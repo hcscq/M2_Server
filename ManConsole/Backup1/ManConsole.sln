@@ -1,0 +1,12 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{059D6162-CD51-11D0-AE1F-00A0C90FFFC3}") = "ManConsole", "ManConsole.vcxproj", "{37D023B0-AEAB-42FA-9587-5A325D3090AA}"
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

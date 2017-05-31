@@ -15,6 +15,7 @@ VirtualClient/
 *.dsw
 *.exe
 *.db
+*.htm
 # Folder config file
 Desktop.ini
 
