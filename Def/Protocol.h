@@ -23,6 +23,7 @@
 
 /*for .net client begin*/
 #define CM_CLIENTVERSION		0
+#define CM_LOGIN				5
 
 #define SM_CONNECTED            0
 #define SM_CLIENTVERSION		1
