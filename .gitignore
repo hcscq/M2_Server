@@ -1,7 +1,20 @@
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
-
+Debug/
+*.txt
+*.sql
+_Bin/
+ipch/
+_Obj_Debug/
+Tools/
+Tec_Test/
+SQL_Scripts/
+VirtualClient/
+*.opendb
+*.dsw
+*.exe
+*.db
 # Folder config file
 Desktop.ini
 

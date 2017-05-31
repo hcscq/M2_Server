@@ -1,0 +1,298 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_NEUTRAL
+#pragma code_page(936)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TOOLBAR             BITMAP                  ".\\Res\\toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MIR2                ICON                    ".\\Res\\MIR2.ICO"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "服务(&S)"
+    BEGIN
+        MENUITEM "启动服务(&S)",                    IDM_STARTSERVICE
+        MENUITEM "停止服务(&T)",                    IDM_STOPSERVICE, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "配置信息(&C)",                    IDM_CONFIG
+        MENUITEM "字体颜色(&F)",                    IDM_SETFONTCOLOR
+        MENUITEM "背景颜色(&B)",                    IDM_SETBKGCOLOR
+        MENUITEM SEPARATOR
+        MENUITEM "退出(&E)",                      IDM_EXIT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_CONFIGDLG DIALOGEX 0, 0, 343, 285
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "游戏服务器配置"
+FONT 9, "??", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "确认",IDOK,228,264,50,14
+    PUSHBUTTON      "取消",IDCANCEL,286,264,50,14
+    LTEXT           "游戏服务器编号：",IDC_STATIC,23,24,70,8
+    CONTROL         "IPAddress1",IDC_DBSVR_IP,"SysIPAddress32",WS_TABSTOP,65,130,90,11
+    EDITTEXT        IDC_DBSRV_PORT,65,144,28,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "服务器地址：",IDC_STATIC,28,132,35,8
+    GROUPBOX        "数据库服务器信息：",IDC_STATIC,15,116,158,48
+    LTEXT           "服务器端口：",IDC_STATIC,28,145,36,9
+    GROUPBOX        "游戏服务信息",IDC_STATIC,15,58,158,54
+    EDITTEXT        IDC_SRVINDEX,94,21,17,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "初始等级：",IDC_STATIC,23,76,43,8
+    LTEXT           "初始金币：",IDC_STATIC,97,76,41,8
+    EDITTEXT        IDC_STARTLEVEL,69,73,19,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_STARTGOLD,142,73,19,14,ES_AUTOHSCROLL
+    CONTROL         "测试服务器",IDC_CHECK_TESTSRV,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,93,53,10
+    LTEXT           "游戏服务器名称：",IDC_STATIC,120,24,70,8
+    LTEXT           "游戏服务器数量：",IDC_STATIC,22,41,76,8
+    EDITTEXT        IDC_SRVNUMBER,94,38,17,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SRVNAME,193,21,40,14,ES_CENTER | ES_AUTOHSCROLL | WS_DISABLED
+    GROUPBOX        "地图文件信息",IDC_STATIC,178,58,149,40
+    LTEXT           "地图：",IDC_STATIC,186,74,31,8
+    EDITTEXT        IDC_MAPFILE_LOC,221,72,101,14,ES_AUTOHSCROLL
+    CONTROL         "IPAddress1",IDC_DBMS_IP,"SysIPAddress32",WS_TABSTOP,66,186,90,11
+    EDITTEXT        IDC_DBMS_PORT,65,199,28,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "数据库地址：",IDC_STATIC,19,187,58,8
+    GROUPBOX        "DBMS Information",IDC_STATIC,15,171,158,83
+    LTEXT           "Instance :",IDC_STATIC,26,201,34,9
+    LTEXT           "用户名：",IDC_STATIC,19,237,33,8
+    EDITTEXT        IDC_DBMS_ID,55,234,28,14,ES_AUTOHSCROLL
+    LTEXT           "密码：",IDC_STATIC,95,238,25,8
+    EDITTEXT        IDC_DBMS_PASSWORD,123,234,40,14,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "数据库名：",IDC_STATIC,26,216,44,8
+    EDITTEXT        IDC_DBMS_DEVICE,65,214,82,14,ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_CONFIGDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 336
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 278
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_NOTWINNT            "本程序只能运行在Microsoft Windows2000及更高版本系统。"
+    IDS_LVS_LABEL1          "日期"
+    IDS_LVS_LABEL2          "时间"
+    IDS_LVS_LABEL3          "消息"
+    IDS_STARTSERVICE        "游戏服务器服务已启动.(端口%s)"
+    IDS_STOPSERVICE         "游戏服务器服务已停止。"
+    IDS_FETCH_MAGICDATA     "加载技能数据库(%d)。"
+    IDS_DISCONNECT_LOGINSERVER "与帐号登录服务器以断开连接。"
+    IDS_PROGRAM_QUIT        "是否退出游戏服务器？"
+    IDS_PROGRAM_TITLE       "热血传奇2 - 游戏服务器"
+    IDS_LOAD_ADMINCOMMAND   "加载游戏命令(%d)。"
+    IDS_CONFLVS_LABEL1      "服务器名称。"
+    IDS_CONFLVS_LABEL2      "名称"
+    IDS_CONFLVS_LABEL3      "网关的内部IP地址登录"
+    IDS_CONFLVS_LABEL4      "登录网关外部IP地址"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_CONFLVS_LABEL5      "游戏网关之外的IP地址"
+    IDS_TAB_LABEL1          "服务器设置"
+    IDS_ACCEPT_GATESERVER   "连接到游戏网关服务器(%s)。"
+    IDS_OPEN_USER           "客户端(%s)一直试图连接到它。"
+    IDS_CLOSE_USER          "客户端(%s)已终止了连接。"
+    IDS_OPEN_GATE           "%d网关以打开。"
+    IDS_CLOSE_GATE          "%d网关已关闭。"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_CONNECT_DBSERVER    "已连接到数据服务器。"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_LOADMAPFILE_GOOD    "加载地图配置信息成功."
+    IDS_LOADMAPFILE_FAIL    "错误：加载地图配置文件(%d)。"
+    IDS_DISCONNECT_DBSERVER "错误：数据库服务器和连接已丢失。"
+    IDS_APPLY_RECONNECT     "提示：尝试重新连接到数据库服务器。"
+    IDS_CANT_CONNECT        "错误：无法连接到数据库服务器"
+    IDS_FETCH_MONSTER       "加载怪物配置信息(%d)。"
+    IDS_FETCH_MONGEN        "加载怪物刷新文件(%d )."
+    IDS_FETCH_STDITEMWEAPON "加载武器配置信息(%d)。"
+    IDS_FETCH_STDITEMARMOR  "加载衣服配置信息(%d)。"
+    IDS_FETCH_MERCHANT      "加载交易NPC(%)。"
+    IDS_FETCH_MOVEMAPEVENT  "加载地图触发事件(%d)。"
+    IDS_ALLOW_LONGHIT       "开启刺杀剑术。"
+    IDS_NOTALLOW_LONGHIT    "关闭刺杀剑术。"
+    IDS_ALLOW_WIDEHIT       "允许使用半月。"
+    IDS_NOTALLOW_WIDEHIT    "禁止使用半月。"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_ALLOW_FIREHIT       "你的武器因内力凝聚而炙热。"
+    IDS_NOTALLOW_FIREHIT    "内力凝聚失败。"
+    IDS_TIMEOUT_FIREHIT     "能量消失了。"
+    IDS_ATTACKMODE_ALL      "[人物攻击模式 : 全体攻击]"
+    IDS_ATTACKMODE_PEACE    "[人物攻击模式 : 和平攻击]"
+    IDS_ATTACKMODE_GROUP    "[人物攻击模式 : 编组攻击]"
+    IDS_ATTACKMODE_GUILD    "[人物攻击模式 :行会模式]"
+    IDS_ATTACKMODE_PKATTACK "[人物攻击模式: 善恶攻击]"
+    IDS_ATTACKMODE_CHGMODE  "改变攻击模式 : CTRL-H"
+    IDS_FETCH_STDITEMETC    "加载标准物品信息%d。"
+    IDS_FETCH_STDITEMACCESSORY "加载标准物品附属信息%d。"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_JOBNAME_W           "战士"
+    IDS_JOBNAME_S           "魔法师"
+    IDS_JOBNAME_T           "道士"
+    IDS_INSPECTOR_ON        "进入观察模式"
+    IDS_INSPECTOR_OFF       "退出观察模式"
+    IDS_NOTENOUGHLEVEL_CRY  "只有8等级在8级及以上才能喊话。"
+    IDS_CANTFIND_HUMAN      "找不到玩家。"
+    IDS_SKIL_LEVELUP        "(%s)等级为(%d)。"
+    IDS_USERCMD_NOWHISPER1  "禁止私聊1"
+    IDS_USERCMD_NOWHISPER2  "禁止私聊2"
+    IDS_USERCMD_YESWHISPER1 "允许私聊1"
+    IDS_USERCMD_YESWHISPER2 "允许私聊2"
+    IDS_USERCMD_NOWHISPER_SOMEBODY "禁止指定人物私聊"
+    IDS_USERCMD_DONTCRY1    "过滤喊话"
+    IDS_USERCMD_DONTCRY2    "关闭喊话"
+    IDS_USERCMD_DONTEXNG    "禁止交易"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_USERCMD_ACPTGUILD   "允许加入行会"
+    IDS_USERCMD_ALOWPARTY   "允许联盟"
+    IDS_USERCMD_DOPARTY     "联盟"
+    IDS_USERCMD_BROKEPARTY  "取消联盟"
+    IDS_USERCMD_OUTGUILD    "退出行会"
+    IDS_USERCMD_NOGUILDCRY1 "行会掌门1"
+    IDS_USERCMD_NOGUILDCRY2 "行会掌门2"
+    IDS_USERCMD_ATTACKMODE  "攻击模式"
+    IDS_USERCMD_REST        "休息"
+    IDS_USERCMD_SABUKDOOR   "沙巴克大门"
+    IDS_LOAD_USERCOMMAND    "加载用户命令(%d )。"
+    IDS_DEFENCEUP           "物理防御提升%d"
+    IDS_MAGDEFENCEUP        "魔法防御提升%d"
+    IDS_MALE_WEAR           "这是男衣服。"
+    IDS_FEMALE_WEAR         "这是女衣服。"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_NOTENOUGH_VALUE     "你不可以穿戴。"
+    IDS_NOTENOUGH_WEIGHT    "负重不够。"
+    IDS_GOLD                "金币"
+    IDS_NEVERDIE_ON         "无敌模式[开]"
+    IDS_NEVERDIE_OFF        "无敌模式[关]"
+    IDS_CAPTURE_ON          "开始采集"
+    IDS_CAPTURE_OFF         "停止采集"
+END
+
+#endif    // 中文(简体) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 朝鲜语(韩国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 朝鲜语(韩国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

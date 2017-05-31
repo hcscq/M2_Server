@@ -1,0 +1,226 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_NEUTRAL
+#pragma code_page(936)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MIR2                ICON                    ".\\Res\\MIR2.ICO"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TOOLBAR             BITMAP                  ".\\Res\\toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_CONFIGDLG DIALOGEX 0, 0, 151, 123
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "帐号登录服务器配置"
+FONT 10, "??", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确认",IDOK,38,17,50,14
+    PUSHBUTTON      "取消",IDCANCEL,79,75,50,14
+END
+
+IDD_CONFIGDLG_SERVERLIST DIALOGEX 0, 0, 271, 159
+STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD | WS_VISIBLE | WS_CAPTION
+CAPTION "服务器列表"
+FONT 9, "??", 0, 0, 0x1
+BEGIN
+    CONTROL         "List1",IDC_SERVERINFO_LIST,"SysListView32",LVS_REPORT | LVS_EDITLABELS | WS_BORDER | WS_TABSTOP,7,7,257,115,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "&添加",IDC_SVRLIST_ADD,7,138,50,14
+    PUSHBUTTON      "&删除",IDC_SVRLIST_REMOVE,214,138,50,14
+    PUSHBUTTON      "&编辑",IDC_SVRLIST_EDIT,107,138,50,14
+END
+
+IDD_SVRLIST_ADD DIALOGEX 0, 0, 239, 161
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "添加/服务网关"
+FONT 9, "??", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_TITLE,64,24,60,14,ES_AUTOHSCROLL
+    CONTROL         "IPAddress1",IDC_IPADDRESS1,"SysIPAddress32",WS_TABSTOP,64,44,100,15
+    CONTROL         "IPAddress2",IDC_IPADDRESS2,"SysIPAddress32",WS_TABSTOP,64,66,100,15
+    CONTROL         "IPAddress3",IDC_IPADDRESS3,"SysIPAddress32",WS_TABSTOP,64,88,100,15
+    DEFPUSHBUTTON   "&添加/修改",IDOK,107,140,56,14
+    PUSHBUTTON      "取消",IDCANCEL,176,140,56,14
+    LTEXT           "名称：",IDC_STATIC,32,26,27,8
+    CTEXT           "内部IP 地址 : ",IDC_STATIC,17,45,44,16
+    CTEXT           "公共IP 地址 :",IDC_STATIC,17,67,44,16
+    CTEXT           "IP 地址 :",IDC_STATIC,17,92,44,10
+    EDITTEXT        IDC_PORT,64,109,27,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "端口 :",IDC_STATIC,41,111,18,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_CONFIGDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 144
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 116
+    END
+
+    IDD_CONFIGDLG_SERVERLIST, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 264
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 152
+    END
+
+    IDD_SVRLIST_ADD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 232
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 154
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "服务(&S)"
+    BEGIN
+        MENUITEM "开始服务(&S)",                    IDM_STARTSERVICE
+        MENUITEM "停止服务(&T)",                    IDM_STOPSERVICE, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "编辑务器列表(&C)",                  IDM_CONFIG
+        MENUITEM "&Game Server Connection Status", IDM_SERVERSTAT
+        MENUITEM SEPARATOR
+        MENUITEM "退出(&E)",                      IDM_EXIT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_NOTWINNT            "这个程序只运行在Microsoft Windows2000及更高版本可以。"
+    IDS_LVS_LABEL1          "日期"
+    IDS_LVS_LABEL2          "时间"
+    IDS_LVS_LABEL3          "消息"
+    IDS_STARTSERVICE        "日志服务器服务已经启动。"
+    IDS_STOPSERVICE         "日志服务器服务已停止。"
+    IDS_CONNECT_LOGINSERVER "登录服务器已连接。"
+    IDS_DISCONNECT_LOGINSERVER "登录服务器的连接已丢失。"
+    IDS_PROGRAM_QUIT        "退出帐号登录服务器？"
+    IDS_PROGRAM_TITLE       "热血传奇2 - 帐号登录服务器"
+    IDS_CANT_CONNECT        "无法连接到登录服务器，10秒后将尝试重新连接。"
+    IDS_CONFLVS_LABEL1      "服务器名"
+    IDS_CONFLVS_LABEL2      "标题"
+    IDS_CONFLVS_LABEL3      "网关的内部IP地址登录"
+    IDS_CONFLVS_LABEL4      "登录门的外部IP地址"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_CONFLVS_LABEL5      "游戏网关之外的IP地址"
+    IDS_TAB_LABEL1          "??? ?? ?? ???? ?? ????."
+    IDS_ACCEPT_GATESERVER   "登录网关已连接(%s)。"
+    IDS_OPEN_USER           "客户端(%s)一直试图连接到它。"
+    IDS_CLOSE_USER          "客户端(%s)已终止了连接。"
+    IDS_CONNECTDB           "热血传奇2连接到数据库。"
+    IDS_LOADACCOUNTRECORDS  "读取玩家帐号信息。"
+    IDS_BOUNDACCOUNTRECORDS "％d记录我读过一个用户帐户信息。"
+    IDS_COMPLETENEWUSER     "用户ID[％s]已建立。"
+    IDS_OPEN_PORT           "端口:%d已打开。"
+END
+
+#endif    // 中文(简体) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 朝鲜语(韩国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 朝鲜语(韩国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,119 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: GameSvr - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP339.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GR /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /FR"../_Obj_Debug/GameSvr/" /Fp"../_Obj_Debug/GameSvr/GameSvr.pch" /Yu"stdafx.h" /Fo"../_Obj_Debug/GameSvr/" /Fd"../_Obj_Debug/GameSvr/" /FD /GZ /c 
+"C:\Works.Wemade\LegendOfMir2_Server\GameSvr\GateInfo.cpp"
+"C:\Works.Wemade\LegendOfMir2_Server\GameSvr\SockMsg_GateComm.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP339.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP33A.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"../_Bin/Debug/GameSvr.pdb" /debug /machine:I386 /out:"../_Bin/Debug/GameSvr.exe" /pdbtype:sept 
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ConfigDlgFunc.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\database.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\GameSvr.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\GateInfo.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Global.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Handler_CommonDB.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Handler_Item.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Handler_Magic.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Handler_Map.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\MainWndProc.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Misc.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectEngine.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectEvent.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectMerchant.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectMonster.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectNPC.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayer.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayerAdmin.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayerAdminSaid.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayerClone.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayerSaid.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectScripter.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessEvents.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessLogin.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessMerchants.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessMonster.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessNPC.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessUserHuman.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessUserMsg.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\SockMsg_DBSrv.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\SockMsg_GateComm.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\SockMsg_LogSvr.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\StdAfx.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ThreadFuncForComm.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\UserInfo.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\EnDecode.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\RegstryHandler.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ServerSockHandler.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\syncobj.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\GameSvr.res
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP33A.tmp"
+<h3>Output Window</h3>
+Compiling...
+GateInfo.cpp
+SockMsg_GateComm.cpp
+Generating Code...
+Linking...
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP33C.tmp" with contents
+[
+/nologo /o"../_Bin/Debug/GameSvr.bsc" 
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\StdAfx.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ConfigDlgFunc.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\database.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\GameSvr.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\GateInfo.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Global.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Handler_CommonDB.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Handler_Item.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Handler_Magic.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Handler_Map.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\MainWndProc.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\Misc.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectEngine.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectEvent.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectMerchant.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectMonster.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectNPC.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayer.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayerAdmin.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayerAdminSaid.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayerClone.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectPlayerSaid.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ObjectScripter.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessEvents.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessLogin.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessMerchants.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessMonster.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessNPC.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessUserHuman.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ProcessUserMsg.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\SockMsg_DBSrv.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\SockMsg_GateComm.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\SockMsg_LogSvr.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ThreadFuncForComm.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\UserInfo.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\EnDecode.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\RegstryHandler.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\ServerSockHandler.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\GameSvr\syncobj.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP33C.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+GameSvr.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,171 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_NEUTRAL
+#pragma code_page(936)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_CONFIGDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 171
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 125
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MIR2                ICON                    "Res\\MIR2.ICO"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "服务(&S)"
+    BEGIN
+        MENUITEM "启动服务(&S)",                    IDM_STARTSERVICE
+        MENUITEM "暂停服务(&T)",                    IDM_STOPSERVICE, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "配置信息(&C)",                    IDM_CONFIG
+        MENUITEM SEPARATOR
+        MENUITEM "退出(&E)",                      IDM_EXIT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TOOLBAR             BITMAP                  "res\\toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_CONFIGDLG DIALOGEX 0, 0, 178, 132
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "登录网关服务器配置"
+FONT 9, "??", 0, 0, 0x0
+BEGIN
+    CONTROL         "IPAddress1",IDC_LOGINSVR_IP,"SysIPAddress32",WS_TABSTOP,57,21,90,11
+    EDITTEXT        IDC_LOGINSVR_PORT,57,35,28,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_LOCALPORT,104,67,28,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "确认",IDOK,66,111,50,14
+    PUSHBUTTON      "取消",IDCANCEL,121,111,50,14
+    LTEXT           "登录服务器地址：",IDC_STATIC,21,23,35,8
+    GROUPBOX        "登录服务器信息",IDC_STATIC,7,7,164,48
+    LTEXT           "端口：",IDC_STATIC,24,36,32,9
+    LTEXT           "本地端口：",IDC_STATIC,43,70,51,10
+    LTEXT           "登陆网关服务器编号：",IDC_STATIC,17,89,83,8
+    EDITTEXT        IDC_EDIT1,104,86,15,14,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_NOTWINNT            "本程序只能运行在Microsoft Windows2000及更高版本系统。"
+    IDS_LVS_LABEL1          "日期"
+    IDS_LVS_LABEL2          "时间"
+    IDS_LVS_LABEL3          "消息"
+    IDS_STARTSERVICE        "角色网关Server服务已启动。"
+    IDS_STOPSERVICE         "角色网关Server服务已停止。"
+    IDS_CONNECT_LOGINSERVER "连接到数据库服务器。"
+    IDS_DISCONNECT_LOGINSERVER "与数据库服务器连接断开。"
+    IDS_PROGRAM_QUIT        "是否关闭角色网关？"
+    IDS_PROGRAM_TITLE       "热血传奇2 - 角色网关"
+    IDS_CANT_CONNECT        "无法连接到数据库服务器。稍后将尝试重新连接。"
+    IDS_APPLY_RECONNECT     "尝试连接到数据库服务器。"
+END
+
+#endif    // 中文(简体) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 朝鲜语(韩国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 朝鲜语(韩国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

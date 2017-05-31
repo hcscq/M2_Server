@@ -1,0 +1,168 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_NEUTRAL
+#pragma code_page(936)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_COMMAND_MONGEN      "怪物刷新"
+    IDS_COMMAND_INSPECTOR   "观察"
+    IDS_COMMAND_ADMIN       "管理员"
+    IDS_COMMAND_INVINCIBILITY "无敌"
+    IDS_COMMAND_ATTACK      "攻击"
+    IDS_COMMAND_MOVE        "移动"
+    IDS_COMMAND_CHANGELEVEL "调整等级"
+    IDS_COMMAND_MOVEFREESTYLE "随机移动"
+    IDS_COMMAND_MAP         "地图"
+    IDS_COMMAND_LEVEL       "声望"
+    IDS_COMMAND_MONLEVEL    "怪物等级"
+    IDS_COMMAND_RECALL      "传唤"
+    IDS_COMMAND_NUMOFMON    "怪物数量"
+    IDS_COMMAND_NUMOFHUMAN  "玩家数量"
+    IDS_COMMAND_SABUKMONEY  "沙巴克经济"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMAND_KICK        "踢人"
+    IDS_COMMAND_KICK2       "踢人2"
+    IDS_COMMAND_TING        "随机传送"
+    IDS_COMMAND_KINGTING    "身边传送"
+    IDS_COMMAND_LUCKYVALUE  "幸运值"
+    IDS_COMMANT_SHUTUP      "禁言"
+    IDS_COMMAND_TALK        "解除禁言"
+    IDS_COMMAND_SHUTUPMAN   "人物禁言"
+    IDS_COMMAND_RELOADADMIN "重新加载管理员列表"
+    IDS_COMMAND_RELOADABUSIVE "重新加载脏话过滤配置"
+    IDS_COMMAND_MOOTAEBO    "???"
+    IDS_COMMAND_BACKWALK    "回城"
+    IDS_COMMAND_GAIN        "制造"
+    IDS_COMMAND_DELGOLD     "减少金币（自己）"
+    IDS_COMMAND_ADDGOLD     "增加金币（自己）"
+    IDS_COMMAND_GOOD        "物品"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMAND_OTHERDELGOLD "减少金币（指定人）"
+    IDS_COMMAND_OTHERADDGOLD "增加金币（指定人）"
+    IDS_COMMAND_OTHERLEVELUP "等级提升（指定人）"
+    IDS_COMMAND_OTHEREXPUP  "调整经验（指定人）"
+    IDS_COMMAND_WEAPONDUR   "调整武器持久"
+    IDS_COMMAND_PARDON      "清除红名"
+    IDS_COMMAND_PKPOINT     "调整PK值"
+    IDS_COMMAND_PKPOINTUP   "增加PK值"
+    IDS_COMMAND_CHANGELUCKY "调整幸运值"
+    IDS_COMMAND_SKILLUP     "提升人物技能等级（自己）"
+    IDS_COMMAND_OTHERSKILLUP "提升人物技能等级（指定人）"
+    IDS_COMMAND_DELSKILL    "删除技能（自己）"
+    IDS_COMMAND_OTHERDELSKILL "删除人物技能（指定人）"
+    IDS_COMMAND_CHGJOB      "改变职业"
+    IDS_COMMAND_CHGGENDER   "变性"
+    IDS_COMMAND_COLOR       "颜色"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMAND_MONRECALL   "召唤怪物"
+    IDS_COMMAND_MISSION     "任务"
+    IDS_COMMAND_GENPOS      "??"
+    IDS_COMMAND_TRANSPARENCY "隐身"
+    IDS_COMMAND_CIVILWAR    "开始攻城"
+    IDS_COMMAND_DYEINGHAIR  "头发变色"
+    IDS_COMMAND_DYEINGWEAR  "衣服变色"
+    IDS_COMMAND_SUSINOTICE  "不定时公告"
+    IDS_COMMAND_GAMCHUNG    "监听"
+    IDS_COMMAND_CHOOLDOO    "显示"
+    IDS_COMMAND_RESERVED1   "重新加载怪物信息"
+    IDS_COMMAND_RESERVED2   "加载项"
+    IDS_COMMAND_RESERVED3   "物品名称"
+    IDS_COMMAND_RESERVED4   "捕捉"
+    IDS_COMMAND_RESERVED5   "未指定5"
+    IDS_COMMAND_RESERVED6   "未指定6"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMAND_RESERVED7   "未指定7"
+    IDS_COMMAND_RESERVED8   "未指定8"
+    IDS_COMMANT_RESERVED9   "未指定9"
+    IDS_COMMAND_RESERVED10  "未指定10"
+    IDS_COMMAND_RESERVED11  "未指定11"
+    IDS_COMMAND_RESERVED12  "未指定12"
+    IDS_COMMAND_RESERVED13  "未指定13"
+    IDS_COMMAND_HAIRSTYLE   "发型"
+END
+
+#endif    // 中文(简体) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 朝鲜语(韩国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 朝鲜语(韩国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

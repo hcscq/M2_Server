@@ -1,0 +1,172 @@
+#include "stdafx.h"
+
+extern HWND						g_hStatusBar;
+
+extern SOCKET					g_csock;
+extern HANDLE					g_hSvrMsgEvnt;
+
+//extern CWHQueue					g_SendToUserQ;
+extern CWHQueue					g_SendToServerQ;
+
+extern CWHDynamicArray<CSessionInfo*>			g_UserInfoArray;
+
+CWHAbusive						g_xAbusive;
+
+DWORD WINAPI ThreadFuncForMsg(LPVOID lpParameter)
+{
+	int							nCount;
+	_TDEFAULTMESSAGE			DefMsg;
+	int							nBodyLen;
+	_TMSGHEADER					MsgHdr;
+	char						szDecodeSay[256];
+	char						szEncodeSay[256];
+	char						*pData;
+	CSessionInfo*				pSessionInfo;
+
+	FILETIME					ftKernelTimeStart, ftKernelTimeEnd;
+	FILETIME					ftUserTimeStart, ftUserTimeEnd;
+	FILETIME					ftDummy, ftTotalTimeElapsed;
+	__int64						qwKernelTimeElapsed, qwUserTimeElapsed, qwTotalTimeElapsed;
+	TCHAR						wszThreadTime[32];
+
+	int							nPos;
+
+	MsgHdr.nCode	= 0xAA55AA55;
+	MsgHdr.wIdent	= GM_DATA;
+
+//	g_xAbusive.LoadAbusiveList();
+	
+	while(TRUE)
+	{
+		GetThreadTimes(GetCurrentThread(), &ftDummy, &ftDummy, &ftKernelTimeStart, &ftUserTimeStart);
+
+		//Send packet to Game server.
+		nCount = g_SendToServerQ.GetCount();
+
+		if (nCount)
+		{
+			for (int nLoop = 0; nLoop < nCount; nLoop++)
+			{
+				_LPTSENDBUFF pSendBuff = (_LPTSENDBUFF)g_SendToServerQ.PopQ();
+
+				if (pSendBuff)
+				{
+					if (pSessionInfo = g_UserInfoArray.GetData(pSendBuff->nGateIndex))
+					{
+						MsgHdr.nSocket			= (int)pSendBuff->sock;
+						MsgHdr.wUserGateIndex	= pSendBuff->nGateIndex;
+						MsgHdr.wUserListIndex	= pSendBuff->nServerUserIndex;
+
+						if (pSessionInfo->fLoginCode)
+						{
+							pSessionInfo->fLoginCode = FALSE;
+
+							MsgHdr.nLength = (memlen(pSendBuff->szData) - 1);
+
+							SendSocketMsgS (&MsgHdr, MsgHdr.nLength, pSendBuff->szData, 0, NULL);					
+
+//#ifdef _DEBUG
+//							_RPT1(_CRT_WARN, "SS:%s\t", pSendBuff->szData);
+//#endif
+						}
+						else
+						{
+							if (*pSendBuff->szData == '#')
+							{
+								if (memlen(pSendBuff->szData) > _DEFBLOCKSIZE + 2)
+								{
+									if (*(pSendBuff->szData + _DEFBLOCKSIZE + 3) == '!')	// 3[#? !]
+									{
+										*(pSendBuff->szData + _DEFBLOCKSIZE + 3) = '\0';
+										fnDecodeMessageA(&DefMsg, (pSendBuff->szData + 2));		// 2[#?] ? = Code
+		
+										if (DefMsg.wIdent >= 3000 && DefMsg.wIdent <= 4000)
+										{
+											MsgHdr.nLength = sizeof(_TDEFAULTMESSAGE);
+											SendSocketMsgS(&MsgHdr, sizeof(_TDEFAULTMESSAGE), (char *)&DefMsg, 0, NULL);
+										}
+//#ifdef _DEBUG
+//										_RPT4(_CRT_WARN, "SS:%d %d %d %d \t", DefMsg.wIdent, DefMsg.nRecog, DefMsg.wParam, DefMsg.wSeries);
+//#endif
+									}
+									else
+									{
+										nBodyLen = memlen(pSendBuff->szData + _DEFBLOCKSIZE + 2) - 2;	// 2 = '!\0'
+
+										pData = pSendBuff->szData + _DEFBLOCKSIZE + 2;				
+										pData[nBodyLen] = '\0';
+
+										fnDecodeMessageA(&DefMsg, (pSendBuff->szData + 2));		// 2[#?] ? = Code
+
+										if (DefMsg.wIdent == CM_SAY)
+										{
+											nPos = fnDecode6BitBufA(pData, szDecodeSay, sizeof(szDecodeSay));
+											szDecodeSay[nPos] = '\0';
+											g_xAbusive.ChangeAbusiveText(szDecodeSay);
+											nPos = fnEncode6BitBufA((unsigned char *)szDecodeSay, szEncodeSay, memlen(szDecodeSay) - 1, sizeof(szEncodeSay));
+											szEncodeSay[nPos] = '\0';
+
+											pData = &szEncodeSay[0];
+										}
+
+										MsgHdr.nLength = sizeof(_TDEFAULTMESSAGE) + nBodyLen;
+
+										SendSocketMsgS (&MsgHdr, sizeof(_TDEFAULTMESSAGE), (char *)&DefMsg, nBodyLen + 1, pData);
+
+//#ifdef _DEBUG
+//										char szText[256];
+
+//										fnDecode6BitBufA(pData, szText, sizeof(szText));
+//										_RPT4(_CRT_WARN, "SS:%d %d %d %d \t", DefMsg.wIdent, DefMsg.nRecog, DefMsg.wParam, DefMsg.wSeries);
+//										_RPT1(_CRT_WARN, "%s\n", szText);
+//#endif
+									}
+								} // if (memlen(pSendBuff->szData) > _DEFBLOCKSIZE + 2)
+							} // if '#'
+						}
+					}
+
+					delete pSendBuff;
+				}
+			}// for nLoop
+		}
+
+		//Send Packet to Client
+/*		nCount = g_SendToUserQ.GetCount();
+
+		if (nCount)
+		{
+			for (int nLoop = 0; nLoop < nCount; nLoop++)
+			{
+				pSendBuff = (_LPTSENDBUFF)g_SendToUserQ.PopQ();
+
+				if (pSendBuff)
+				{
+					send(pSendBuff->sock, pSendBuff->szData, lstrlen(pSendBuff->szData), 0);
+
+#ifdef _DEBUG
+					_RPT1(_CRT_WARN, "SC:%s\n", pSendBuff->szData);
+#endif
+					delete pSendBuff;
+				}
+			}
+		}
+*/
+		GetThreadTimes(GetCurrentThread(), &ftDummy, &ftDummy, &ftKernelTimeEnd, &ftUserTimeEnd);
+
+		qwKernelTimeElapsed = FileTimeToQuadWord(&ftKernelTimeEnd) - FileTimeToQuadWord(&ftKernelTimeStart);
+		qwUserTimeElapsed	= FileTimeToQuadWord(&ftUserTimeEnd) - FileTimeToQuadWord(&ftUserTimeStart);
+		
+		qwTotalTimeElapsed = qwKernelTimeElapsed + qwUserTimeElapsed;
+
+		QuadTimeToFileTime(qwTotalTimeElapsed, &ftTotalTimeElapsed);
+
+		wsprintf(wszThreadTime, _TEXT("%lu%lu ns"), ftTotalTimeElapsed.dwHighDateTime, ftTotalTimeElapsed.dwLowDateTime);
+		
+		SendMessage(g_hStatusBar, SB_SETTEXT, MAKEWORD(4, 0), (LPARAM)wszThreadTime);
+
+		SleepEx(1, TRUE);
+	}
+
+	return 0;
+}

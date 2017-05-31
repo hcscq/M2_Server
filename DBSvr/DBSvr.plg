@@ -1,0 +1,86 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: DBSvr - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP2E8.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"../_Obj_Debug/DBSvr/" /Fp"../_Obj_Debug/DBSvr/DBSvr.pch" /Yu"stdafx.h" /Fo"../_Obj_Debug/DBSvr/" /Fd"../_Obj_Debug/DBSvr/" /FD /GZ /c 
+"C:\Works.Wemade\LegendOfMir2_Server\DBSvr\ProcessDBMsg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP2E8.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP2E9.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"../_Bin/Debug/DBSvr.pdb" /debug /machine:I386 /out:"../_Bin/Debug/DBSvr.exe" /pdbtype:sept 
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ConfigDlgFunc.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\dbmgr.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\DBSvr.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\GameGateSockMsg.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\GateCommSockMsg.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\GateInfo.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\GlobalUserList.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\MainWndProc.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\Misc.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ProcessDBMsg.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ProcessGateMsg.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ProcessServerMsg.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ServerCommSockMsg.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\StdAfx.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\TableList.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\util.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\database.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\error.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\prime.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\syncobj.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\EnDecode.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\RegstryHandler.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ServerSockHandler.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\stringex.obj
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\DBSvr.res
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP2E9.tmp"
+<h3>Output Window</h3>
+Compiling...
+ProcessDBMsg.cpp
+Linking...
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP2EA.tmp" with contents
+[
+/nologo /o"../_Bin/Debug/DBSvr.bsc" 
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\StdAfx.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ConfigDlgFunc.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\dbmgr.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\DBSvr.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\GameGateSockMsg.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\GateCommSockMsg.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\GateInfo.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\GlobalUserList.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\MainWndProc.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\Misc.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ProcessDBMsg.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ProcessGateMsg.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ProcessServerMsg.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ServerCommSockMsg.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\TableList.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\util.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\database.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\error.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\prime.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\syncobj.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\EnDecode.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\RegstryHandler.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\ServerSockHandler.sbr
+\Works.Wemade\LegendOfMir2_Server\_Obj_Debug\DBSvr\stringex.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP2EA.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+DBSvr.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
