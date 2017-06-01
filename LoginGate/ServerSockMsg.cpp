@@ -196,10 +196,10 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 
 			
 			wsprintf(szGateIP, _T("%d"), ((int) pSessionInfo->sock));
-			MessageBox(NULL,szGateIP,_T("µÇÂ½Íø¹Ø"),MB_OKCANCEL);
+			//MessageBox(NULL,szGateIP,_T("µÇÂ½Íø¹Ø"),MB_OKCANCEL);
 
 			wsprintf(szGateIP, _T("%s"), pSessionInfo->Buffer);
-			MessageBox(NULL,szGateIP,_T("µÇÂ½Íø¹Ø"),MB_OKCANCEL);
+			//MessageBox(NULL,szGateIP,_T("µÇÂ½Íø¹Ø"),MB_OKCANCEL);
 
 			*pszPos++	= '/';
 			pszPos		= pSessionInfo->ExtractPacket( pszPos );
