@@ -89,21 +89,22 @@ void CGateInfo::SendToGate(SOCKET cSock, char *pszPacket)
 //	wsprintf(szData, _TEXT("%%%d/#%s!$"), (int)cSock, pszPacket);
 	
 	int nLen = memlen(pszPacket) - 1;
-
 	szData[0] = '%';
 	
 	char *pszNext = ValToAnsiStr((int)cSock, &szData[1]);
 	
 	*pszNext++ = '/';
 	*pszNext++ = '#';
-
+	/*FOR .NET CLIENT BEGIN*/
+	pszNext=ValToAnsiStr((short)(nLen+5), pszNext);
+	//*pszNext = (short)(nLen+5);
+	//pszNext += 2;
+	/*FOR .NET CLIENT END*/
 	memmove(pszNext, pszPacket, nLen);
 
 	pszNext += nLen;
 
-	/*FOR .NET CLIENT BEGIN*/
-	*pszNext++ = (short)nLen;
-	/*FOR .NET CLIENT END*/
+
 
 	*pszNext++ = '!';
 	*pszNext++ = '$';
