@@ -88,7 +88,8 @@ void CGateInfo::SendToGate(SOCKET cSock, char *pszPacket)
 	
 //	wsprintf(szData, _TEXT("%%%d/#%s!$"), (int)cSock, pszPacket);
 	
-	int nLen = memlen(pszPacket) - 1;
+	short nLen = memlen(pszPacket) - 1;
+
 	szData[0] = '%';
 	
 	char *pszNext = ValToAnsiStr((int)cSock, &szData[1]);
@@ -96,14 +97,12 @@ void CGateInfo::SendToGate(SOCKET cSock, char *pszPacket)
 	*pszNext++ = '/';
 	*pszNext++ = '#';
 	/*FOR .NET CLIENT BEGIN*/
-	pszNext=ValToAnsiStr((short)(nLen+5), pszNext);
-	//*pszNext = (short)(nLen+5);
-	//pszNext += 2;
+	fnEncode6BitBufA((unsigned char*)&nLen, pszNext, 2, 4);
+	pszNext += 2;
 	/*FOR .NET CLIENT END*/
 	memmove(pszNext, pszPacket, nLen);
 
 	pszNext += nLen;
-
 
 
 	*pszNext++ = '!';
