@@ -88,7 +88,7 @@ void CGateInfo::SendToGate(SOCKET cSock, char *pszPacket)
 	
 //	wsprintf(szData, _TEXT("%%%d/#%s!$"), (int)cSock, pszPacket);
 	
-	short nLen = memlen(pszPacket) - 1;
+	WORD nLen = memlen(pszPacket) - 1;
 
 	szData[0] = '%';
 	
@@ -97,8 +97,7 @@ void CGateInfo::SendToGate(SOCKET cSock, char *pszPacket)
 	*pszNext++ = '/';
 	*pszNext++ = '#';
 	/*FOR .NET CLIENT BEGIN*/
-	fnEncode6BitBufA((unsigned char*)&nLen, pszNext, 2, 4);
-	pszNext += 2;
+	pszNext += fnEncode6BitBufA((unsigned char*)&nLen, pszNext, 2, 4);
 	/*FOR .NET CLIENT END*/
 	memmove(pszNext, pszPacket, nLen);
 
