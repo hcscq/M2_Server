@@ -39,7 +39,7 @@ UINT WINAPI ThreadFuncForMsg(LPVOID lpParameter)
 								{
 									*pszEnd = '\0';
 
-									fnDecodeMessageA(&DefaultMsg, (pszBegin + 3));	// 2 = "#?" ? = Check Code //new c#client 3="#|(short)packet size"
+									fnDecodeMessageA(&DefaultMsg, (pszBegin + 3));	// 2 = "#?" ? = Check Code //new c#client 3="#|(short)packet size encode =3bytes"
 
 									switch (DefaultMsg.wIdent)
 									{
