@@ -27,6 +27,17 @@
 
 #define SM_CONNECTED            0
 #define SM_CLIENTVERSION		1
+#define SM_LOGIN				7
+#define SM_LOGIN_SUCCESS		9
+#define SM_RE_ID_NOTFOUND		3
+#define SM_RE_ID_WRONGPASS		4
+/*
+* 0: Disabled
+* 1: Bad AccountID
+* 2: Bad Password
+* 3: Account Not Exist
+* 4: Wrong Password
+*/
 /*for .net client end*/
 #define SM_CERTIFICATION_FAIL	501
 #define SM_ID_NOTFOUND			502

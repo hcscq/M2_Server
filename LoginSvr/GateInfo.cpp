@@ -573,9 +573,9 @@ void CGateInfo::ProcLogin(SOCKET s, char *pszData)
 				CRecordset *pRec = GetDBManager()->CreateRecordset();
 
 				if ( !pRec->Execute( szQuery ) || !pRec->Fetch() )
-					fnMakeDefMessageA( &DefMsg, SM_ID_NOTFOUND, 0, 0, 0, 0 );
+					fnMakeDefMessageA( &DefMsg, SM_LOGIN, 0, SM_RE_ID_NOTFOUND, 0, 0 );
 				else if ( CompareDBString( pszPassword, pRec->Get( "FLD_PASSWORD" ) ) != 0 )
-					fnMakeDefMessageA( &DefMsg, SM_PASSWD_FAIL, 0, 0, 0, 0 );
+					fnMakeDefMessageA( &DefMsg, SM_LOGIN, 0, SM_RE_ID_WRONGPASS, 0, 0 );
 				else
 				{
 					int nCertCode = atoi( pRec->Get( "FLD_CERTIFICATION" ) );
