@@ -136,7 +136,7 @@ DWORD WINAPI AcceptThread(LPVOID lpParameter)
 			nCvtLen = WideCharToMultiByte(CP_ACP, 0, szAddress, -1, szMsg, sizeof(szMsg), NULL, NULL);
 
 			SendSocketMsgS(GM_OPEN, pNewSessionInfo->nGateIndex, (int)pNewSessionInfo->sock, 0, nCvtLen + 1, szMsg);
-			InsertLogMsg(_TEXT("Sned GM_OPEN to GMSvr."));
+			InsertLogMsg(_TEXT("Send GM_OPEN to GMSvr."));
 		}
 	}
 
