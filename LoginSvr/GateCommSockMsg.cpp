@@ -125,8 +125,10 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 				{
 					pGateInfo = g_xGateList.GetData(pListNode);
 
-					if (pGateInfo)
+					if (pGateInfo) {
 						pGateInfo->Close();
+						UpdateStatusBar(false);
+					}
 
 					delete pGateInfo;
 					pGateInfo = NULL;
@@ -141,6 +143,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 		if ( dwBytesTransferred == 0 )
 		{
 			pGateInfo->Close();
+			UpdateStatusBar(false);
 			continue;
 		}
 

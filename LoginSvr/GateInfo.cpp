@@ -97,7 +97,7 @@ void CGateInfo::SendToGate(SOCKET cSock, char *pszPacket)
 	*pszNext++ = '/';
 	*pszNext++ = '#';
 	/*FOR .NET CLIENT BEGIN*/
-	pszNext += fnEncode6BitBufA((unsigned char*)&nLen, pszNext, 2, 4);
+	//pszNext += fnEncode6BitBufA((unsigned char*)&nLen, pszNext, 2, 4);
 	/*FOR .NET CLIENT END*/
 	memmove(pszNext, pszPacket, nLen);
 
@@ -218,7 +218,7 @@ void CGateInfo::ReceiveClientInfo(int nSocket)
 	* 0: Wrong Version
 	* 1: Correct Version
 	*/
-	fnMakeDefMessageA(&DefMsg, SM_CLIENTVERSION, 0, 1, 0, 0);
+	fnMakeDefMessageA(&DefMsg, SM_CLIENTVERSION, DEFBLOCKSIZE, 1, 0, 0);
 	nPos = fnEncodeMessageA(&DefMsg, szEncodePacket, sizeof(szEncodePacket));
 	szEncodePacket[nPos] = '\0';
 
@@ -258,7 +258,7 @@ void CGateInfo::ReceiveOpenUser(char *pszPacket)
 
 			InsertLogMsgParam(IDS_OPEN_USER, pUserInfo->szAddress);
 
-			fnMakeDefMessageA(&DefMsg, SM_CONNECTED, 0, 0, 0, 0);
+			fnMakeDefMessageA(&DefMsg, SM_CONNECTED, DEFBLOCKSIZE, 0, 0, 0);
 			nPos = fnEncodeMessageA(&DefMsg, szEncodePacket, sizeof(szEncodePacket));
 			szEncodePacket[nPos] = '\0';
 
@@ -346,9 +346,7 @@ void CGateInfo::ProcSelectServer(SOCKET s, WORD wServerIndex)
 		{
 			if (!pUserInfo->fSelServerOk)
 			{
-				fnMakeDefMessageA(&DefMsg, SM_SELECTSERVER_OK, 0, pUserInfo->nCertification, 0, 0);		
-				int nPos = fnEncodeMessageA(&DefMsg, szEncodeMsg, sizeof(szEncodePacket));
-				szEncodeMsg[nPos] = '\0';
+
 
 				for ( PLISTNODE pNode = g_xGameServerList.GetHead(); pNode; pNode = g_xGameServerList.GetNext( pNode ) )
 				{
@@ -369,6 +367,10 @@ void CGateInfo::ProcSelectServer(SOCKET s, WORD wServerIndex)
 
 				int nPos2 = fnEncode6BitBufA((unsigned char *)pServerIP, szEncodePacket, memlen(pServerIP), sizeof(szEncodePacket));
 				szEncodePacket[nPos2] = '\0';
+
+				fnMakeDefMessageA(&DefMsg, SM_SELECTSERVER_OK, DEFBLOCKSIZE+nPos2, pUserInfo->nCertification, 0, 0);
+				int nPos = fnEncodeMessageA(&DefMsg, szEncodeMsg, sizeof(szEncodePacket));
+				szEncodeMsg[nPos] = '\0';
 
 				memmove(szEncodeAllPacket, szEncodeMsg, nPos);
 				memmove(&szEncodeAllPacket[nPos], szEncodePacket, nPos2);
@@ -466,7 +468,7 @@ void CGateInfo::ProcAddUser(SOCKET s, char *pszData)
 	char *token = strtok( szEntryInfo, seps );
 
 	if ( !ParseUserEntry( szEntryInfo, &UserEntryInfo ) )
-		fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, 0, 0, 0, 0);
+		fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE, 0, 0, 0);
 	else
 	{	
 		char szQuery[1024];
@@ -477,10 +479,10 @@ void CGateInfo::ProcAddUser(SOCKET s, char *pszData)
 		CRecordset *pRec = GetDBManager()->CreateRecordset();
 
 		if (!pRec->Execute( szQuery ))
-			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, 0, 0, 0, 0);
+			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE, 0, 0, 0);
 
 		if ( pRec->Fetch() )
-			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, 0, 0, 0, 0);
+			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE, 0, 0, 0);
 		else
 		{
 			GetDBManager()->DestroyRecordset( pRec );
@@ -518,7 +520,7 @@ void CGateInfo::ProcAddUser(SOCKET s, char *pszData)
 
 		GetDBManager()->DestroyRecordset( pRec );
 				
-		fnMakeDefMessageA(&DefMsg, SM_NEWID_SUCCESS, 0, 0, 0, 0);
+		fnMakeDefMessageA(&DefMsg, SM_NEWID_SUCCESS, DEFBLOCKSIZE, 0, 0, 0);
 	
 		TCHAR szID[32];
 		MultiByteToWideChar( CP_ACP, 0, UserEntryInfo.szLoginID, -1, szID, sizeof( szID ) / sizeof( TCHAR ) );
@@ -573,9 +575,9 @@ void CGateInfo::ProcLogin(SOCKET s, char *pszData)
 				CRecordset *pRec = GetDBManager()->CreateRecordset();
 
 				if ( !pRec->Execute( szQuery ) || !pRec->Fetch() )
-					fnMakeDefMessageA( &DefMsg, SM_LOGIN, 0, SM_RE_ID_NOTFOUND, 0, 0 );
+					fnMakeDefMessageA( &DefMsg, SM_LOGIN, DEFBLOCKSIZE, SM_RE_ID_NOTFOUND, 0, 0 );
 				else if ( CompareDBString( pszPassword, pRec->Get( "FLD_PASSWORD" ) ) != 0 )
-					fnMakeDefMessageA( &DefMsg, SM_LOGIN, 0, SM_RE_ID_WRONGPASS, 0, 0 );
+					fnMakeDefMessageA( &DefMsg, SM_LOGIN, DEFBLOCKSIZE, SM_RE_ID_WRONGPASS, 0, 0 );
 				else
 				{
 					int nCertCode = atoi( pRec->Get( "FLD_CERTIFICATION" ) );
@@ -589,12 +591,12 @@ void CGateInfo::ProcLogin(SOCKET s, char *pszData)
 						char szEncodeServerList[512];
 						char szEncodeAllPacket[1024];
 						
-						fnMakeDefMessageA(&DefMsg, SM_PASSOK_SELECTSERVER, 0, 1, 0, 0);		
-						nPos = fnEncodeMessageA(&DefMsg, szEncodePacket, sizeof(szEncodePacket));
-						szEncodePacket[nPos] = '\0';
-						
 						int nPos2 = fnEncode6BitBufA((unsigned char *)g_szServerList, szEncodeServerList, memlen(g_szServerList), sizeof(szEncodeServerList));
 						szEncodeServerList[nPos2] = '\0';
+
+						fnMakeDefMessageA(&DefMsg, SM_PASSOK_SELECTSERVER, DEFBLOCKSIZE+ nPos2, 1, 0, 0);
+						nPos = fnEncodeMessageA(&DefMsg, szEncodePacket, sizeof(szEncodePacket));
+						szEncodePacket[nPos] = '\0';
 						
 						memmove(szEncodeAllPacket, szEncodePacket, nPos);
 						memmove(&szEncodeAllPacket[nPos], szEncodeServerList, memlen(szEncodeServerList));

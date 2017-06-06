@@ -39,7 +39,7 @@ UINT WINAPI ThreadFuncForMsg(LPVOID lpParameter)
 								{
 									*pszEnd = '\0';
 
-									fnDecodeMessageA(&DefaultMsg, (pszBegin + 4));	// 2 = "#?" ? = Check Code //new c#client 3="#|(short)packet size encode =3bytes"
+									fnDecodeMessageA(&DefaultMsg, (pszBegin + 1));	// 2 = "#?" ? = Check Code //new c#client 3="#|def packet size encode "
 
 									switch (DefaultMsg.wIdent)
 									{
@@ -49,7 +49,7 @@ UINT WINAPI ThreadFuncForMsg(LPVOID lpParameter)
 											pGateInfo->ReceiveClientInfo(pSendBuff->sock);
 											break;
 										case CM_IDPASSWORD:case CM_LOGIN:
-											pGateInfo->ProcLogin(pSendBuff->sock, pszBegin + 8);//DEFBLOCKSIZE-1 );
+											pGateInfo->ProcLogin(pSendBuff->sock, pszBegin + DEFBLOCKSIZE);
 											break;
 										case CM_SELECTSERVER:
 											pGateInfo->ProcSelectServer(pSendBuff->sock, DefaultMsg.wParam);
