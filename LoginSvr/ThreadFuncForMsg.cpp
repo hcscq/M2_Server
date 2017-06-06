@@ -49,7 +49,7 @@ UINT WINAPI ThreadFuncForMsg(LPVOID lpParameter)
 											pGateInfo->ReceiveClientInfo(pSendBuff->sock);
 											break;
 										case CM_IDPASSWORD:case CM_LOGIN:
-											pGateInfo->ProcLogin(pSendBuff->sock, pszBegin + DEFBLOCKSIZE);
+											pGateInfo->ProcLogin(pSendBuff->sock, pszBegin + DEFBLOCKSIZE+1);
 											break;
 										case CM_SELECTSERVER:
 											pGateInfo->ProcSelectServer(pSendBuff->sock, DefaultMsg.wParam);
