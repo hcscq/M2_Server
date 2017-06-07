@@ -2,10 +2,11 @@
 #ifndef _LEGENDOFMIR_ENDECODE
 #define _LEGENDOFMIR_ENDECODE
 
-#define _DEFBLOCKSIZE		16
+#define _DEFBLOCKSIZE		22
 
 typedef struct tag_TDEFAULTMESSAGE
 {
+	int		nLen;
 	int		nRecog;
 	WORD	wIdent;
 	WORD	wParam;
@@ -65,7 +66,9 @@ int  WINAPI fnEncodeMessageA(_LPTDEFAULTMESSAGE lptdm, char *pszBuf, int nLen);
 __inline void  WINAPI fnDecodeMessageA(_LPTDEFAULTMESSAGE lptdm, char *pszBuf)
 	{ fnDecode6BitBufA(pszBuf, (char *)lptdm, sizeof(_TDEFAULTMESSAGE)); }
 
-__inline void WINAPI fnMakeDefMessageA(_LPTDEFAULTMESSAGE lptdm, WORD wIdent, int nRecog, WORD wParam, WORD wTag, WORD wSeries)
-	{ lptdm->wIdent	= wIdent; lptdm->nRecog	= nRecog; lptdm->wParam	= wParam; lptdm->wTag = wTag; lptdm->wSeries = wSeries; }
+__inline void WINAPI fnMakeDefMessageA(_LPTDEFAULTMESSAGE lptdm, WORD wIdent,int nLen, int nRecog, WORD wParam, WORD wTag, WORD wSeries)
+{
+	lptdm->wIdent = wIdent; lptdm->nLen = nLen; lptdm->nRecog = nRecog; lptdm->wParam = wParam; lptdm->wTag = wTag; lptdm->wSeries = wSeries;
+}
 
 #endif //_LEGENDOFMIR_ENDECODE

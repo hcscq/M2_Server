@@ -158,14 +158,14 @@ void CGateInfo::MakeNewUser(char *pszPacket)
 
 			CRecordset *pRec = GetDBManager()->CreateRecordset();
 			if ( pRec->Execute( szQuery ) && pRec->GetRowCount() )
-				fnMakeDefMessageA( &DefMsg, SM_NEWID_SUCCESS, 0, 0, 0, 0 );
+				fnMakeDefMessageA( &DefMsg, SM_NEWID_SUCCESS,0, 0, 0, 0, 0 );
 			else
-				fnMakeDefMessageA( &DefMsg, SM_NEWID_FAIL, 0, 0, 0, 0 );
+				fnMakeDefMessageA( &DefMsg, SM_NEWID_FAIL,0, 0, 0, 0, 0 );
 			GetDBManager()->DestroyRecordset( pRec );
 			// -----------------------------------------------------------------------------------
 		}
 		else
-			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, 0, 0, 0, 0);
+			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL,0, 0, 0, 0, 0);
 
 		fnEncodeMessageA(&DefMsg, szEncodeMsg, sizeof(szEncodeMsg));
 
@@ -218,7 +218,7 @@ void CGateInfo::ReceiveClientInfo(int nSocket)
 	* 0: Wrong Version
 	* 1: Correct Version
 	*/
-	fnMakeDefMessageA(&DefMsg, SM_CLIENTVERSION, DEFBLOCKSIZE, 1, 0, 0);
+	fnMakeDefMessageA(&DefMsg, SM_CLIENTVERSION, DEFBLOCKSIZE,0, 1, 0, 0);
 	nPos = fnEncodeMessageA(&DefMsg, szEncodePacket, sizeof(szEncodePacket));
 	szEncodePacket[nPos] = '\0';
 
@@ -258,7 +258,7 @@ void CGateInfo::ReceiveOpenUser(char *pszPacket)
 
 			InsertLogMsgParam(IDS_OPEN_USER, pUserInfo->szAddress);
 
-			fnMakeDefMessageA(&DefMsg, SM_CONNECTED, DEFBLOCKSIZE, 0, 0, 0);
+			fnMakeDefMessageA(&DefMsg, SM_CONNECTED, DEFBLOCKSIZE,0, 0, 0, 0);
 			nPos = fnEncodeMessageA(&DefMsg, szEncodePacket, sizeof(szEncodePacket));
 			szEncodePacket[nPos] = '\0';
 
@@ -280,6 +280,19 @@ void CGateInfo::ReceiveOpenUser(char *pszPacket)
 void CGateInfo::ReceiveCloseUser(char *pszPacket)
 {
 	int nSocket = AnsiStrToVal(pszPacket);
+	PLISTNODE pListNode = xUserInfoList.GetHead();
+	CUserInfo *pUserInfo;
+	while (pListNode)
+	{
+		pUserInfo = xUserInfoList.GetData(pListNode);
+		if (pUserInfo->sock != nSocket)
+		{
+			InsertLogMsgParam(IDS_CLOSE_USER, pUserInfo->szAddress);
+			xUserInfoList.RemoveNode(pListNode);
+			return;
+		}
+		pListNode = xUserInfoList.GetNext(pListNode);
+	}
 }
 
 /* **************************************************************************************
@@ -368,7 +381,7 @@ void CGateInfo::ProcSelectServer(SOCKET s, WORD wServerIndex)
 				int nPos2 = fnEncode6BitBufA((unsigned char *)pServerIP, szEncodePacket, memlen(pServerIP), sizeof(szEncodePacket));
 				szEncodePacket[nPos2] = '\0';
 
-				fnMakeDefMessageA(&DefMsg, SM_SELECTSERVER_OK, DEFBLOCKSIZE+nPos2, pUserInfo->nCertification, 0, 0);
+				fnMakeDefMessageA(&DefMsg, SM_SELECTSERVER_OK, DEFBLOCKSIZE+nPos2, 0,pUserInfo->nCertification, 0, 0);
 				int nPos = fnEncodeMessageA(&DefMsg, szEncodeMsg, sizeof(szEncodePacket));
 				szEncodeMsg[nPos] = '\0';
 
@@ -468,7 +481,7 @@ void CGateInfo::ProcAddUser(SOCKET s, char *pszData)
 	char *token = strtok( szEntryInfo, seps );
 
 	if ( !ParseUserEntry( szEntryInfo, &UserEntryInfo ) )
-		fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE, 0, 0, 0);
+		fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE,0, 0, 0, 0);
 	else
 	{	
 		char szQuery[1024];
@@ -479,10 +492,10 @@ void CGateInfo::ProcAddUser(SOCKET s, char *pszData)
 		CRecordset *pRec = GetDBManager()->CreateRecordset();
 
 		if (!pRec->Execute( szQuery ))
-			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE, 0, 0, 0);
+			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE,0, 0, 0, 0);
 
 		if ( pRec->Fetch() )
-			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE, 0, 0, 0);
+			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE,0, 0, 0, 0);
 		else
 		{
 			GetDBManager()->DestroyRecordset( pRec );
@@ -520,7 +533,7 @@ void CGateInfo::ProcAddUser(SOCKET s, char *pszData)
 
 		GetDBManager()->DestroyRecordset( pRec );
 				
-		fnMakeDefMessageA(&DefMsg, SM_NEWID_SUCCESS, DEFBLOCKSIZE, 0, 0, 0);
+		fnMakeDefMessageA(&DefMsg, SM_NEWID_SUCCESS, DEFBLOCKSIZE,0, 0, 0, 0);
 	
 		TCHAR szID[32];
 		MultiByteToWideChar( CP_ACP, 0, UserEntryInfo.szLoginID, -1, szID, sizeof( szID ) / sizeof( TCHAR ) );
@@ -575,18 +588,18 @@ void CGateInfo::ProcLogin(SOCKET s, char *pszData)
 				CRecordset *pRec = GetDBManager()->CreateRecordset();
 
 				if ( !pRec->Execute( szQuery ) || !pRec->Fetch() )
-					fnMakeDefMessageA( &DefMsg, SM_LOGIN, DEFBLOCKSIZE, SM_RE_ID_NOTFOUND, 0, 0 );
+					fnMakeDefMessageA( &DefMsg, SM_LOGIN, DEFBLOCKSIZE,0, SM_RE_ID_NOTFOUND, 0, 0 );
 				else if ( CompareDBString( pszPassword, pRec->Get( "FLD_PASSWORD" ) ) != 0 )
-					fnMakeDefMessageA( &DefMsg, SM_LOGIN, DEFBLOCKSIZE, SM_RE_ID_WRONGPASS, 0, 0 );
+					fnMakeDefMessageA( &DefMsg, SM_LOGIN, DEFBLOCKSIZE, 0,SM_RE_ID_WRONGPASS, 0, 0 );
 				else
 				{
 					int nCertCode = atoi( pRec->Get( "FLD_CERTIFICATION" ) );
-		/*
+		
 					if ( nCertCode > 0 && nCertCode < 30 )
-						fnMakeDefMessageA(&DefMsg, SM_CERTIFICATION_FAIL, (nCertCode + 1), 0, 0, 0);
+						fnMakeDefMessageA(&DefMsg, SM_CERTIFICATION_FAIL,DEFBLOCKSIZE, (nCertCode + 1), 0, 0, 0);
 					else if ( nCertCode >= 30 )
-						fnMakeDefMessageA(&DefMsg, SM_CERTIFICATION_FAIL, 1, 0, 0, 0);
-					else*/
+						fnMakeDefMessageA(&DefMsg, SM_CERTIFICATION_FAIL, DEFBLOCKSIZE, 1, 0, 0, 0);
+					else
 					{
 						char szEncodeServerList[512];
 						char szEncodeAllPacket[1024];
@@ -594,7 +607,7 @@ void CGateInfo::ProcLogin(SOCKET s, char *pszData)
 						int nPos2 = fnEncode6BitBufA((unsigned char *)g_szServerList, szEncodeServerList, memlen(g_szServerList), sizeof(szEncodeServerList));
 						szEncodeServerList[nPos2] = '\0';
 
-						fnMakeDefMessageA(&DefMsg, SM_PASSOK_SELECTSERVER, DEFBLOCKSIZE+ nPos2, 1, 0, 0);
+						fnMakeDefMessageA(&DefMsg, SM_PASSOK_SELECTSERVER, DEFBLOCKSIZE + nPos2,0, 1, 0, 0);
 						nPos = fnEncodeMessageA(&DefMsg, szEncodePacket, sizeof(szEncodePacket));
 						szEncodePacket[nPos] = '\0';
 						
@@ -607,13 +620,13 @@ void CGateInfo::ProcLogin(SOCKET s, char *pszData)
 
 						pUserInfo->nCertification = GetCertification();
 
-		//				pRec = GetDBManager()->CreateRecordset();
-		//				sprintf( szQuery, 
-		//					"UPDATE TBL_ACCOUNT SET FLD_CERTIFICATION=%d WHERE FLD_LOGINID='%s'",
-		//					GetCertification(), pszID );
-		//				pRec->Execute( szQuery );
+						pRec = GetDBManager()->CreateRecordset();
+						sprintf( szQuery, 
+							"UPDATE TBL_ACCOUNT SET FLD_CERTIFICATION=%d WHERE FLD_LOGINID='%s'",
+							GetCertification(), pszID );
+						pRec->Execute( szQuery );
 						
-		//				GetDBManager()->DestroyRecordset( pRec );
+						GetDBManager()->DestroyRecordset( pRec );
 
 						return;
 					}

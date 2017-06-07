@@ -152,9 +152,10 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 		
 		if (nCnt > 0 && nCnt < 3)
 		{
-			fnMakeDefMessageA(&DefaultMsg, SM_QUERYCHR, 0, nCnt, 0, 0);
-			nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
+
 			int nPos2 = fnEncode6BitBufA((unsigned char *)tQueryChr, szEncodeData, sizeof(_TQUERYCHR) * nCnt, sizeof(szEncodeData));
+			fnMakeDefMessageA(&DefaultMsg, SM_QUERYCHR, DEFBLOCKSIZE+nPos2,0, nCnt, 0, 0);
+			nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 			
 			memmove(szEncodePacket, szEncodeMsg, nPos);
 			memmove(&szEncodePacket[nPos], szEncodeData, nPos2);
@@ -164,7 +165,7 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 		}
 		else
 		{
-			fnMakeDefMessageA(&DefaultMsg, SM_QUERYCHR_FAIL, 0, 0, 0, 0);
+			fnMakeDefMessageA(&DefaultMsg, SM_QUERYCHR_FAIL, DEFBLOCKSIZE,0, 0, 0, 0);
 			nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 			szEncodeMsg[nPos] = '\0';
 			
@@ -204,7 +205,7 @@ void CGateInfo::DeleteExistCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 	pRec->Execute( szQuery );
 	GetDBManager()->DestroyRecordset( pRec );
 
-	fnMakeDefMessageA(&DefaultMsg, SM_DELCHR_SUCCESS, 0, 4, 0, 0);
+	fnMakeDefMessageA(&DefaultMsg, SM_DELCHR_SUCCESS, DEFBLOCKSIZE,0, 4, 0, 0);
 	int nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 	szEncodeMsg[nPos] = '\0';
 	
@@ -227,7 +228,7 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 
 	if (pRec->Fetch())
 	{
-		fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_FAIL, 0, 1, 0, 0);
+		fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_FAIL,DEFBLOCKSIZE, 0, 1, 0, 0);
 		nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 		szEncodeMsg[nPos] = '\0';
 		
@@ -248,7 +249,7 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 	{
 		if (atoi(pRec->Get( "FLD_COUNT" )) >= 3)
 		{
-			fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_FAIL, 0, 3, 0, 0);
+			fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_FAIL,DEFBLOCKSIZE, 0, 3, 0, 0);
 			nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 			szEncodeMsg[nPos] = '\0';
 			
@@ -310,7 +311,7 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 		makeItem.nDuraMax	= 4000;
 		MakeNewItem( NULL, &human, &makeItem, 0 );
 		
-		fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_SUCCESS, 0, 0, 0, 0);
+		fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_SUCCESS,DEFBLOCKSIZE, 0, 0, 0, 0);
 		nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 		szEncodeMsg[nPos] = '\0';
 		
@@ -319,7 +320,7 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 		return;
 	}
 
-	fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_FAIL, 0, 4, 0, 0);
+	fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_FAIL, DEFBLOCKSIZE,0, 4, 0, 0);
 	nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 	szEncodeMsg[nPos] = '\0';
 	
@@ -384,10 +385,12 @@ void CGateInfo::GetSelectCharacter(SOCKET s, char *pszPacket)
 
 		GetLoadHumanRcd(pServerInfo, &tLoadHuman, 0);
 
-		fnMakeDefMessageA(&DefaultMsg, SM_STARTPLAY, 0, 0, 0, 0);
-		nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
+
 		int nPos2 = fnEncode6BitBufA((unsigned char *)szServerIP, szEncodeData, memlen(szServerIP) -1, sizeof(szEncodeData));
 		
+		fnMakeDefMessageA(&DefaultMsg, SM_STARTPLAY,DEFBLOCKSIZE+nPos2 , 0, 0, 0, 0);
+		nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
+
 		memmove(szEncodePacket, szEncodeMsg, nPos);
 		memmove(&szEncodePacket[nPos], szEncodeData, nPos2);
 		szEncodePacket[nPos + nPos2] = '\0';

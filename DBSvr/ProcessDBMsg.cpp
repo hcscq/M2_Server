@@ -244,12 +244,7 @@ void GetLoadHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, int nR
 		if (nCount)
 			nHorse = GetHorseRcd(lpLoadHuman->szCharName, &tHorseRcd);	// Fetch Horse Data
 
-		if (nRecog)
-			fnMakeDefMessageA(&DefMsg, DBR_LOADHUMANRCD, nRecog, MAKEWORD(nCount, nItemCount), nHorse, nMagicCount);
-		else
-			fnMakeDefMessageA(&DefMsg, DBR_LOADHUMANRCD2, nRecog, MAKEWORD(nCount, nItemCount), nHorse, nMagicCount);
 
-		fnEncodeMessageA(&DefMsg, szEncodeMsg1, sizeof(szEncodeMsg1));
 		
 		int nPos = fnEncode6BitBufA((unsigned char *)&tHumanRcd, szEncodeMsg2, sizeof(_THUMANRCD), sizeof(szEncodeMsg2));
 		
@@ -317,12 +312,19 @@ void GetLoadHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, int nR
 		}
 		
 		szEncodeMsg2[nPos] = '\0';
+
+		if (nRecog)
+			fnMakeDefMessageA(&DefMsg, DBR_LOADHUMANRCD,DEFBLOCKSIZE+ nPos,nRecog, MAKEWORD(nCount, nItemCount), nHorse, nMagicCount);
+		else
+			fnMakeDefMessageA(&DefMsg, DBR_LOADHUMANRCD2, DEFBLOCKSIZE + nPos, nRecog, MAKEWORD(nCount, nItemCount), nHorse, nMagicCount);
+
+		fnEncodeMessageA(&DefMsg, szEncodeMsg1, sizeof(szEncodeMsg1));
 		
 		SendSocket(pServerInfo->m_sock, lpLoadHuman->nCertification, szEncodeMsg1, szEncodeMsg2, nPos);
 	}
 	else
 	{
-		fnMakeDefMessageA(&DefMsg, DBR_FAIL, nRecog, 0, 0, 0);
+		fnMakeDefMessageA(&DefMsg, DBR_FAIL,DEFBLOCKSIZE, nRecog, 0, 0, 0);
 		fnEncodeMessageA(&DefMsg, szEncodeMsg1, sizeof(szEncodeMsg1));
 		
 		SendSocket(pServerInfo->m_sock, lpLoadHuman->nCertification, szEncodeMsg1, "Test", 4);
@@ -517,12 +519,7 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 		char				szEncodeMsg2[128];
 		int					nPos = 0;
 		
-		if (lpHumanLoad)
-			fnMakeDefMessageA(&DefMsg, DBR_MAKEITEMRCD, nRecog, 0, 0, 0);
-		else
-			fnMakeDefMessageA(&DefMsg, DBR_MAKEITEMRCD2, nRecog, 0, 0, 0);
 
-		fnEncodeMessageA(&DefMsg, szEncodeMsg1, sizeof(szEncodeMsg1));
 		
 		UserItemRcd.szMakeIndex[0] = lpMakeItemRcd->szStdType;
 		
@@ -532,7 +529,14 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 		memcpy(&UserItemRcd.nStdIndex, &lpMakeItemRcd->nStdIndex, sizeof(_TUSERITEMRCD) - sizeof(UserItemRcd.szMakeIndex));
 		
 		nPos = fnEncode6BitBufA((unsigned char *)&UserItemRcd, szEncodeMsg2, sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg2));
-		
+
+		if (lpHumanLoad)
+			fnMakeDefMessageA(&DefMsg, DBR_MAKEITEMRCD, DEFBLOCKSIZE+nPos,nRecog, 0, 0, 0);
+		else
+			fnMakeDefMessageA(&DefMsg, DBR_MAKEITEMRCD2, DEFBLOCKSIZE + nPos,nRecog, 0, 0, 0);
+
+		fnEncodeMessageA(&DefMsg, szEncodeMsg1, sizeof(szEncodeMsg1));
+
 		SendSocket(pServerInfo->m_sock, 2, szEncodeMsg1, szEncodeMsg2, nPos);		
 	}
 
