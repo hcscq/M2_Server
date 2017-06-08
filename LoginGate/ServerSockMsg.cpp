@@ -160,6 +160,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 
 		if (dwBytesTransferred == 0)
 		{
+
 			szMsg[0] = '%';
 			szMsg[1] = 'X';
 

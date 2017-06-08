@@ -127,6 +127,9 @@ UINT WINAPI LoadAccountRecords(LPVOID lpParameter)
 		sprintf( szTmp, "%d,%s,", pServerInfo->index, pServerInfo->name );
 		strcat( g_szServerList, szTmp );
 	}
+	int nLen = memlen(g_szServerList);
+	if (nLen)
+		g_szServerList[nLen-2] = '\0';
 	// ----------------------------------------------------------------------------------------
 
 	InitServerThreadForMsg();

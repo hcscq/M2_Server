@@ -244,13 +244,13 @@ void CGateInfo::ReceiveOpenUser(char *pszPacket)
 
 		if (pUserInfo)
 		{
-			MultiByteToWideChar(CP_ACP, 0, pszPacket, -1, pUserInfo->szSockHandle, sizeof(pUserInfo->szSockHandle)/sizeof(TCHAR));
-			MultiByteToWideChar(CP_ACP, 0, pszPos, -1, pUserInfo->szAddress, sizeof(pUserInfo->szAddress)/sizeof(TCHAR));
+			MultiByteToWideChar(CP_ACP, 0, pszPacket, -1, pUserInfo->szSockHandle, sizeof(pUserInfo->szSockHandle) / sizeof(TCHAR));
+			MultiByteToWideChar(CP_ACP, 0, pszPos, -1, pUserInfo->szAddress, sizeof(pUserInfo->szAddress) / sizeof(TCHAR));
 
-			pUserInfo->sock					= nSocket;
-			pUserInfo->nCertification		= 0;
-			pUserInfo->nClientVersion		= 0;
-			pUserInfo->fSelServerOk			= FALSE;
+			pUserInfo->sock = nSocket;
+			pUserInfo->nCertification = 0;
+			pUserInfo->nClientVersion = 0;
+			pUserInfo->fSelServerOk = FALSE;
 
 			ZeroMemory(pUserInfo->szUserID, sizeof(pUserInfo->szUserID));
 
@@ -264,7 +264,7 @@ void CGateInfo::ReceiveOpenUser(char *pszPacket)
 
 			SendToGate(nSocket, szEncodePacket);
 		}
-	} 
+	}
 }
 
 /* **************************************************************************************
@@ -315,9 +315,6 @@ void CGateInfo::ReceiveSendUser(char *pszPacket)
 	{
 		nSocket = AnsiStrToVal(pszPacket);
 
-		//			TCHAR szGateIP[256];
-		//	wsprintf(szGateIP, _T("%d"), ((int) nSocket));
-		//MessageBox(NULL,szGateIP,_T("µÇÂ½·þÎñÆ÷"),MB_OKCANCEL);
 		pszPos++;
 
 		_LPTSENDBUFF lpSendUserData = new _TSENDBUFF;
@@ -603,7 +600,7 @@ void CGateInfo::ProcLogin(SOCKET s, char *pszData)
 					{
 						char szEncodeServerList[512];
 						char szEncodeAllPacket[1024];
-						
+
 						int nPos2 = fnEncode6BitBufA((unsigned char *)g_szServerList, szEncodeServerList, memlen(g_szServerList), sizeof(szEncodeServerList));
 						szEncodeServerList[nPos2] = '\0';
 
