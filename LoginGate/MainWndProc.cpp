@@ -138,8 +138,13 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 				g_hMsgThread = INVALID_HANDLE_VALUE;
 			}
 */
+			closesocket(g_csock);
+			closesocket(g_ssock);
 			ClearSocket(g_ssock);
 			ClearSocket(g_csock);
+
+			g_ssock = INVALID_SOCKET;
+			g_csock = INVALID_SOCKET;
 
 			CloseHandle(g_hIOCP);
 
