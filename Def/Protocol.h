@@ -457,9 +457,11 @@ typedef struct tag_TCLIENTITEMRCD
 
 typedef struct tag_TQUERYCHR
 {
+	BYTE		btIndex;
+	USHORT		btLevel;
 	BYTE		btClass;
 	BYTE		btGender;
-	BYTE		btLevel;
+	DATE		dateLastAccessTime;
 	char		szName[20];
 } _TQUERYCHR,*_LPTQUERYCHR;
 

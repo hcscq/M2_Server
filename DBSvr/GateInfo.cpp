@@ -134,9 +134,12 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 		{
 			while (pRec->Fetch() && nCnt < 3)
 			{
+				tQueryChr[nCnt].btIndex = atoi(pRec->Get("FLD_Index"));
 				tQueryChr[nCnt].btClass	 = atoi( pRec->Get( "FLD_JOB" ) );
 				tQueryChr[nCnt].btGender = atoi( pRec->Get( "FLD_GENDER" ) );
+				tQueryChr[nCnt].btLevel = atoi(pRec->Get("FLD_LEVEL"));
 				strcpy( tQueryChr[nCnt].szName, pRec->Get( "FLD_CHARNAME" ) );
+				tQueryChr[nCnt].dateLastAccessTime=atof(pRec->Get("FLD_LASTACCESSTIME"));
 				ChangeSpaceToNull( tQueryChr[nCnt].szName );
 
 				nCnt++;
