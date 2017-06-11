@@ -114,6 +114,7 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 	char				szDecodeMsg[128];
 	int					nCnt = 0;
 	char				szQuery[256];
+	char				szCnt[6];
 
 	ZeroMemory(tQueryChr, sizeof(tQueryChr));
 
@@ -155,14 +156,15 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 		
 		if (nCnt > 0 && nCnt < 3)
 		{
-
+			fnEncode6BitBufA((unsigned char *)nCnt, szCnt, sizeof(int) * nCnt, sizeof(szCnt));
 			int nPos2 = fnEncode6BitBufA((unsigned char *)tQueryChr, szEncodeData, sizeof(_TQUERYCHR) * nCnt, sizeof(szEncodeData));
-			fnMakeDefMessageA(&DefaultMsg, SM_QUERYCHR, DEFBLOCKSIZE+nPos2,0, nCnt, 0, 0);
+			fnMakeDefMessageA(&DefaultMsg, SM_QUERYCHR, DEFBLOCKSIZE+nPos2+6,0, nCnt, 0, 0);
 			nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 			
 			memmove(szEncodePacket, szEncodeMsg, nPos);
-			memmove(&szEncodePacket[nPos], szEncodeData, nPos2);
-			szEncodePacket[nPos + nPos2] = '\0';
+			memmove(szEncodePacket, szCnt, nPos);
+			memmove(&szEncodePacket[nPos+6], szEncodeData, nPos2);
+			szEncodePacket[nPos + nPos2+6] = '\0';
 				
 			SendToGate(s, szEncodePacket);
 		}

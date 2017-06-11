@@ -145,8 +145,10 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 		case IDM_STOPSERVICE:
 		{
 			g_fTerminated = TRUE;
+			closesocket(g_ssock);
 			if(ClearSocket(g_ssock))
 				InsertLogMsg( _T("端口:6000已关闭.\n") );;
+			closesocket(g_gssock);
 			if(ClearSocket(g_gssock))
 				InsertLogMsg( _T("端口:5100已关闭.\n") );;
 			SwitchMenuItem(FALSE);

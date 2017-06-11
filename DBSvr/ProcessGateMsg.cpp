@@ -39,12 +39,12 @@ UINT WINAPI ProcessGateMsg(LPVOID lpParameter)
 								{
 									*pszEnd = '\0';
 
-									fnDecodeMessageA(&DefaultMsg, (pszBegin + 2));	// 2 = "#?" ? = Check Code 
+									fnDecodeMessageA(&DefaultMsg, (pszBegin + 1));	// 2 = "#?" ? = Check Code 
 
 									switch (DefaultMsg.wIdent)
 									{
 										case CM_QUERYCHR:
-											pGateInfo->QueryCharacter(pSendBuff->sock, (pszBegin + _DEFBLOCKSIZE + 2));
+											pGateInfo->QueryCharacter(pSendBuff->sock, (pszBegin + _DEFBLOCKSIZE + 1));
 											break;
 										case CM_NEWCHR:
 											fnDecode6BitBufA((pszBegin + _DEFBLOCKSIZE + 2), (char *)&tCreateChr, sizeof(_TCREATECHR));

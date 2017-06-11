@@ -375,6 +375,7 @@ void CGateInfo::ProcSelectServer(SOCKET s, WORD wServerIndex)
 
 				pUserInfo->nServerID = wServerIndex;
 
+				ChangeSpaceToNull(pServerIP);
 				int nPos2 = fnEncode6BitBufA((unsigned char *)pServerIP, szEncodePacket, memlen(pServerIP), sizeof(szEncodePacket));
 				szEncodePacket[nPos2] = '\0';
 
