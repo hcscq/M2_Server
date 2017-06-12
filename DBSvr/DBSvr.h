@@ -56,7 +56,7 @@ public:
 	void	ReceiveSendUser(char *pszPacket);
 
 	void	QueryCharacter(SOCKET s, char *pszPacket);
-	void	DeleteExistCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr);
+	void	DeleteExistCharacter(SOCKET s, _LPTDELCHR lpTCreateChr);
 	void	MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr);
 	void	GetSelectCharacter(SOCKET s, char *pszPacket);
 

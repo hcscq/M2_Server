@@ -8,6 +8,7 @@ UINT WINAPI ProcessGateMsg(LPVOID lpParameter)
 	char				*pszBegin, *pszEnd;
 	int					nCount;
 	_TCREATECHR			tCreateChr;
+	_TDELCHR			tDelChr;
 	PLISTNODE			pListNode;
 	CGateInfo*			pGateInfo;
 				
@@ -47,12 +48,12 @@ UINT WINAPI ProcessGateMsg(LPVOID lpParameter)
 											pGateInfo->QueryCharacter(pSendBuff->sock, (pszBegin + _DEFBLOCKSIZE + 1));
 											break;
 										case CM_NEWCHR:
-											fnDecode6BitBufA((pszBegin + _DEFBLOCKSIZE + 2), (char *)&tCreateChr, sizeof(_TCREATECHR));
+											fnDecode6BitBufA((pszBegin + _DEFBLOCKSIZE + 1), (char *)&tCreateChr, sizeof(_TCREATECHR));
 											pGateInfo->MakeNewCharacter(pSendBuff->sock, &tCreateChr);
 											break;
 										case CM_DELCHR:
-											fnDecode6BitBufA((pszBegin + _DEFBLOCKSIZE + 2), (char *)&tCreateChr, sizeof(_TCREATECHR));
-											pGateInfo->DeleteExistCharacter(pSendBuff->sock, &tCreateChr);
+											fnDecode6BitBufA((pszBegin + _DEFBLOCKSIZE + 1), (char *)&tDelChr, sizeof(_TCREATECHR));
+											pGateInfo->DeleteExistCharacter(pSendBuff->sock, &tDelChr);
 											break;
 										case CM_SELCHR:
 											pGateInfo->GetSelectCharacter(pSendBuff->sock, (pszBegin + _DEFBLOCKSIZE + 2));

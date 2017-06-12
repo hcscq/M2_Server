@@ -179,32 +179,32 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 	}
 }
 
-void CGateInfo::DeleteExistCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
+void CGateInfo::DeleteExistCharacter(SOCKET s, _LPTDELCHR lpTDelChr)
 {
 	_TDEFAULTMESSAGE	DefaultMsg;
 	char				szEncodeMsg[32];
 	char				szQuery[256];
 	CRecordset			*pRec;
 
-	sprintf( szQuery, "DELETE FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_CHARNAME='%s'", lpTCreateChr->szID, lpTCreateChr->szName );
+	sprintf( szQuery, "DELETE FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_INDEX='%s'", lpTDelChr->szID, lpTDelChr->btIndex );
 
 	pRec = GetDBManager()->CreateRecordset();
 	pRec->Execute( szQuery );
 	GetDBManager()->DestroyRecordset( pRec );
 
-	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_GENITEM WHERE FLD_LOGINID='%s' AND FLD_CHARNAME='%s'", lpTCreateChr->szID, lpTCreateChr->szName );
+	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_GENITEM WHERE FLD_LOGINID='%s' AND FLD_INDEX='%s'", lpTDelChr->szID, lpTDelChr->btIndex);
 
 	pRec = GetDBManager()->CreateRecordset();
 	pRec->Execute( szQuery );
 	GetDBManager()->DestroyRecordset( pRec );
 
-	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_ITEM WHERE FLD_LOGINID='%s' AND FLD_CHARNAME='%s'", lpTCreateChr->szID, lpTCreateChr->szName );
+	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_ITEM WHERE FLD_LOGINID='%s' AND FLD_INDEX='%s'", lpTDelChr->szID, lpTDelChr->btIndex);
 
 	pRec = GetDBManager()->CreateRecordset();
 	pRec->Execute( szQuery );
 	GetDBManager()->DestroyRecordset( pRec );
 
-	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_MAGIC WHERE FLD_LOGINID='%s' AND FLD_CHARNAME='%s'", lpTCreateChr->szID, lpTCreateChr->szName );
+	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_MAGIC WHERE FLD_LOGINID='%s' AND FLD_INDEX='%s'", lpTDelChr->szID, lpTDelChr->btIndex);
 
 	pRec = GetDBManager()->CreateRecordset();
 	pRec->Execute( szQuery );
@@ -278,14 +278,14 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 						"FLD_ATTACKMODE, FLD_CX, FLD_CY, FLD_MAPNAME, FLD_GOLD, FLD_HAIR, "
 						"FLD_DRESS_ID, FLD_WEAPON_ID, FLD_LEFTHAND_ID, FLD_RIGHTHAND_ID, FLD_HELMET_ID, "
 						"FLD_NECKLACE_ID, FLD_ARMRINGL_ID, FLD_ARMRINGR_ID, FLD_RINGL_ID, "
-						"FLD_RINGR_ID, FLD_EXP) VALUES ( "
+						"FLD_RINGR_ID, FLD_EXP,FLD_INDEX) VALUES ( "
 						"'%s', '%s', %d, %d, 1, 4, "
 						"1, %d, %d, '%s', 0, 0, "
 						"'0', '0', '0', '0', '0', "
 						"'0', '0', '0', '0', "
-						"'0', 0 )",
+						"'0', 0,'%d' )",
 						lpTCreateChr->szID, lpTCreateChr->szName, lpTCreateChr->btClass, lpTCreateChr->btGender,
-						table->posX, table->posY, table->mapName);
+						table->posX, table->posY, table->mapName,lpTCreateChr->btIndex);
 		pRec->Execute( szQuery );
 		//DONE 2012 /6/29
 		sprintf(szQuery, "INSERT TBL_CHARACTER_GENITEM (FLD_LOGINID, FLD_CHARNAME, FLD_ITEMINDEX) VALUES ('%s', '%s', 'G00080008000')",

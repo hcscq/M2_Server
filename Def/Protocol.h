@@ -465,10 +465,19 @@ typedef struct tag_TQUERYCHR
 	char		szName[20];
 } _TQUERYCHR,*_LPTQUERYCHR;
 
-typedef struct tag_TCREATECHR : public tag_TQUERYCHR
+typedef struct tag_TCREATECHR 
 {
+	BYTE		btIndex;
+	BYTE		btClass;
+	BYTE		btGender;
+	char		szName[20];
 	char		szID[20];
 } _TCREATECHR, *_LPTCREATECHR;
+typedef struct tag_TDELCHR 
+{
+	BYTE		btIndex;
+	char		szID[20];
+} _TDELCHR, *_LPTDELCHR;
 
 typedef struct tag_THORSERCD
 {
