@@ -210,7 +210,7 @@ void CGateInfo::DeleteExistCharacter(SOCKET s, _LPTDELCHR lpTDelChr)
 	pRec->Execute( szQuery );
 	GetDBManager()->DestroyRecordset( pRec );
 
-	fnMakeDefMessageA(&DefaultMsg, SM_DELCHR_SUCCESS, DEFBLOCKSIZE,0, 4, 0, 0);
+	fnMakeDefMessageA(&DefaultMsg, SM_DELCHR_SUCCESS, DEFBLOCKSIZE,0, lpTDelChr->btIndex, 0, 0);
 	int nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 	szEncodeMsg[nPos] = '\0';
 	
