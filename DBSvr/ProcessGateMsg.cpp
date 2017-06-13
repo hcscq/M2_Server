@@ -47,7 +47,7 @@ UINT WINAPI ProcessGateMsg(LPVOID lpParameter)
 										case CM_QUERYCHR:
 											pGateInfo->QueryCharacter(pSendBuff->sock, (pszBegin + _DEFBLOCKSIZE + 1));
 											break;
-										case CM_NEWCHR:
+										case CM_NEWCHR:case CM_NEWCHRA:
 											fnDecode6BitBufA((pszBegin + _DEFBLOCKSIZE + 1), (char *)&tCreateChr, sizeof(_TCREATECHR));
 											pGateInfo->MakeNewCharacter(pSendBuff->sock, &tCreateChr);
 											break;

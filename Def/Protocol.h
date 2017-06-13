@@ -52,7 +52,9 @@
 #define CM_NEWCHR				101
 #define CM_DELCHR				102
 #define CM_SELCHR				103
-
+/*.net client*/
+#define CM_NEWCHRA				6
+/*end*/
 #define	SM_QUERYCHR				520
 #define	SM_NEWCHR_SUCCESS		521
 #define	SM_NEWCHR_FAIL			522

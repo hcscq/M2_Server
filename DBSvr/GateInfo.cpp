@@ -224,7 +224,8 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 	char				szEncodeMsg[32];
 	int					nPos;
 	char				szQuery[2048];
-
+	ChangeSpaceToNull(lpTCreateChr->szName);
+	ChangeSpaceToNull(lpTCreateChr->szID);
 	sprintf( szQuery, "SELECT FLD_CHARNAME FROM TBL_CHARACTER WHERE FLD_CHARNAME='%s'", lpTCreateChr->szName );
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
