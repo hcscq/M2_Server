@@ -119,15 +119,16 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 	ZeroMemory(tQueryChr, sizeof(tQueryChr));
 
 	int nPos = fnDecode6BitBufA(pszPacket, szDecodeMsg, sizeof(szDecodeMsg));
-	szDecodeMsg[nPos] = '\0';
-
-	char *pszDevide = (char *)memchr(szDecodeMsg, '/', nPos);
 	
-	if (pszDevide)
-	{
-		*pszDevide++ = '\0';
 
-		sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_LOGINID='%s'", pszDevide );
+	//char *pszDevide = (char *)memchr(szDecodeMsg, '/', nPos);
+	
+	if (nPos>0)
+	{
+		szDecodeMsg[nPos] = '\0';
+		//*pszDevide++ = '\0';
+
+		sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_LOGINID='%s'", szDecodeMsg);
 
 		CRecordset *pRec = GetDBManager()->CreateRecordset();
 		
@@ -156,15 +157,15 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 		
 		if (nCnt > 0 && nCnt < 3)
 		{
-			fnEncode6BitBufA((unsigned char *)nCnt, szCnt, sizeof(int) * nCnt, sizeof(szCnt));
+			//fnEncode6BitBufA((unsigned char *)&nCnt, szCnt, sizeof(int), sizeof(szCnt));
 			int nPos2 = fnEncode6BitBufA((unsigned char *)tQueryChr, szEncodeData, sizeof(_TQUERYCHR) * nCnt, sizeof(szEncodeData));
-			fnMakeDefMessageA(&DefaultMsg, SM_QUERYCHR, DEFBLOCKSIZE+nPos2+6,0, nCnt, 0, 0);
+			fnMakeDefMessageA(&DefaultMsg, SM_QUERYCHR, DEFBLOCKSIZE+nPos2,0, nCnt, 0, 0);
 			nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 			
 			memmove(szEncodePacket, szEncodeMsg, nPos);
-			memmove(szEncodePacket, szCnt, nPos);
-			memmove(&szEncodePacket[nPos+6], szEncodeData, nPos2);
-			szEncodePacket[nPos + nPos2+6] = '\0';
+			//memmove(szEncodePacket, szCnt, nPos);
+			memmove(&szEncodePacket[nPos], szEncodeData, nPos2);
+			szEncodePacket[nPos + nPos2] = '\0';
 				
 			SendToGate(s, szEncodePacket);
 		}
@@ -224,8 +225,10 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 	char				szEncodeMsg[32];
 	int					nPos;
 	char				szQuery[2048];
-	ChangeSpaceToNull(lpTCreateChr->szName);
+	TCHAR				szName[20];
+	MultiByteToWideChar(CP_ACP, 0, lpTCreateChr->szName, -1, szName, sizeof(szName) / sizeof(TCHAR));
 	ChangeSpaceToNull(lpTCreateChr->szID);
+
 	sprintf( szQuery, "SELECT FLD_CHARNAME FROM TBL_CHARACTER WHERE FLD_CHARNAME='%s'", lpTCreateChr->szName );
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
@@ -301,8 +304,8 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 		memset( &makeItem, 0, sizeof( makeItem ) );
 
 		strcpy( human.szUserID, lpTCreateChr->szID );
-		strcpy( human.szCharName, lpTCreateChr->szName );
-
+		//strcpy( human.szCharName, lpTCreateChr->szName );
+		wcscpy(human.szCharName, szName);
 		// 평복 추가 (0: 남, 1: 여)
 		makeItem.szStdType	= 'B';
 		makeItem.nStdIndex	= lpTCreateChr->btGender ? 34 : 33;

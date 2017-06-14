@@ -39,7 +39,7 @@ void SendSocket(SOCKET s, int nCertification, char *pszData1, char *pszData2, in
 	send(s, szEncodeMsg, nSendLen, 0);
 }
 
-int GetHorseRcd(char *szName, _LPTHORSERCD lpTHorseRcd)
+int GetHorseRcd(TCHAR *szName, _LPTHORSERCD lpTHorseRcd)
 {
 	char szQuery[1024];
 	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER_HORSE WHERE FLD_CHARNAME='%s'", szName );
@@ -60,7 +60,7 @@ int GetHorseRcd(char *szName, _LPTHORSERCD lpTHorseRcd)
 	return 1;
 }
 
-void GetHumanGenItemRcd(char *szName, CWHList<_LPTGENITEMRCD>	*pxUserGenItemRcdList)
+void GetHumanGenItemRcd(TCHAR *szName, CWHList<_LPTGENITEMRCD>	*pxUserGenItemRcdList)
 {
 	char szQuery[128];
 
@@ -85,7 +85,7 @@ void GetHumanGenItemRcd(char *szName, CWHList<_LPTGENITEMRCD>	*pxUserGenItemRcdL
 	GetDBManager()->DestroyRecordset( pRec );
 }
 
-void GetHumanMagicRcd(char *szName, CWHList<_LPTHUMANMAGICRCD>	*pxUserMagicRcdList)
+void GetHumanMagicRcd(TCHAR *szName, CWHList<_LPTHUMANMAGICRCD>	*pxUserMagicRcdList)
 {
 	char szQuery[1024];
 
@@ -114,7 +114,7 @@ void GetHumanMagicRcd(char *szName, CWHList<_LPTHUMANMAGICRCD>	*pxUserMagicRcdLi
 	GetDBManager()->DestroyRecordset( pRec );
 }
 
-void GetHumanItemRcd(char *szName, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcdList)
+void GetHumanItemRcd(TCHAR *szName, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcdList)
 {
 	char szQuery[128];
 
@@ -158,7 +158,7 @@ void GetHumanItemRcd(char *szName, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcdList)
 	GetDBManager()->DestroyRecordset( pRec );
 }
 
-BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHuman)
+BOOL GetHumanRcd(TCHAR	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHuman)
 {
 	char szQuery[1024];
 
@@ -331,7 +331,7 @@ void GetLoadHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, int nR
 	}
 }
 
-char *SaveHumanMagicRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int nCount)
+char *SaveHumanMagicRcd(char *pszUserID, TCHAR *pszCharName, char *pszEncodeRcd, int nCount)
 {
 	char szTmp[1024];
 
@@ -369,7 +369,7 @@ char *SaveHumanMagicRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, 
 	return pszEncode;
 }
 
-void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int nCount)
+void SaveGenItemRcd(char *pszUserID, TCHAR *pszCharName, char *pszEncodeRcd, int nCount)
 {
 	char szTmp[1024];
 
@@ -476,17 +476,18 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 //		g_nItemIndexCnt++;
 
 	char szUserID[32];
-	char szCharName[32];
+	TCHAR szCharName[32];
 
 	if (lpHumanLoad)
 	{
 		strcpy(szUserID, lpHumanLoad->szUserID);
-		strcpy(szCharName, lpHumanLoad->szCharName);
+		//strcpy(szCharName, lpHumanLoad->szCharName);
+		wcscpy(szCharName, lpHumanLoad->szCharName);
 	}
 	else
 	{
 		strcpy(szUserID, "0");
-		strcpy(szCharName, "WEMADE");
+		wcscpy(szCharName, _T("WEMADE"));
 	}
 	//DOWN 2012/6/29
 	sprintf(szQuery, "INSERT TBL_CHARACTER_ITEM (FLD_LOGINID, FLD_CHARNAME, FLD_STDTYPE, FLD_MAKEDATE, FLD_MAKEINDEX, "

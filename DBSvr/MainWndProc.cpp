@@ -124,7 +124,7 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 	
 			LoadCharacterRecords();
 
-			if(InitServerSocket(g_ssock, &g_saddr, _IDM_GATECOMMSOCK_MSG, 6000, 1))
+			if(InitServerSocket(g_ssock, &g_saddr, _IDM_GATECOMMSOCK_MSG, 6000,1))
 				InsertLogMsg( _T("端口:6000已打开.\n") );
 			else InsertLogMsg( _T("端口:6000打开失败.\n") );
 			if(InitGateCommSocket(g_gssock, &g_gsaddr, _IDM_GATECOMMSOCK_MSG, 5100, FD_ACCEPT|FD_READ|FD_CLOSE))
@@ -145,12 +145,10 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 		case IDM_STOPSERVICE:
 		{
 			g_fTerminated = TRUE;
-			closesocket(g_ssock);
 			if(ClearSocket(g_ssock))
-				InsertLogMsg( _T("端口:6000已关闭.\n") );;
-			closesocket(g_gssock);
+				InsertLogMsg( _T("端口:6000已关闭.\n") );
 			if(ClearSocket(g_gssock))
-				InsertLogMsg( _T("端口:5100已关闭.\n") );;
+				InsertLogMsg( _T("端口:5100已关闭.\n") );
 			SwitchMenuItem(FALSE);
 
 			return;

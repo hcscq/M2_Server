@@ -353,7 +353,7 @@ typedef struct tag_AUSERENTRYINFO
 typedef struct tag_TLOADMUHAN
 {
 	char		szUserID[16];
-	char		szCharName[20];
+	TCHAR		szCharName[20];
 	char		szUserAddr[15];
 	int			nCertification;
 } _TLOADHUMAN, *_LPTLOADHUMAN;
