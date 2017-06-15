@@ -128,7 +128,7 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 		szDecodeMsg[nPos] = '\0';
 		//*pszDevide++ = '\0';
 
-		sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_LOGINID='%s'", szDecodeMsg);
+		sprintf( szQuery, "SELECT FLD_Index,FLD_JOB,FLD_GENDER,FLD_LEVEL,FLD_CHARNAME,FLD_LASTACCESSTIME FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_ISDELETED=0", szDecodeMsg);
 
 		CRecordset *pRec = GetDBManager()->CreateRecordset();
 		
@@ -141,13 +141,13 @@ void CGateInfo::QueryCharacter(SOCKET s, char *pszPacket)
 				tQueryChr[nCnt].btGender = atoi( pRec->Get( "FLD_GENDER" ) );
 				tQueryChr[nCnt].btLevel = atoi(pRec->Get("FLD_LEVEL"));
 				strcpy( tQueryChr[nCnt].szName, pRec->Get( "FLD_CHARNAME" ) );
-				tQueryChr[nCnt].dateLastAccessTime=atof(pRec->Get("FLD_LASTACCESSTIME"));
+				tQueryChr[nCnt].dateLastAccessTime=atol(pRec->Get("FLD_LASTACCESSTIME"));
 				ChangeSpaceToNull( tQueryChr[nCnt].szName );
 
 				nCnt++;
 			}
 		}
-
+		
 		GetDBManager()->DestroyRecordset( pRec );
 
 		_TDEFAULTMESSAGE	DefaultMsg;
@@ -187,31 +187,31 @@ void CGateInfo::DeleteExistCharacter(SOCKET s, _LPTDELCHR lpTDelChr)
 	char				szQuery[256];
 	CRecordset			*pRec;
 
-	sprintf( szQuery, "DELETE FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_INDEX='%s'", lpTDelChr->szID, lpTDelChr->btIndex );
+	sprintf( szQuery, "DELETE FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_INDEX=%d", lpTDelChr->szID, lpTDelChr->btIndex );
 
 	pRec = GetDBManager()->CreateRecordset();
 	pRec->Execute( szQuery );
 	GetDBManager()->DestroyRecordset( pRec );
 
-	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_GENITEM WHERE FLD_LOGINID='%s' AND FLD_INDEX='%s'", lpTDelChr->szID, lpTDelChr->btIndex);
+	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_GENITEM WHERE FLD_LOGINID='%s' AND FLD_INDEX=%d", lpTDelChr->szID, lpTDelChr->btIndex);
 
 	pRec = GetDBManager()->CreateRecordset();
 	pRec->Execute( szQuery );
 	GetDBManager()->DestroyRecordset( pRec );
 
-	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_ITEM WHERE FLD_LOGINID='%s' AND FLD_INDEX='%s'", lpTDelChr->szID, lpTDelChr->btIndex);
+	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_ITEM WHERE FLD_LOGINID='%s' AND FLD_INDEX=%d", lpTDelChr->szID, lpTDelChr->btIndex);
 
 	pRec = GetDBManager()->CreateRecordset();
 	pRec->Execute( szQuery );
 	GetDBManager()->DestroyRecordset( pRec );
 
-	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_MAGIC WHERE FLD_LOGINID='%s' AND FLD_INDEX='%s'", lpTDelChr->szID, lpTDelChr->btIndex);
+	sprintf( szQuery, "DELETE FROM TBL_CHARACTER_MAGIC WHERE FLD_LOGINID='%s' AND FLD_INDEX=%d", lpTDelChr->szID, lpTDelChr->btIndex);
 
 	pRec = GetDBManager()->CreateRecordset();
 	pRec->Execute( szQuery );
 	GetDBManager()->DestroyRecordset( pRec );
 
-	fnMakeDefMessageA(&DefaultMsg, SM_DELCHR_SUCCESS, DEFBLOCKSIZE,0, lpTDelChr->btIndex, 0, 0);
+	fnMakeDefMessageA(&DefaultMsg, SM_DELCHR_SUCCESS, DEFBLOCKSIZE,0, 16|(lpTDelChr->btIndex), 0, 0);
 	int nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 	szEncodeMsg[nPos] = '\0';
 	
@@ -225,8 +225,9 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 	char				szEncodeMsg[32];
 	int					nPos;
 	char				szQuery[2048];
-	TCHAR				szName[20];
-	MultiByteToWideChar(CP_ACP, 0, lpTCreateChr->szName, -1, szName, sizeof(szName) / sizeof(TCHAR));
+	char				szCharGuid[64];
+	//TCHAR				szName[20];
+	//MultiByteToWideChar(CP_ACP, 0, lpTCreateChr->szName, -1, szName, sizeof(szName) / sizeof(TCHAR));
 	ChangeSpaceToNull(lpTCreateChr->szID);
 
 	sprintf( szQuery, "SELECT FLD_CHARNAME FROM TBL_CHARACTER WHERE FLD_CHARNAME='%s'", lpTCreateChr->szName );
@@ -275,21 +276,29 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 
 		pRec = GetDBManager()->CreateRecordset();
 
-		// TBL_CHARACTER 테이블 추가
+		//insert TBL_CHARACTER 
 		//done 2012/6/29
+		GUID guid;
+		CoCreateGuid(&guid);
+		sprintf_s(szCharGuid, sizeof(szCharGuid), "{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
+			guid.Data1, guid.Data2, guid.Data3,
+			guid.Data4[0], guid.Data4[1],
+			guid.Data4[2], guid.Data4[3],
+			guid.Data4[4], guid.Data4[5],
+			guid.Data4[6], guid.Data4[7]);
 		sprintf(szQuery, "INSERT TBL_CHARACTER ("
 						"FLD_LOGINID, FLD_CHARNAME, FLD_JOB, FLD_GENDER, FLD_LEVEL, FLD_DIRECTION, "
 						"FLD_ATTACKMODE, FLD_CX, FLD_CY, FLD_MAPNAME, FLD_GOLD, FLD_HAIR, "
 						"FLD_DRESS_ID, FLD_WEAPON_ID, FLD_LEFTHAND_ID, FLD_RIGHTHAND_ID, FLD_HELMET_ID, "
 						"FLD_NECKLACE_ID, FLD_ARMRINGL_ID, FLD_ARMRINGR_ID, FLD_RINGL_ID, "
-						"FLD_RINGR_ID, FLD_EXP,FLD_INDEX) VALUES ( "
+						"FLD_RINGR_ID, FLD_EXP,FLD_INDEX,FLD_GUID) VALUES ( "
 						"'%s', '%s', %d, %d, 1, 4, "
 						"1, %d, %d, '%s', 0, 0, "
 						"'0', '0', '0', '0', '0', "
 						"'0', '0', '0', '0', "
-						"'0', 0,'%d' )",
+						"'0', 0,'%d','%s')",
 						lpTCreateChr->szID, lpTCreateChr->szName, lpTCreateChr->btClass, lpTCreateChr->btGender,
-						table->posX, table->posY, table->mapName,lpTCreateChr->btIndex);
+						table->posX, table->posY, table->mapName,lpTCreateChr->btIndex, szCharGuid);
 		pRec->Execute( szQuery );
 		//DONE 2012 /6/29
 		sprintf(szQuery, "INSERT TBL_CHARACTER_GENITEM (FLD_LOGINID, FLD_CHARNAME, FLD_ITEMINDEX) VALUES ('%s', '%s', 'G00080008000')",
@@ -304,8 +313,10 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 		memset( &makeItem, 0, sizeof( makeItem ) );
 
 		strcpy( human.szUserID, lpTCreateChr->szID );
-		//strcpy( human.szCharName, lpTCreateChr->szName );
-		wcscpy(human.szCharName, szName);
+		strcpy( human.szCharName, lpTCreateChr->szName );
+		human.btCharIndex = lpTCreateChr->btIndex;
+		strcpy(human.szCharGuid,szCharGuid);
+		//wcscpy(human.szCharName, szName);
 		// 평복 추가 (0: 남, 1: 여)
 		makeItem.szStdType	= 'B';
 		makeItem.nStdIndex	= lpTCreateChr->btGender ? 34 : 33;
@@ -383,7 +394,7 @@ void CGateInfo::GetSelectCharacter(SOCKET s, char *pszPacket)
 		CServerInfo*	pServerInfo;
 
 		memcpy(tLoadHuman.szUserID, szDecodeMsg, memlen(szDecodeMsg));
-		memcpy(tLoadHuman.szCharName, pszDevide, memlen(pszDevide));
+		memcpy(&tLoadHuman.btCharIndex, pszDevide, memlen(pszDevide));
 		ZeroMemory(tLoadHuman.szUserAddr, sizeof(tLoadHuman.szUserAddr));
 		tLoadHuman.nCertification = 0;
 

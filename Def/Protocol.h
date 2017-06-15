@@ -54,6 +54,8 @@
 #define CM_SELCHR				103
 /*.net client*/
 #define CM_NEWCHRA				6
+#define CM_DELCHRA				7
+#define CM_START				8
 /*end*/
 #define	SM_QUERYCHR				520
 #define	SM_NEWCHR_SUCCESS		521
@@ -353,8 +355,10 @@ typedef struct tag_AUSERENTRYINFO
 typedef struct tag_TLOADMUHAN
 {
 	char		szUserID[16];
-	TCHAR		szCharName[20];
+	char		szCharName[20];
 	char		szUserAddr[15];
+	byte		btCharIndex;
+	char		szCharGuid[64];
 	int			nCertification;
 } _TLOADHUMAN, *_LPTLOADHUMAN;
 

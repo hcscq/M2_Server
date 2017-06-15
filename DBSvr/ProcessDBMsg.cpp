@@ -39,7 +39,7 @@ void SendSocket(SOCKET s, int nCertification, char *pszData1, char *pszData2, in
 	send(s, szEncodeMsg, nSendLen, 0);
 }
 
-int GetHorseRcd(TCHAR *szName, _LPTHORSERCD lpTHorseRcd)
+int GetHorseRcd(char *szName, _LPTHORSERCD lpTHorseRcd)
 {
 	char szQuery[1024];
 	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER_HORSE WHERE FLD_CHARNAME='%s'", szName );
@@ -60,7 +60,7 @@ int GetHorseRcd(TCHAR *szName, _LPTHORSERCD lpTHorseRcd)
 	return 1;
 }
 
-void GetHumanGenItemRcd(TCHAR *szName, CWHList<_LPTGENITEMRCD>	*pxUserGenItemRcdList)
+void GetHumanGenItemRcd(char *szName, CWHList<_LPTGENITEMRCD>	*pxUserGenItemRcdList)
 {
 	char szQuery[128];
 
@@ -85,7 +85,7 @@ void GetHumanGenItemRcd(TCHAR *szName, CWHList<_LPTGENITEMRCD>	*pxUserGenItemRcd
 	GetDBManager()->DestroyRecordset( pRec );
 }
 
-void GetHumanMagicRcd(TCHAR *szName, CWHList<_LPTHUMANMAGICRCD>	*pxUserMagicRcdList)
+void GetHumanMagicRcd(char *szName, CWHList<_LPTHUMANMAGICRCD>	*pxUserMagicRcdList)
 {
 	char szQuery[1024];
 
@@ -114,11 +114,11 @@ void GetHumanMagicRcd(TCHAR *szName, CWHList<_LPTHUMANMAGICRCD>	*pxUserMagicRcdL
 	GetDBManager()->DestroyRecordset( pRec );
 }
 
-void GetHumanItemRcd(TCHAR *szName, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcdList)
+void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcdList)
 {
 	char szQuery[128];
 
-	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE FLD_CHARNAME='%s'", szName );
+	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE FLD_OWNER='%s'", szGuid);
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
 	
@@ -158,16 +158,19 @@ void GetHumanItemRcd(TCHAR *szName, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcdList)
 	GetDBManager()->DestroyRecordset( pRec );
 }
 
-BOOL GetHumanRcd(TCHAR	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHuman)
+BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHuman)
 {
 	char szQuery[1024];
 
-	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_CHARNAME='%s'", szName );
+	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_INDEX='%d' AND FLD_ISDELETED=0", szName,lpLoadHuman->btCharIndex );
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
 
 	if ( pRec->Execute( szQuery ) && pRec->Fetch() )
 	{
+		memcpy(lpLoadHuman->szCharGuid, pRec->Get("FLD_GUID"),sizeof(GUID));
+		strcpy(lpLoadHuman->szCharName, pRec->Get("FLD_CHARNAME"));
+
 		strcpy(lptHumanRcd->szUserID, pRec->Get( "FLD_LOGINID" ) );
 		ChangeSpaceToNull(lptHumanRcd->szUserID);
 		strcpy(lptHumanRcd->szCharName, pRec->Get( "FLD_CHARNAME" ) );
@@ -188,6 +191,7 @@ BOOL GetHumanRcd(TCHAR	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHu
 
 		lptHumanRcd->dwGold		= atoi( pRec->Get( "FLD_GOLD" ) );
 		lptHumanRcd->szHair		= atoi( pRec->Get( "FLD_HAIR" ) );
+
 
 		memmove( lptHumanRcd->szTakeItem[0], pRec->Get( "FLD_DRESS_ID" ), 12 );
 		memmove( lptHumanRcd->szTakeItem[1], pRec->Get( "FLD_WEAPON_ID" ), 12 );
@@ -233,7 +237,7 @@ void GetLoadHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, int nR
 	
 	if (GetHumanRcd(lpLoadHuman->szCharName, &tHumanRcd, lpLoadHuman))		// Fetch Character Data
 	{
-		GetHumanItemRcd(lpLoadHuman->szCharName, &xUserItemRcdList);		// Fetch Item Data
+		GetHumanItemRcd(lpLoadHuman->szCharGuid, &xUserItemRcdList);		// Fetch Item Data
 		GetHumanMagicRcd(lpLoadHuman->szCharName, &xUserMagicRcdList);		// Fetch Magic Data
 		GetHumanGenItemRcd(lpLoadHuman->szCharName, &xUserGenItemRcdList);	// Fetch General Item Data
 		
@@ -331,7 +335,7 @@ void GetLoadHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, int nR
 	}
 }
 
-char *SaveHumanMagicRcd(char *pszUserID, TCHAR *pszCharName, char *pszEncodeRcd, int nCount)
+char *SaveHumanMagicRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int nCount)
 {
 	char szTmp[1024];
 
@@ -369,7 +373,7 @@ char *SaveHumanMagicRcd(char *pszUserID, TCHAR *pszCharName, char *pszEncodeRcd,
 	return pszEncode;
 }
 
-void SaveGenItemRcd(char *pszUserID, TCHAR *pszCharName, char *pszEncodeRcd, int nCount)
+void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int nCount)
 {
 	char szTmp[1024];
 
@@ -459,7 +463,7 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 //	if (strcmp(szDate, g_szYesterDay) != 0)
 //	{
 		sprintf( szQuery, 
-			"SELECT * FROM TBL_CHARACTER_ITEM WHERE FLD_STDTYPE = '%c' AND "
+			"SELECT FLD_MAKEINDEX FROM TBL_CHARACTER_ITEM WHERE FLD_STDTYPE = '%c' AND "
 			"FLD_MAKEDATE = '%s' ORDER BY FLD_MAKEINDEX DESC",
 			lpMakeItemRcd->szStdType, szDate );
 		
@@ -476,31 +480,36 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 //		g_nItemIndexCnt++;
 
 	char szUserID[32];
-	TCHAR szCharName[32];
-
+	char szCharName[32];
+	byte btCharIndex;
+	char szGuid[64];
 	if (lpHumanLoad)
 	{
 		strcpy(szUserID, lpHumanLoad->szUserID);
-		//strcpy(szCharName, lpHumanLoad->szCharName);
-		wcscpy(szCharName, lpHumanLoad->szCharName);
+		strcpy(szCharName, lpHumanLoad->szCharName);
+		btCharIndex = lpHumanLoad->btCharIndex;
+		strcpy(szGuid,lpHumanLoad->szCharGuid);
+		//wcscpy(szCharName, lpHumanLoad->szCharName);
 	}
 	else
 	{
 		strcpy(szUserID, "0");
-		wcscpy(szCharName, _T("WEMADE"));
+		strcpy(szCharName, "WEMADE");
+		btCharIndex = 0;
+		memset(szGuid, 0, sizeof(szGuid));
 	}
 	//DOWN 2012/6/29
-	sprintf(szQuery, "INSERT TBL_CHARACTER_ITEM (FLD_LOGINID, FLD_CHARNAME, FLD_STDTYPE, FLD_MAKEDATE, FLD_MAKEINDEX, "
+	sprintf(szQuery, "INSERT TBL_CHARACTER_ITEM (FLD_LOGINID, FLD_CHARINDEX, FLD_STDTYPE, FLD_MAKEDATE, FLD_MAKEINDEX, "
 						"FLD_STDINDEX, FLD_DURA, FLD_DURAMAX, FLD_VALUE1, FLD_VALUE2, FLD_VALUE3, FLD_VALUE4, FLD_VALUE5, "
 						"FLD_VALUE6, FLD_VALUE7, FLD_VALUE8, FLD_VALUE9, FLD_VALUE10, FLD_VALUE11, FLD_VALUE12, FLD_VALUE13, "
-						"FLD_VALUE14, FLD_LASTOWNER, FLD_LASTACTION, FLD_PREFIXNAME) "
-						"VALUES( '%s', '%s', '%c', '%s', '%05d', %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, '%s', %d, '%s' )", 
-						szUserID, szCharName, lpMakeItemRcd->szStdType, g_szYesterDay, g_nItemIndexCnt,
+						"FLD_VALUE14, FLD_LASTOWNER, FLD_LASTACTION, FLD_PREFIXNAME,FLD_OWNER) "
+						"VALUES( '%s', '%d', '%c', '%s', '%05d', %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, '%s', %d, '%s' ,'%s')", 
+						szUserID, btCharIndex, lpMakeItemRcd->szStdType, g_szYesterDay, g_nItemIndexCnt,
 						lpMakeItemRcd->nStdIndex, lpMakeItemRcd->nDura,	lpMakeItemRcd->nDuraMax, 
 						lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 						lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 						lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
-						lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], szCharName, 1, "");
+						lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], szGuid, 1, "",szGuid);
 	
 	pRec = GetDBManager()->CreateRecordset();
 	if ( !pRec->Execute( szQuery ) || pRec->GetRowCount() <= 0 )
