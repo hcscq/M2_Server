@@ -330,12 +330,28 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 		makeItem.nDura		= 4000;
 		makeItem.nDuraMax	= 4000;
 		MakeNewItem( NULL, &human, &makeItem, 0 );
-		
-		fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_SUCCESS,DEFBLOCKSIZE, 0, 0, 0, 0);
+
+		char				szEncodeData[256];
+		_TQUERYCHR			tQueryChr;
+		tQueryChr.btIndex = lpTCreateChr->btIndex;
+		tQueryChr.btClass = lpTCreateChr->btClass;
+		tQueryChr.btGender = lpTCreateChr->btGender;
+		tQueryChr.btLevel = 1;
+		strcpy(tQueryChr.szName, lpTCreateChr->szName);
+		tQueryChr.dateLastAccessTime = GetTime();
+
+		int nPos2 = fnEncode6BitBufA((unsigned char *)&tQueryChr, szEncodeData, sizeof(_TQUERYCHR), sizeof(szEncodeData));
+
+		fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_SUCCESS,DEFBLOCKSIZE+nPos2, 0, 0, 0, 0);
 		nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
-		szEncodeMsg[nPos] = '\0';
+
+		memmove(szEncodeData, szEncodeMsg, nPos);
+
+		memmove(&szEncodeData[nPos], szEncodeData, nPos2);
+
+		szEncodeData[nPos] = '\0';
 		
-		SendToGate(s, szEncodeMsg);
+		SendToGate(s, szEncodeData);
 
 		return;
 	}
