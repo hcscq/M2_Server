@@ -331,7 +331,8 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 		makeItem.nDuraMax	= 4000;
 		MakeNewItem( NULL, &human, &makeItem, 0 );
 
-		char				szEncodeData[256];
+		char				szEncodeData[50];
+		char				szEncodePacket[256];
 		_TQUERYCHR			tQueryChr;
 		tQueryChr.btIndex = lpTCreateChr->btIndex;
 		tQueryChr.btClass = lpTCreateChr->btClass;
@@ -345,13 +346,12 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 		fnMakeDefMessageA(&DefaultMsg, SM_NEWCHR_SUCCESS,DEFBLOCKSIZE+nPos2, 0, 0, 0, 0);
 		nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 
-		memmove(szEncodeData, szEncodeMsg, nPos);
+		memmove(szEncodePacket, szEncodeMsg, nPos);
+		memmove(&szEncodePacket[nPos], szEncodeData, nPos2);
 
-		memmove(&szEncodeData[nPos], szEncodeData, nPos2);
-
-		szEncodeData[nPos] = '\0';
+		szEncodePacket[nPos + nPos2] = '\0';
 		
-		SendToGate(s, szEncodeData);
+		SendToGate(s, szEncodePacket);
 
 		return;
 	}
