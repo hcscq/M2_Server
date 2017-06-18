@@ -339,6 +339,7 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 		tQueryChr.btGender = lpTCreateChr->btGender;
 		tQueryChr.btLevel = 1;
 		strcpy(tQueryChr.szName, lpTCreateChr->szName);
+		ChangeSpaceToNull(tQueryChr.szName);
 		tQueryChr.dateLastAccessTime = GetTime();
 
 		int nPos2 = fnEncode6BitBufA((unsigned char *)&tQueryChr, szEncodeData, sizeof(_TQUERYCHR), sizeof(szEncodeData));
