@@ -44,7 +44,7 @@ void ProcMakeSocketStr(char *lpMsg)
 
 	char *pszData = &pSessionInfo->SendBuffer[pSessionInfo->nSendBufferLen];
 
-	if (lpMsgHeader->nLength < 0)
+	if (lpMsgHeader->nLength < 0)//pure string msg.
 	{
 //		wsprintf(szPacket, _TEXT("#%s!"), (lpMsg + sizeof(_TMSGHEADER))); // Walk
 		pszData[0]		= '#';
@@ -66,6 +66,7 @@ void ProcMakeSocketStr(char *lpMsg)
 
 			if (lpMsgHeader->nLength > sizeof(_TDEFAULTMESSAGE))
 			{
+				lpDefMsg->nLen = lpMsgHeader->nLength - sizeof(_TDEFAULTMESSAGE) + DEFBLOCKSIZE;
 				nPos = fnEncodeMessageA(lpDefMsg, &pszData[1], sizeof(pSessionInfo->SendBuffer) - pSessionInfo->nSendBufferLen - 1);
 //				nPos = fnEncodeMessage((char *)lpDefMsg + sizeof(_TDEFAULTMESSAGE) , &szPacket[nPos + 1], sizeof(szPacket) - nPos - 1);
 				memmove(&pszData[nPos + 1], (lpMsg + sizeof(_TMSGHEADER) + sizeof(_TDEFAULTMESSAGE)), lpMsgHeader->nLength - sizeof(_TDEFAULTMESSAGE));

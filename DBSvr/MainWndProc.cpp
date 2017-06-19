@@ -67,7 +67,8 @@ void LoadCharacterRecords()
 	InsertLogMsg(IDS_LOADACCOUNTRECORDS);
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
-	if ( pRec->Execute( "SELECT * FROM TBL_GAMEGATEINFO" ) )
+	//0:SelServer;1:GameGate
+	if ( pRec->Execute( "SELECT * FROM TBL_SERVERINFO WHERE FLD_TYPE=1" ) )
 	{
 		GAMESERVERINFO *pServerInfo;
 
@@ -104,7 +105,6 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 	//szDatabase
 			if(!GetDBManager()->Init( InsertLogMsg,szDatabase , "sa", "123" )){
 				InsertLogMsg( _T("数据库连接失败,无法启动服务！\n") );
-				//MessageBox(NULL,_T("数据库连接失败！"),_T("数据库网关"),MB_OK);
 				return;
 			}
 			CConnection *pConn = GetDBManager()->m_dbMain.CreateConnection( szDatabase, "sa", "123" );

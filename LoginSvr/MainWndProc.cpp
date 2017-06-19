@@ -101,7 +101,8 @@ UINT WINAPI LoadAccountRecords(LPVOID lpParameter)
 	GAMESERVERINFO *pServerInfo;
 
 	pRec = GetDBManager()->CreateRecordset();
-	if ( pRec->Execute( "SELECT * FROM TBL_SERVERINFO" ) )
+	//0:SelServer;1:GameGate
+	if ( pRec->Execute( "SELECT * FROM TBL_SERVERINFO WHERE FLT_TYPE=0" ) )
 	{
 		while ( pRec->Fetch() )
 		{			

@@ -1078,7 +1078,7 @@ void CUserInfo::CloseAccount(char *pszName, int nCertification)
 	send(g_clsock, szMsg, memlen(szMsg) - 1, 0);
 }
 
-void CUserInfo::DoClientCertification(char *pszPacket)
+void CUserInfo::DoClientCertification(char *pszPacket) 
 {
 	char szDecodePacket[64];
 	char *pszDecodePacket = &szDecodePacket[0];
