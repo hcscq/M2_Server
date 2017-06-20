@@ -1122,12 +1122,13 @@ void CUserInfo::DoClientCertification(char *pszPacket)
 				m_nCertification = AnsiStrToVal(pszDecodePacket);
 				pszDecodePacket = pszPos;
 
-				if (!(pszPos = (char *)memchr(pszDecodePacket, '/', nLen))) return;
+				//2017.06.20 skip version check
+				//if (!(pszPos = (char *)memchr(pszDecodePacket, '/', nLen))) return;
 
-				*pszPos++ = '\0';
-				nLen -= (pszPos - pszDecodePacket);
-				m_nClientVersion = AnsiStrToVal(pszDecodePacket);
-				pszDecodePacket = pszPos;
+				//*pszPos++ = '\0';
+				//nLen -= (pszPos - pszDecodePacket);
+				//m_nClientVersion = AnsiStrToVal(pszDecodePacket);
+				//pszDecodePacket = pszPos;
 
 				m_btCurrentMode = USERMODE_LOGIN;
 //				(*pszDecodePacket == '0' ? StartNew = TRUE : StartNew = FALSE);

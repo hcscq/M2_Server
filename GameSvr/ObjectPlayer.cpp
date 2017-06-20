@@ -1526,10 +1526,12 @@ void CPlayerObject::SendNewMap()
 		_TDEFAULTMESSAGE	DefMsg;
 		char				szEncodeMsg[256];
 																			
-		fnMakeDefMessage(&DefMsg, SM_NEWMAP, (int)this, m_nCurrX, m_nCurrY, MAKEWORD(DayBright(), m_pMap->m_btSeries));
-
 		int nPos = fnEncode6BitBufA((unsigned char *)m_pMap->m_szMapName, szEncodeMsg, memlen(m_pMap->m_szMapName) - 1, sizeof(szEncodeMsg));
+		nPos += fnEncode6BitBufA((unsigned char *)m_pMap->m_szMapTextName, &szEncodeMsg[nPos], memlen(m_pMap->m_szMapTextName) - 1, sizeof(szEncodeMsg)-nPos);
+
 		szEncodeMsg[nPos] = '\0';
+
+		fnMakeDefMessage(&DefMsg, SM_NEWMAP, (int)this, m_nCurrX, m_nCurrY, MAKEWORD(DayBright(), m_pMap->m_btSeries));
 
 		SendSocket(&DefMsg, szEncodeMsg);
 	}

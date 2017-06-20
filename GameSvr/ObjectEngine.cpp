@@ -3262,7 +3262,7 @@ void CCharObject::SendSocket(_LPTDEFAULTMESSAGE lpDefMsg, char *pszPacket)
 	MsgHdr.wUserGateIndex	= m_pUserInfo->m_nUserGateIndex;
 	MsgHdr.wUserListIndex	= m_pUserInfo->m_nUserServerIndex;
 	MsgHdr.nSocket			= m_pUserInfo->m_sock;
-
+	lpDefMsg->nLen = memlen(pszPacket);
 	if (lpDefMsg)
 	{
 		if (pszPacket)
