@@ -1529,6 +1529,8 @@ void CPlayerObject::SendNewMap()
 		int nPos = fnEncode6BitBufA((unsigned char *)m_pMap->m_szMapName, szEncodeMsg, memlen(m_pMap->m_szMapName) - 1, sizeof(szEncodeMsg));
 		nPos += fnEncode6BitBufA((unsigned char *)m_pMap->m_szMapTextName, &szEncodeMsg[nPos], memlen(m_pMap->m_szMapTextName) - 1, sizeof(szEncodeMsg)-nPos);
 
+		nPos += fnEncode6BitBufA((unsigned char *)&(m_pMap->m_exMapDiscEx), &szEncodeMsg[nPos], sizeof(TMIRMAPEX), sizeof(szEncodeMsg) - nPos);
+
 		szEncodeMsg[nPos] = '\0';
 
 		fnMakeDefMessage(&DefMsg, SM_NEWMAP, (int)this, m_nCurrX, m_nCurrY, MAKEWORD(DayBright(), m_pMap->m_btSeries));
@@ -2528,16 +2530,17 @@ void CPlayerObject::Operate()
 
 						fnMakeDefMessage(&DefMsg, SM_LOGON, (int)this, 
 											(unsigned short)m_nCurrX, (unsigned short)m_nCurrY, MAKEWORD(m_nDirection, lpProcessMsg->pCharObject->m_btLight));
-
-						nPos = 	fnEncode6BitBufA((unsigned char *)&lpProcessMsg->pCharObject->m_tFeature, szEncodeMsg, sizeof(_TOBJECTFEATURE), sizeof(szEncodeMsg));
-						nPos +=	fnEncode6BitBufA((unsigned char *)&((CPlayerObject *)lpProcessMsg->pCharObject)->m_tFeatureEx, &szEncodeMsg[nPos], sizeof(_TOBJECTFEATUREEX), sizeof(szEncodeMsg) - nPos);
+						nPos = fnEncode6BitBufA((unsigned char *)((CPlayerObject *)lpProcessMsg->pCharObject)->m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, DEFGUIDLEN, sizeof(szEncodeMsg) - nPos);
+						nPos += fnEncode6BitBufA((unsigned char *)&lpProcessMsg->pCharObject->m_tFeature, &szEncodeMsg[nPos], sizeof(_TOBJECTFEATURE), sizeof(szEncodeMsg));
+						nPos += fnEncode6BitBufA((unsigned char *)&((CPlayerObject *)lpProcessMsg->pCharObject)->m_tFeatureEx, &szEncodeMsg[nPos], sizeof(_TOBJECTFEATUREEX), sizeof(szEncodeMsg) - nPos);
+						
 						szEncodeMsg[nPos] = '\0';
 
 						SendSocket(&DefMsg, szEncodeMsg);
 
 						GetQueryUserName(this, m_nCurrX, m_nCurrY);
-
-						SendMapName();
+						//2017.06.21
+						//SendMapName();
 
 						break;
 					}

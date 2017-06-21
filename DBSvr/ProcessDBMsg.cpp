@@ -171,6 +171,7 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 		memcpy(lpLoadHuman->szCharGuid, pRec->Get("FLD_GUID"),sizeof(GUID));
 		strcpy(lpLoadHuman->szCharName, pRec->Get("FLD_CHARNAME"));
 
+		strcpy(lptHumanRcd->szCharGuid,lpLoadHuman->szCharGuid);
 		strcpy(lptHumanRcd->szUserID, pRec->Get( "FLD_LOGINID" ) );
 		ChangeSpaceToNull(lptHumanRcd->szUserID);
 		strcpy(lptHumanRcd->szCharName, pRec->Get( "FLD_CHARNAME" ) );

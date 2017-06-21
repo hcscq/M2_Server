@@ -57,6 +57,24 @@ public:
 	CMapCellInfo();
 	~CMapCellInfo();
 };
+typedef struct tagMirMapEX
+{
+public:
+	USHORT				m_usMiniMap;
+	USHORT				m_usBigMap;
+	USHORT				m_usMusic;
+	/*
+	*Normal = 0,
+	*Dawn = 1,
+	*Day = 2,
+	*Evening = 3,
+	*Night = 4
+	*/
+	BYTE				m_bLights;
+	BYTE				m_bLighting;
+	BYTE				m_bFire;
+
+}TMIRMAPEX,*LPTMIRMAPEX;
 
 class CMirMap
 {
@@ -69,6 +87,7 @@ public:
 	char				m_szMapTextName[40];
 	BYTE				m_btSeries;					// 瘤开 盔家 加己
 	BYTE				m_btSeriesVal;				// 瘤开 盔家 加己蔼
+	TMIRMAPEX			m_exMapDiscEx;
 
 public:
 	CMirMap();

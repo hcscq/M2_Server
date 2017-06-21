@@ -3,6 +3,7 @@
 #define _LEGENDOFMIR2_PROTCOL
 
 #define DEFBLOCKSIZE			22
+#define DEFGUIDLEN				64
 #define HUMANRCDBLOCKSIZE		256
 #define ITEMRCDBLOCKSIZE		70			// _TUSERITEMRCD
 #define MAGICRCDBLOCKSIZE		10
@@ -377,6 +378,7 @@ typedef struct tag_THUMANRCD
 {
 	char		szUserID[16];
 	char		szCharName[20];
+	char		szCharGuid[64];
 
 	BYTE		btJob;
 	BYTE		btGender;

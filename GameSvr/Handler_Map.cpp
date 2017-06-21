@@ -81,6 +81,7 @@ CMirMap* GetMap(char *pszMapName)
 
 CMirMap::CMirMap()
 {
+	m_exMapDiscEx = TMIRMAPEX();
 	m_pMapCellInfo = NULL;
 }
 
