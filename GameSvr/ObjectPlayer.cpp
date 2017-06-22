@@ -2962,7 +2962,8 @@ void CPlayerObject::Operate()
 					case RM_SENDUSEITEMS:
 					{
 						fnMakeDefMessage(&DefMsg, SM_SENDUSEITEMS, 0, 0, 0, 0);
-						nPos = fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szTakeItem, szEncodeMsg, sizeof(m_pUserInfo->m_THumanRcd.szTakeItem), sizeof(szEncodeMsg));
+						nPos = fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, sizeof(m_pUserInfo->m_THumanRcd.szCharGuid), sizeof(szEncodeMsg));
+						nPos += fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szTakeItem, &szEncodeMsg[nPos], sizeof(m_pUserInfo->m_THumanRcd.szTakeItem), sizeof(szEncodeMsg));
 						szEncodeMsg[nPos] = '\0';
 						SendSocket(&DefMsg, szEncodeMsg);
 
