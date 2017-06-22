@@ -374,6 +374,19 @@ typedef struct tag_TLOADMUHAN
 #define U_RINGR				8
 
 #pragma pack(1)
+typedef struct tag_TUSERITEMRCD
+{
+	BYTE		btIsEmpty=true;
+	char		szMakeIndex[71];
+	WORD		nStdIndex;
+	WORD		nDura;
+	WORD		nDuraMax;
+	USHORT		usCount;
+	BYTE		btValue[22];
+	char		szBoundGuid[64];
+	char		sbtValue[2];
+	char		szPrefixName[20];
+} _TUSERITEMRCD, *_LPTUSERITEMRCD;
 typedef struct tag_THUMANRCD
 {
 	char		szUserID[16];
@@ -382,7 +395,7 @@ typedef struct tag_THUMANRCD
 
 	BYTE		btJob;
 	BYTE		btGender;
-	char		szTakeItem[10][12];
+	_TUSERITEMRCD		szTakeItem[10];
 	BYTE		szLevel;	
 	BYTE		szHair;
 	BYTE		nDirection;
@@ -412,21 +425,13 @@ typedef struct tag_TMAKEITEMRCD
 
 typedef struct tag_GENERALITEMRCD
 {
-	char		szMakeIndex[12];
+	char		szMakeIndex[71];
 	int			nStdIndex;
 	int			nDura;
 	int			nDuraMax;
 } _TGENERALITEMRCD, *_LPTGENERALITEMRCD;
 
-typedef struct tag_TUSERITEMRCD
-{
-	char		szMakeIndex[12];
-	WORD		nStdIndex;
-	WORD		nDura;
-	WORD		nDuraMax;
-	BYTE		btValue[14];
-	char		szPrefixName[20];
-} _TUSERITEMRCD, *_LPTUSERITEMRCD;
+
 
 typedef struct tag_TGENITEMRCD
 {

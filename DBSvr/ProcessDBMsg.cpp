@@ -64,7 +64,7 @@ void GetHumanGenItemRcd(char *szName, CWHList<_LPTGENITEMRCD>	*pxUserGenItemRcdL
 {
 	char szQuery[128];
 
-	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER_GENITEM WHERE FLD_CHARNAME='%s'", szName );
+	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE FLD_CHARNAME='%s'", szName );
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
 	
@@ -127,30 +127,69 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 		while ( pRec->Fetch() )
 		{
 			_LPTUSERITEMRCD	pItem = new _TUSERITEMRCD;
-			
+			/*
+			AC, MAC, DC, MC, SC, Accuracy, 
+			Agility, HP, MP, Strong, MagicResist, PoisonResist, 
+			HealthRecovery, ManaRecovery, PoisonRecovery, 
+			CriticalRate, CriticalDamage, Freezing, PoisonAttack
+
+			public RefinedValue RefinedValue = RefinedValue.None;
+			public byte RefineAdded = 0;
+
+			public bool DuraChanged;
+			public int SoulBoundId = -1;
+			public bool Identified = false;
+			public bool Cursed = false;
+
+			public int WeddingRing = -1;
+
+			public UserItem[] Slots = new UserItem[5];
+
+			public DateTime BuybackExpiryDate;
+
+			public ExpireInfo ExpireInfo;
+			public RentalInformation RentalInformation;
+
+			public Awake Awake = new Awake();
+			*/
 			pItem->szMakeIndex[0] = *(pRec->Get( "FLD_STDTYPE" ));
 			memmove( &pItem->szMakeIndex[1], pRec->Get( "FLD_MAKEDATE" ), 6 );
-			memmove( &pItem->szMakeIndex[7], pRec->Get( "FLD_MAKEINDEX" ), 5 );
+			memmove( &pItem->szMakeIndex[7], pRec->Get( "FLD_MAKEINDEX" ), 64 );
 			
 			pItem->nStdIndex	= atoi( pRec->Get( "FLD_STDINDEX" ) );
 			pItem->nDura		= atoi( pRec->Get( "FLD_DURA" ) );
 			pItem->nDuraMax		= atoi( pRec->Get( "FLD_DURAMAX" ) );
-			pItem->btValue[0]	= atoi( pRec->Get( "FLD_VALUE1" ) );
-			pItem->btValue[1]	= atoi( pRec->Get( "FLD_VALUE2" ) );
-			pItem->btValue[2]	= atoi( pRec->Get( "FLD_VALUE3" ) );
-			pItem->btValue[3]	= atoi( pRec->Get( "FLD_VALUE4" ) );
-			pItem->btValue[4]	= atoi( pRec->Get( "FLD_VALUE5" ) );
-			pItem->btValue[5]	= atoi( pRec->Get( "FLD_VALUE6" ) );
-			pItem->btValue[6]	= atoi( pRec->Get( "FLD_VALUE7" ) );
-			pItem->btValue[7]	= atoi( pRec->Get( "FLD_VALUE8" ) );
-			pItem->btValue[8]	= atoi( pRec->Get( "FLD_VALUE9" ) );
-			pItem->btValue[9]	= atoi( pRec->Get( "FLD_VALUE10" ) );
-			pItem->btValue[10]	= atoi( pRec->Get( "FLD_VALUE11" ) );
-			pItem->btValue[11]	= atoi( pRec->Get( "FLD_VALUE12" ) );
-			pItem->btValue[12]	= atoi( pRec->Get( "FLD_VALUE13" ) );
+			pItem->btValue[0]	= atoi( pRec->Get( "FLD_AC" ) );
+			pItem->btValue[1]	= atoi( pRec->Get( "FLD_MAC" ) );
+			pItem->btValue[2]	= atoi( pRec->Get( "FLD_DC" ) );
+			pItem->btValue[3]	= atoi( pRec->Get( "FLD_MC" ) );
+			pItem->btValue[4]	= atoi( pRec->Get( "FLD_SC" ) );
+			pItem->btValue[5]	= atoi( pRec->Get( "FLD_Accuracy" ) );
+			pItem->btValue[6]	= atoi( pRec->Get( "FLD_Agility" ) );
+			pItem->btValue[7]	= atoi( pRec->Get( "FLD_HP" ) );
+			pItem->btValue[8]	= atoi( pRec->Get( "FLD_MP" ) );
+			pItem->btValue[9]	= atoi( pRec->Get( "FLD_Strong" ) );
+			pItem->btValue[10]	= atoi( pRec->Get( "FLD_MagicResist" ) );
+			pItem->btValue[11]	= atoi( pRec->Get( "FLD_PoisonResist" ) );
+			pItem->btValue[12]	= atoi( pRec->Get( "FLD_HealthRecovery" ) );
+
+			pItem->btValue[13] = atoi(pRec->Get("FLD_ManaRecovery"));
+			pItem->btValue[14] = atoi(pRec->Get("FLD_PoisonRecovery"));
+			pItem->btValue[15] = atoi(pRec->Get("FLD_CriticalRate"));
+			pItem->btValue[16] = atoi(pRec->Get("FLD_CriticalDamage"));
+			pItem->btValue[17] = atoi(pRec->Get("FLD_Freezing"));
+			pItem->btValue[18] = atoi(pRec->Get("FLD_PoisonAttack"));
+			pItem->btValue[19] = atoi(pRec->Get("FLD_RefinedValue"));
+			pItem->btValue[20] = atoi(pRec->Get("FLD_RefineAdded"));
+			/*FLD_DuraChanged|FLD_Identified|FLD_Cursed|FLD_WeddingRing*/
+			pItem->btValue[21] = atoi(pRec->Get("FLD_Switchs"));
+			strcpy(pItem->szBoundGuid, pRec->Get("FLD_SoulBoundGuid"));
 
 			ZeroMemory(pItem->szPrefixName, sizeof(pItem->szPrefixName));
 			strcpy( pItem->szPrefixName, pRec->Get( "FLD_PREFIXNAME") );
+
+			pItem->sbtValue[0] = atoi(pRec->Get("FLD_AttackSpeed"));
+			pItem->sbtValue[1] = atoi(pRec->Get("FLD_Luck"));
 
 			pxUserItemRcdList->AddNewNode(pItem);
 		}
@@ -165,6 +204,7 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_INDEX='%d' AND FLD_ISDELETED=0", szName,lpLoadHuman->btCharIndex );
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
+	CRecordset *pRec2 = GetDBManager()->CreateRecordset();
 
 	if ( pRec->Execute( szQuery ) && pRec->Fetch() )
 	{
@@ -193,28 +233,68 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 		lptHumanRcd->dwGold		= atoi( pRec->Get( "FLD_GOLD" ) );
 		lptHumanRcd->szHair		= atoi( pRec->Get( "FLD_HAIR" ) );
 
+		lptHumanRcd->fIsAdmin = (BYTE)*pRec->Get("FLD_ISADMIN");
 
-		memmove( lptHumanRcd->szTakeItem[0], pRec->Get( "FLD_DRESS_ID" ), 12 );
-		memmove( lptHumanRcd->szTakeItem[1], pRec->Get( "FLD_WEAPON_ID" ), 12 );
-		memmove( lptHumanRcd->szTakeItem[2], pRec->Get( "FLD_LEFTHAND_ID" ), 12 );
-		memmove( lptHumanRcd->szTakeItem[3], pRec->Get( "FLD_RIGHTHAND_ID" ), 12 );
-		memmove( lptHumanRcd->szTakeItem[4], pRec->Get( "FLD_HELMET_ID" ), 12 );
-		memmove( lptHumanRcd->szTakeItem[5], pRec->Get( "FLD_NECKLACE_ID" ), 12 );
-		memmove( lptHumanRcd->szTakeItem[6], pRec->Get( "FLD_ARMRINGL_ID" ), 12 );
-		memmove( lptHumanRcd->szTakeItem[7], pRec->Get( "FLD_ARMRINGR_ID" ), 12 );
-		memmove( lptHumanRcd->szTakeItem[8], pRec->Get( "FLD_RINGL_ID" ), 12 );
-		memmove( lptHumanRcd->szTakeItem[9], pRec->Get( "FLD_RINGR_ID" ), 12 );
+		char FLD_NAME[10][30] = { "FLD_DRESS_ID" ,"FLD_WEAPON_ID" ,"FLD_LEFTHAND_ID" ,"FLD_RIGHTHAND_ID" ,"FLD_HELMET_ID" ,"FLD_NECKLACE_ID" ,
+			"FLD_ARMRINGL_ID" ,"FLD_ARMRINGR_ID" ,"FLD_RINGL_ID" ,"FLD_RINGR_ID" };
+	
+		for (int i = 0; i < sizeof(lptHumanRcd->szTakeItem); i++) 
+		{
+			sprintf(szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE  FLD_MAKEINDEX='%s' AND FLD_ISDELETED=0",pRec->Get(FLD_NAME[i]));
+			if (pRec2->Execute(szQuery)&&pRec2->Fetch()) {
+				//lptHumanRcd->szTakeItem[i] = new _TUSERITEMRCD;
+				lptHumanRcd->szTakeItem[i].btIsEmpty = false;
+				lptHumanRcd->szTakeItem[i].szMakeIndex[0] = *(pRec->Get("FLD_STDTYPE"));
+				memmove(&lptHumanRcd->szTakeItem[i].szMakeIndex[1], pRec->Get("FLD_MAKEDATE"), 6);
+				memmove(&lptHumanRcd->szTakeItem[i].szMakeIndex[7], pRec->Get("FLD_MAKEINDEX"), 64);
 
-		lptHumanRcd->fIsAdmin	= (BYTE)*pRec->Get( "FLD_ISADMIN" );
+				lptHumanRcd->szTakeItem[i].nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
+				lptHumanRcd->szTakeItem[i].nDura = atoi(pRec->Get("FLD_DURA"));
+				lptHumanRcd->szTakeItem[i].nDuraMax = atoi(pRec->Get("FLD_DURAMAX"));
+				lptHumanRcd->szTakeItem[i].usCount = atoi(pRec->Get("FLD_Count"));
+				lptHumanRcd->szTakeItem[i].btValue[0] = atoi(pRec->Get("FLD_AC"));
+				lptHumanRcd->szTakeItem[i].btValue[1] = atoi(pRec->Get("FLD_MAC"));
+				lptHumanRcd->szTakeItem[i].btValue[2] = atoi(pRec->Get("FLD_DC"));
+				lptHumanRcd->szTakeItem[i].btValue[3] = atoi(pRec->Get("FLD_MC"));
+				lptHumanRcd->szTakeItem[i].btValue[4] = atoi(pRec->Get("FLD_SC"));
+				lptHumanRcd->szTakeItem[i].btValue[5] = atoi(pRec->Get("FLD_Accuracy"));
+				lptHumanRcd->szTakeItem[i].btValue[6] = atoi(pRec->Get("FLD_Agility"));
+				lptHumanRcd->szTakeItem[i].btValue[7] = atoi(pRec->Get("FLD_HP"));
+				lptHumanRcd->szTakeItem[i].btValue[8] = atoi(pRec->Get("FLD_MP"));
+				lptHumanRcd->szTakeItem[i].btValue[9] = atoi(pRec->Get("FLD_Strong"));
+				lptHumanRcd->szTakeItem[i].btValue[10] = atoi(pRec->Get("FLD_MagicResist"));
+				lptHumanRcd->szTakeItem[i].btValue[11] = atoi(pRec->Get("FLD_PoisonResist"));
+				lptHumanRcd->szTakeItem[i].btValue[12] = atoi(pRec->Get("FLD_HealthRecovery"));
+
+				lptHumanRcd->szTakeItem[i].btValue[13] = atoi(pRec->Get("FLD_ManaRecovery"));
+				lptHumanRcd->szTakeItem[i].btValue[14] = atoi(pRec->Get("FLD_PoisonRecovery"));
+				lptHumanRcd->szTakeItem[i].btValue[15] = atoi(pRec->Get("FLD_CriticalRate"));
+				lptHumanRcd->szTakeItem[i].btValue[16] = atoi(pRec->Get("FLD_CriticalDamage"));
+				lptHumanRcd->szTakeItem[i].btValue[17] = atoi(pRec->Get("FLD_Freezing"));
+				lptHumanRcd->szTakeItem[i].btValue[18] = atoi(pRec->Get("FLD_PoisonAttack"));
+				lptHumanRcd->szTakeItem[i].btValue[19] = atoi(pRec->Get("FLD_RefinedValue"));
+				lptHumanRcd->szTakeItem[i].btValue[20] = atoi(pRec->Get("FLD_RefineAdded"));
+				/*FLD_DuraChanged|FLD_Identified|FLD_Cursed|FLD_WeddingRing*/
+				lptHumanRcd->szTakeItem[i].btValue[21] = atoi(pRec->Get("FLD_Switchs"));
+				strcpy(lptHumanRcd->szTakeItem[i].szBoundGuid, pRec->Get("FLD_SoulBoundGuid"));
+
+				ZeroMemory(lptHumanRcd->szTakeItem[i].szPrefixName, sizeof(lptHumanRcd->szTakeItem[i].szPrefixName));
+				strcpy(lptHumanRcd->szTakeItem[i].szPrefixName, pRec->Get("FLD_PREFIXNAME"));
+
+				lptHumanRcd->szTakeItem[i].sbtValue[0] = atoi(pRec->Get("FLD_AttackSpeed"));
+				lptHumanRcd->szTakeItem[i].sbtValue[1] = atoi(pRec->Get("FLD_Luck"));
+			}
+		}
 	}
 	else
 	{
 		GetDBManager()->DestroyRecordset( pRec );
+		GetDBManager()->DestroyRecordset(pRec2);
 		return FALSE;
 	}
 	
 	GetDBManager()->DestroyRecordset( pRec );
-
+	GetDBManager()->DestroyRecordset(pRec2);
 	return TRUE;
 }
 
@@ -418,12 +498,13 @@ void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int 
 BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMANRCD lptHumanRcd, int nRecog)
 {
 	char szSQL[1024];
-	char szTakeItem[10][13];
+	char szTakeItem[10][65];
 
 	ZeroMemory(szTakeItem, sizeof(szTakeItem));
 
 	for (int i = 0; i < 10; i++)
-		memmove(szTakeItem[i], lptHumanRcd->szTakeItem[i], 12);
+		/*0:STDType,1-6:MakeDate*/
+		memmove(szTakeItem[i], &lptHumanRcd->szTakeItem[i].szMakeIndex[7], 64);
 
 	sprintf(szSQL, "UPDATE TBL_CHARACTER SET FLD_JOB=%d, FLD_GENDER=%d, FLD_LEVEL=%d, FLD_DIRECTION=%d, FLD_CX=%d, FLD_CY=%d, "
 						"FLD_MAPNAME='%s', FLD_GOLD=%d, FLD_HAIR=%d, FLD_DRESS_ID='%s', FLD_WEAPON_ID='%s', "
