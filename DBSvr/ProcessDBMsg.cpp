@@ -200,8 +200,10 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHuman)
 {
 	char szQuery[1024];
+	char szItemMakeIndex[64];
+	memset(szItemMakeIndex,0,sizeof(szItemMakeIndex));
 
-	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_INDEX='%d' AND FLD_ISDELETED=0", szName,lpLoadHuman->btCharIndex );
+	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_INDEX=%d AND FLD_ISDELETED=0", lpLoadHuman->szUserID,lpLoadHuman->btCharIndex );
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
 	CRecordset *pRec2 = GetDBManager()->CreateRecordset();
@@ -238,9 +240,11 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 		char FLD_NAME[10][30] = { "FLD_DRESS_ID" ,"FLD_WEAPON_ID" ,"FLD_LEFTHAND_ID" ,"FLD_RIGHTHAND_ID" ,"FLD_HELMET_ID" ,"FLD_NECKLACE_ID" ,
 			"FLD_ARMRINGL_ID" ,"FLD_ARMRINGR_ID" ,"FLD_RINGL_ID" ,"FLD_RINGR_ID" };
 	
-		for (int i = 0; i < sizeof(lptHumanRcd->szTakeItem); i++) 
+		for (int i = 0; i < sizeof(lptHumanRcd->szTakeItem)/sizeof(_TUSERITEMRCD); i++) 
 		{
-			sprintf(szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE  FLD_MAKEINDEX='%s' AND FLD_ISDELETED=0",pRec->Get(FLD_NAME[i]));
+			strcpy(szItemMakeIndex, pRec->Get(FLD_NAME[i]));
+			if (strlen(szItemMakeIndex) <= sizeof(szItemMakeIndex)) continue;
+			sprintf(szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE  FLD_MAKEINDEX='%s' AND FLD_ISDELETED=0", szItemMakeIndex);
 			if (pRec2->Execute(szQuery)&&pRec2->Fetch()) {
 				//lptHumanRcd->szTakeItem[i] = new _TUSERITEMRCD;
 				lptHumanRcd->szTakeItem[i].btIsEmpty = false;
@@ -534,16 +538,18 @@ BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMAN
 BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEITEMRCD lpMakeItemRcd, int nRecog)
 {
 	static char  g_szYesterDay[24];
-	static UINT  g_nItemIndexCnt = 0;
+	//static UINT  g_nItemIndexCnt = 0;
 
 	CRecordset *pRec;
 
 	char szQuery[1024];
 	char szDate[24];
+	char szMakeIndex[64];
 	GetDate( szDate );
 
 //	if (strcmp(szDate, g_szYesterDay) != 0)
 //	{
+	/* use Guid 2017.06.23
 		sprintf( szQuery, 
 			"SELECT FLD_MAKEINDEX FROM TBL_CHARACTER_ITEM WHERE FLD_STDTYPE = '%c' AND "
 			"FLD_MAKEDATE = '%s' ORDER BY FLD_MAKEINDEX DESC",
@@ -555,8 +561,9 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 			g_nItemIndexCnt = atoi( pRec->Get( "FLD_MAKEINDEX" ) ) + 1;
 		}
 		GetDBManager()->DestroyRecordset( pRec );
-
-		strcpy( g_szYesterDay, szDate );
+	*/
+	GetGuidSZ(szMakeIndex);
+	strcpy(g_szYesterDay, szDate);
 //	}
 //	else
 //		g_nItemIndexCnt++;
@@ -581,17 +588,47 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 		memset(szGuid, 0, sizeof(szGuid));
 	}
 	//DOWN 2012/6/29
+	/*
+	lptHumanRcd->szTakeItem[i].btValue[0] = atoi(pRec->Get("FLD_AC"));
+	lptHumanRcd->szTakeItem[i].btValue[1] = atoi(pRec->Get("FLD_MAC"));
+	lptHumanRcd->szTakeItem[i].btValue[2] = atoi(pRec->Get("FLD_DC"));
+	lptHumanRcd->szTakeItem[i].btValue[3] = atoi(pRec->Get("FLD_MC"));
+	lptHumanRcd->szTakeItem[i].btValue[4] = atoi(pRec->Get("FLD_SC"));
+	lptHumanRcd->szTakeItem[i].btValue[5] = atoi(pRec->Get("FLD_Accuracy"));
+	lptHumanRcd->szTakeItem[i].btValue[6] = atoi(pRec->Get("FLD_Agility"));
+	lptHumanRcd->szTakeItem[i].btValue[7] = atoi(pRec->Get("FLD_HP"));
+	lptHumanRcd->szTakeItem[i].btValue[8] = atoi(pRec->Get("FLD_MP"));
+	lptHumanRcd->szTakeItem[i].btValue[9] = atoi(pRec->Get("FLD_Strong"));
+	lptHumanRcd->szTakeItem[i].btValue[10] = atoi(pRec->Get("FLD_MagicResist"));
+	lptHumanRcd->szTakeItem[i].btValue[11] = atoi(pRec->Get("FLD_PoisonResist"));
+	lptHumanRcd->szTakeItem[i].btValue[12] = atoi(pRec->Get("FLD_HealthRecovery"));
+
+	lptHumanRcd->szTakeItem[i].btValue[13] = atoi(pRec->Get("FLD_ManaRecovery"));
+	lptHumanRcd->szTakeItem[i].btValue[14] = atoi(pRec->Get("FLD_PoisonRecovery"));
+	lptHumanRcd->szTakeItem[i].btValue[15] = atoi(pRec->Get("FLD_CriticalRate"));
+	lptHumanRcd->szTakeItem[i].btValue[16] = atoi(pRec->Get("FLD_CriticalDamage"));
+	lptHumanRcd->szTakeItem[i].btValue[17] = atoi(pRec->Get("FLD_Freezing"));
+	lptHumanRcd->szTakeItem[i].btValue[18] = atoi(pRec->Get("FLD_PoisonAttack"));
+	lptHumanRcd->szTakeItem[i].btValue[19] = atoi(pRec->Get("FLD_RefinedValue"));
+	lptHumanRcd->szTakeItem[i].btValue[20] = atoi(pRec->Get("FLD_RefineAdded"));
+	/*FLD_DuraChanged|FLD_Identified|FLD_Cursed|FLD_WeddingRing
+	lptHumanRcd->szTakeItem[i].btValue[21] = atoi(pRec->Get("FLD_Switchs"));
+	*/
 	sprintf(szQuery, "INSERT TBL_CHARACTER_ITEM (FLD_LOGINID, FLD_CHARINDEX, FLD_STDTYPE, FLD_MAKEDATE, FLD_MAKEINDEX, "
-						"FLD_STDINDEX, FLD_DURA, FLD_DURAMAX, FLD_VALUE1, FLD_VALUE2, FLD_VALUE3, FLD_VALUE4, FLD_VALUE5, "
-						"FLD_VALUE6, FLD_VALUE7, FLD_VALUE8, FLD_VALUE9, FLD_VALUE10, FLD_VALUE11, FLD_VALUE12, FLD_VALUE13, "
-						"FLD_VALUE14, FLD_LASTOWNER, FLD_LASTACTION, FLD_PREFIXNAME,FLD_OWNER) "
-						"VALUES( '%s', '%d', '%c', '%s', '%05d', %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, '%s', %d, '%s' ,'%s')", 
-						szUserID, btCharIndex, lpMakeItemRcd->szStdType, g_szYesterDay, g_nItemIndexCnt,
-						lpMakeItemRcd->nStdIndex, lpMakeItemRcd->nDura,	lpMakeItemRcd->nDuraMax, 
+						"FLD_STDINDEX, FLD_DURA, FLD_DURAMAX,FLD_COUNT, FLD_AC, FLD_MAC, FLD_DC, FLD_MC, FLD_SC, "//
+						"FLD_Accuracy, FLD_Agility, FLD_HP, FLD_MP, FLD_Strong, FLD_MagicResist, FLD_PoisonResist, FLD_HealthRecovery, "
+						"FLD_ManaRecovery, FLD_PoisonRecovery, FLD_CriticalRate,FLD_CriticalDamage,FLD_Freezing,"
+						"FLD_PoisonAttack,FLD_RefinedValue,FLD_RefineAdded,FLD_SWITCHS,FLD_PREFIXNAME,FLD_LASTOWNER,FLD_LASTACTION,FLD_OWNER) "
+						"VALUES( '%s', '%d', '%c', '%s', '%s', %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, '%d', %d," 
+						"'%d' ,'%d' ,'%d' ,'%d' ,'%d' ,'%d' ,'%d' ,'%s','%s' ,'%d','%s')", 
+						szUserID, btCharIndex, lpMakeItemRcd->szStdType, g_szYesterDay, szMakeIndex,
+						lpMakeItemRcd->nStdIndex, lpMakeItemRcd->nDura,	lpMakeItemRcd->nDuraMax, 1,
 						lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 						lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 						lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
-						lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], szGuid, 1, "",szGuid);
+						lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], lpMakeItemRcd->btValue[14], lpMakeItemRcd->btValue[15],
+						lpMakeItemRcd->btValue[16], lpMakeItemRcd->btValue[17], lpMakeItemRcd->btValue[18], lpMakeItemRcd->btValue[19], 
+						lpMakeItemRcd->btValue[20], lpMakeItemRcd->btValue[21],"", szGuid, 1,szGuid);
 	
 	pRec = GetDBManager()->CreateRecordset();
 	if ( !pRec->Execute( szQuery ) || pRec->GetRowCount() <= 0 )
@@ -616,7 +653,7 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 		UserItemRcd.szMakeIndex[0] = lpMakeItemRcd->szStdType;
 		
 		memcpy( &UserItemRcd.szMakeIndex[1], g_szYesterDay, 6 );
-		sprintf( &UserItemRcd.szMakeIndex[7], "%d", g_nItemIndexCnt );
+		sprintf( &UserItemRcd.szMakeIndex[7], "%s", szMakeIndex );
 		
 		memcpy(&UserItemRcd.nStdIndex, &lpMakeItemRcd->nStdIndex, sizeof(_TUSERITEMRCD) - sizeof(UserItemRcd.szMakeIndex));
 		

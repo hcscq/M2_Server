@@ -420,7 +420,7 @@ typedef struct tag_TMAKEITEMRCD
 	int			nStdIndex;
 	WORD		nDura;
 	WORD		nDuraMax;
-	BYTE		btValue[14];
+	BYTE		btValue[22];
 } _TMAKEITEMRCD, *_LPTMAKEITEMRCD;
 
 typedef struct tag_GENERALITEMRCD

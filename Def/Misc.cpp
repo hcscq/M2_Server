@@ -119,7 +119,18 @@ void GetDate(char *pszBuf)
 	
 	sprintf(pszBuf, "%02d%02d%02d", ttm.tm_year - 100, ttm.tm_mon + 1, ttm.tm_mday);
 }
-
+char *GetGuidSZ(char *szDest)
+{
+	GUID guid;
+	CoCreateGuid(&guid);
+	sprintf_s(szDest, 64, "{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
+		guid.Data1, guid.Data2, guid.Data3,
+		guid.Data4[0], guid.Data4[1],
+		guid.Data4[2], guid.Data4[3],
+		guid.Data4[4], guid.Data4[5],
+		guid.Data4[6], guid.Data4[7]);
+	return szDest;
+}
 int GetTime()
 {
 	time_t	t;

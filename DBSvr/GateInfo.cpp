@@ -278,14 +278,6 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 
 		//insert TBL_CHARACTER 
 		//done 2012/6/29
-		GUID guid;
-		CoCreateGuid(&guid);
-		sprintf_s(szCharGuid, sizeof(szCharGuid), "{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
-			guid.Data1, guid.Data2, guid.Data3,
-			guid.Data4[0], guid.Data4[1],
-			guid.Data4[2], guid.Data4[3],
-			guid.Data4[4], guid.Data4[5],
-			guid.Data4[6], guid.Data4[7]);
 		sprintf(szQuery, "INSERT TBL_CHARACTER ("
 						"FLD_LOGINID, FLD_CHARNAME, FLD_JOB, FLD_GENDER, FLD_LEVEL, FLD_DIRECTION, "
 						"FLD_ATTACKMODE, FLD_CX, FLD_CY, FLD_MAPNAME, FLD_GOLD, FLD_HAIR, "
@@ -294,11 +286,11 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 						"FLD_RINGR_ID, FLD_EXP,FLD_INDEX,FLD_GUID) VALUES ( "
 						"'%s', '%s', %d, %d, 1, 4, "
 						"1, %d, %d, '%s', 0, 0, "
-						"'0', '0', '0', '0', '0', "
-						"'0', '0', '0', '0', "
-						"'0', 0,'%d','%s')",
+						"NULL, NULL, NULL, NULL, NULL, "
+						"NULL,NULL, NULL, NULL, "
+						"NULL, 0,'%d','%s')",
 						lpTCreateChr->szID, lpTCreateChr->szName, lpTCreateChr->btClass, lpTCreateChr->btGender,
-						table->posX, table->posY, table->mapName,lpTCreateChr->btIndex, szCharGuid);
+						table->posX, table->posY, table->mapName,lpTCreateChr->btIndex, GetGuidSZ(szCharGuid));
 		pRec->Execute( szQuery );
 		//DONE 2012 /6/29
 		sprintf(szQuery, "INSERT TBL_CHARACTER_GENITEM (FLD_LOGINID, FLD_CHARNAME, FLD_ITEMINDEX) VALUES ('%s', '%s', 'G00080008000')",

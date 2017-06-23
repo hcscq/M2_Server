@@ -13,6 +13,7 @@ char		*ValToAnsiStr(unsigned long val, char *buf);
 void		ChangeSpaceToNull(char *pszData);
 
 void		GetDate(char *pszBuf);
+char		*GetGuidSZ(char *szDest);
 int			GetTime();
 
 #endif
