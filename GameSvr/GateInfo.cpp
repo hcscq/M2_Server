@@ -249,7 +249,7 @@ char * CGateInfo::ExtractPacket( char *pPacket )
 
 	memcpy( pPacket, OverlappedEx[0].Buffer, packetLen );
 
-	memmove( OverlappedEx[0].Buffer, OverlappedEx[0].Buffer + packetLen, DATA_BUFSIZE - packetLen );
+	memmove( OverlappedEx[0].Buffer, OverlappedEx[0].Buffer + packetLen, DATA_BUFSIZE - packetLen ); 
 	OverlappedEx[0].bufLen -= packetLen;
 
 	return pPacket + packetLen;

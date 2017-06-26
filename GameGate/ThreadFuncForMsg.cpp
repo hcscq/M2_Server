@@ -67,12 +67,12 @@ DWORD WINAPI ThreadFuncForMsg(LPVOID lpParameter)
 						{
 							if (*pSendBuff->szData == '#')
 							{
-								if (memlen(pSendBuff->szData) > _DEFBLOCKSIZE + 2)
+								if (memlen(pSendBuff->szData) > _DEFBLOCKSIZE + 1)
 								{
-									if (*(pSendBuff->szData + _DEFBLOCKSIZE + 2) == '!')	// 3[#? !]
+									if (*(pSendBuff->szData + _DEFBLOCKSIZE + 1) == '!')	// 3[#? !]
 									{
-										*(pSendBuff->szData + _DEFBLOCKSIZE + 2) = '\0';
-										fnDecodeMessageA(&DefMsg, (pSendBuff->szData + 2));		// 2[#?] ? = Code
+										*(pSendBuff->szData + _DEFBLOCKSIZE + 1) = '\0';
+										fnDecodeMessageA(&DefMsg, (pSendBuff->szData + 1));		// 2[#?] ? = Code
 		
 										MsgHdr.nLength = sizeof(_TDEFAULTMESSAGE);
 										SendSocketMsgS(&MsgHdr, sizeof(_TDEFAULTMESSAGE), (char *)&DefMsg, 0, NULL);

@@ -1384,7 +1384,7 @@ void CPlayerObject::ServerGetTakeOnGenItem(WORD wWhere, char *pszItemIndex)
 		
 			if (memcmp(pszItemIndex, lpTGenItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
 			{
-				memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere], lpTGenItemRcd->szMakeIndex, _MAKEITEMINDEX);
+				memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, lpTGenItemRcd->szMakeIndex, _MAKEITEMINDEX);
 
 				RecalcAbilitys();
 
@@ -1419,7 +1419,7 @@ void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, char *pszItemIndex)
 	{
 		if (CheckTakeOnItem(wWhere, lpTItemRcd))
 		{
-			memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere], lpTItemRcd->szMakeIndex, _MAKEITEMINDEX);
+			memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX);
 
 			switch (wWhere)
 			{
@@ -1469,10 +1469,10 @@ void CPlayerObject::ServerGetTakeOffItem(WORD wWhere, char *pszItemIndex)
 //		{
 //			lpTItemRcd = m_pUserInfo->m_lpTItemRcd.GetData(pListNode);
 		
-	if (memcmp(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere], pszItemIndex, _MAKEITEMINDEX) == 0)
+	if (memcmp(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, pszItemIndex, _MAKEITEMINDEX) == 0)
 	{
-		ZeroMemory(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere], _MAKEITEMINDEX);
-		memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere], "0", 2);
+		ZeroMemory(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, _MAKEITEMINDEX);
+		memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, "0", 2);
 
 		switch (wWhere)
 		{

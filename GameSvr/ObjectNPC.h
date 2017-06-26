@@ -29,5 +29,5 @@ public:
 	void RunRace();
 
 	virtual WORD	GetThisCharColor() { return _CHAT_COLOR3; }
-	virtual void	GetCharName(char *pszCharName) { strcpy(pszCharName, m_szName); }
+	virtual void	GetCharName(char *pszCharName) { strcpy_s(pszCharName,sizeof(m_szName), m_szName); }
 };
