@@ -146,8 +146,12 @@ BOOL CMirMap::LoadMapData(char *pszName)
 	lstrcat(szMapFileName, _TEXT("\\"));
 	lstrcat(szMapFileName, szMapName);
 
-	hFile = CreateFile(szMapFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+/*	WCHAR pBuf[MAX_PATH];                                   
 
+	GetCurrentDirectory(MAX_PATH, pBuf); */                 
+
+	hFile = CreateFile(szMapFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	int a= GetLastError();
 	if ( hFile != INVALID_HANDLE_VALUE )
 	{
 		DWORD		dwReadLen;

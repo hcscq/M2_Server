@@ -1088,13 +1088,13 @@ void CUserInfo::DoClientCertification(char *pszPacket)
 	{
 		int nLen = memlen(pszPacket);
 
-		if (pszPos = (char *)memchr(pszPacket, '!', nLen))
-		{
-			*pszPos = '\0';
+		//if (pszPos = (char *)memchr(pszPacket, '!', nLen))
+		//{
+			//*pszPos = '\0';
 
 			//             uid  chr	 cer  ver  startnew
 			// pszPacket **SSSS/SSSS/SSSS/SSSS/1
-			nLen = fnDecode6BitBufA(pszPacket + 2, szDecodePacket, sizeof(szDecodePacket));
+			nLen = fnDecode6BitBufA(pszPacket, szDecodePacket, sizeof(szDecodePacket));
 			szDecodePacket[nLen] = '\0';
 
 			if (*pszDecodePacket == '*' && *(pszDecodePacket + 1) == '*')
@@ -1112,7 +1112,8 @@ void CUserInfo::DoClientCertification(char *pszPacket)
 
 				*pszPos++ = '\0';
 				nLen -= (pszPos - pszDecodePacket);
-				memmove(m_szCharName, pszDecodePacket, (pszPos - pszDecodePacket));
+				m_THumanRcd.btIndex=AnsiStrToVal(pszDecodePacket);
+				//memmove(&m_THumanRcd.btIndex, pszDecodePacket, (pszPos - pszDecodePacket));
 				pszDecodePacket = pszPos;
 
 				if (!(pszPos = (char *)memchr(pszDecodePacket, '/', nLen))) return;
@@ -1145,6 +1146,6 @@ void CUserInfo::DoClientCertification(char *pszPacket)
 					// INSERT:Close User
 				} */
 			}
-		}
+		//}
 	}
 }

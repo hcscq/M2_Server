@@ -251,7 +251,7 @@ UINT WINAPI ProcessLogin(LPVOID lpParameter)
 								pReadyUserInfo = g_xReadyUserInfoList2.GetData(pReadyListNode);
 
 								if ((strcmp(pReadyUserInfo->m_THumanRcd.szUserID, pUserInfo->m_szUserID) == 0) &&
-									(strcmp(pReadyUserInfo->m_THumanRcd.szCharName, pUserInfo->m_szCharName) == 0))
+									(pReadyUserInfo->m_THumanRcd.btIndex == pUserInfo->m_THumanRcd.btIndex))
 								{
 									if (LoadPlayer(pReadyUserInfo, pUserInfo))
 									{

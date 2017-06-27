@@ -2270,7 +2270,7 @@ void CPlayerObject::Operate()
 
 	if (nCount)
 	{
-		char				szEncodeMsg[256];
+		char				szEncodeMsg[2048];
 		_TMESSAGEBODYWL		MsgBodyWL;
 		_TSHORTMSSEAGE		tsMsg;
 		_TCHARDESC			CharDesc;

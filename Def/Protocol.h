@@ -4,7 +4,7 @@
 
 #define DEFBLOCKSIZE			22
 #define DEFGUIDLEN				64
-#define HUMANRCDBLOCKSIZE		256
+#define HUMANRCDBLOCKSIZE		1906//256
 #define ITEMRCDBLOCKSIZE		70			// _TUSERITEMRCD
 #define MAGICRCDBLOCKSIZE		10
 #define GENITEMRCDBLOCKSIZE		18
@@ -359,7 +359,7 @@ typedef struct tag_TLOADMUHAN
 	char		szCharName[20];
 	char		szUserAddr[15];
 	byte		btCharIndex;
-	char		szCharGuid[64];
+	char		szCharGuid[36];
 	int			nCertification;
 } _TLOADHUMAN, *_LPTLOADHUMAN;
 
@@ -377,13 +377,13 @@ typedef struct tag_TLOADMUHAN
 typedef struct tag_TUSERITEMRCD
 {
 	BYTE		btIsEmpty=true;
-	char		szMakeIndex[71];
+	char		szMakeIndex[43];
 	WORD		nStdIndex;
 	WORD		nDura;
 	WORD		nDuraMax;
 	USHORT		usCount;
 	BYTE		btValue[22];
-	char		szBoundGuid[64];
+	char		szBoundGuid[36];
 	char		sbtValue[2];
 	char		szPrefixName[20];
 } _TUSERITEMRCD, *_LPTUSERITEMRCD;
@@ -391,8 +391,9 @@ typedef struct tag_THUMANRCD
 {
 	char		szUserID[16];
 	char		szCharName[20];
-	char		szCharGuid[64];
+	char		szCharGuid[36];
 
+	BYTE		btIndex;
 	BYTE		btJob;
 	BYTE		btGender;
 	_TUSERITEMRCD		szTakeItem[10];

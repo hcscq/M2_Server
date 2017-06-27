@@ -152,9 +152,10 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 
 			public Awake Awake = new Awake();
 			*/
+			pItem->btIsEmpty = false;
 			pItem->szMakeIndex[0] = *(pRec->Get( "FLD_STDTYPE" ));
-			memmove( &pItem->szMakeIndex[1], pRec->Get( "FLD_MAKEDATE" ), 6 );
-			memmove( &pItem->szMakeIndex[7], pRec->Get( "FLD_MAKEINDEX" ), 64 );
+			memcpy( &pItem->szMakeIndex[1], pRec->Get( "FLD_MAKEDATE" ), 6 );
+			memcpy( &pItem->szMakeIndex[7], pRec->Get( "FLD_MAKEINDEX" ), 36 );
 			
 			pItem->nStdIndex	= atoi( pRec->Get( "FLD_STDINDEX" ) );
 			pItem->nDura		= atoi( pRec->Get( "FLD_DURA" ) );
@@ -183,10 +184,12 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 			pItem->btValue[20] = atoi(pRec->Get("FLD_RefineAdded"));
 			/*FLD_DuraChanged|FLD_Identified|FLD_Cursed|FLD_WeddingRing*/
 			pItem->btValue[21] = atoi(pRec->Get("FLD_Switchs"));
-			strcpy(pItem->szBoundGuid, pRec->Get("FLD_SoulBoundGuid"));
+			memcpy(pItem->szBoundGuid, pRec->Get("FLD_SoulBoundGuid"),36);
+
+			pItem->usCount = atoi(pRec->Get("FLD_COUNT"));
 
 			ZeroMemory(pItem->szPrefixName, sizeof(pItem->szPrefixName));
-			strcpy( pItem->szPrefixName, pRec->Get( "FLD_PREFIXNAME") );
+			memcpy( pItem->szPrefixName, pRec->Get( "FLD_PREFIXNAME"),20 );
 
 			pItem->sbtValue[0] = atoi(pRec->Get("FLD_AttackSpeed"));
 			pItem->sbtValue[1] = atoi(pRec->Get("FLD_Luck"));
@@ -200,7 +203,7 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHuman)
 {
 	char szQuery[1024];
-	char szItemMakeIndex[64];
+	char szItemMakeIndex[43];
 	memset(szItemMakeIndex,0,sizeof(szItemMakeIndex));
 
 	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_INDEX=%d AND FLD_ISDELETED=0", lpLoadHuman->szUserID,lpLoadHuman->btCharIndex );
@@ -209,8 +212,8 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 	CRecordset *pRec2 = GetDBManager()->CreateRecordset();
 
 	if ( pRec->Execute( szQuery ) && pRec->Fetch() )
-	{
-		memcpy(lpLoadHuman->szCharGuid, pRec->Get("FLD_GUID"),sizeof(GUID));
+	{	
+		memcpy(lpLoadHuman->szCharGuid, pRec->Get("FLD_GUID"),sizeof(lpLoadHuman->szCharGuid));
 		strcpy(lpLoadHuman->szCharName, pRec->Get("FLD_CHARNAME"));
 
 		strcpy(lptHumanRcd->szCharGuid,lpLoadHuman->szCharGuid);
@@ -219,6 +222,8 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 		strcpy(lptHumanRcd->szCharName, pRec->Get( "FLD_CHARNAME" ) );
 		ChangeSpaceToNull(lptHumanRcd->szCharName);
 
+		memcpy(lptHumanRcd->szCharGuid, pRec->Get("FLD_GUID"), sizeof(lpLoadHuman->szCharGuid));
+		lptHumanRcd->btIndex	= (BYTE)atoi(pRec->Get("FLD_INDEX"));
 		lptHumanRcd->btJob		= (BYTE)atoi( pRec->Get( "FLD_JOB" ) );
 		lptHumanRcd->btGender	= (BYTE)atoi( pRec->Get( "FLD_GENDER" ) );
 		lptHumanRcd->szLevel	= (BYTE)atoi( pRec->Get( "FLD_LEVEL" ) );
@@ -249,8 +254,8 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 				//lptHumanRcd->szTakeItem[i] = new _TUSERITEMRCD;
 				lptHumanRcd->szTakeItem[i].btIsEmpty = false;
 				lptHumanRcd->szTakeItem[i].szMakeIndex[0] = *(pRec->Get("FLD_STDTYPE"));
-				memmove(&lptHumanRcd->szTakeItem[i].szMakeIndex[1], pRec->Get("FLD_MAKEDATE"), 6);
-				memmove(&lptHumanRcd->szTakeItem[i].szMakeIndex[7], pRec->Get("FLD_MAKEINDEX"), 64);
+				memcpy(&lptHumanRcd->szTakeItem[i].szMakeIndex[1], pRec->Get("FLD_MAKEDATE"), 6);
+				memcpy(&lptHumanRcd->szTakeItem[i].szMakeIndex[7], pRec->Get("FLD_MAKEINDEX"), 36);
 
 				lptHumanRcd->szTakeItem[i].nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
 				lptHumanRcd->szTakeItem[i].nDura = atoi(pRec->Get("FLD_DURA"));
@@ -508,7 +513,7 @@ BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMAN
 
 	for (int i = 0; i < 10; i++)
 		/*0:STDType,1-6:MakeDate*/
-		memmove(szTakeItem[i], &lptHumanRcd->szTakeItem[i].szMakeIndex[7], 64);
+		memmove(szTakeItem[i], &lptHumanRcd->szTakeItem[i].szMakeIndex[7], 36);
 
 	sprintf(szSQL, "UPDATE TBL_CHARACTER SET FLD_JOB=%d, FLD_GENDER=%d, FLD_LEVEL=%d, FLD_DIRECTION=%d, FLD_CX=%d, FLD_CY=%d, "
 						"FLD_MAPNAME='%s', FLD_GOLD=%d, FLD_HAIR=%d, FLD_DRESS_ID='%s', FLD_WEAPON_ID='%s', "
@@ -544,7 +549,7 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 
 	char szQuery[1024];
 	char szDate[24];
-	char szMakeIndex[64];
+	char szMakeIndex[43];
 	GetDate( szDate );
 
 //	if (strcmp(szDate, g_szYesterDay) != 0)
@@ -571,7 +576,7 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 	char szUserID[32];
 	char szCharName[32];
 	byte btCharIndex;
-	char szGuid[64];
+	char szGuid[36];
 	if (lpHumanLoad)
 	{
 		strcpy(szUserID, lpHumanLoad->szUserID);

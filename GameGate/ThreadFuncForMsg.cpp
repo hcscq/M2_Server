@@ -52,26 +52,31 @@ DWORD WINAPI ThreadFuncForMsg(LPVOID lpParameter)
 						MsgHdr.wUserGateIndex	= pSendBuff->nGateIndex;
 						MsgHdr.wUserListIndex	= pSessionInfo->nServerUserIndex;
 
-						if (pSessionInfo->fLoginCode)
+//						if (pSessionInfo->fLoginCode)
+//						{
+//							pSessionInfo->fLoginCode = FALSE;
+//
+////							MsgHdr.nLength = (memlen(pSendBuff->szData) - 1);
+////							SendSocketMsgS (&MsgHdr, MsgHdr.nLength, , 0, NULL);					
+//
+//							MsgHdr.nLength = sizeof(_TDEFAULTMESSAGE) + (memlen(pSendBuff->szData) - 1);
+//
+//							SendSocketMsgS (&MsgHdr, sizeof(_TDEFAULTMESSAGE), (char *)&DefMsg, (memlen(pSendBuff->szData) - 1), pSendBuff->szData);
+//						}
+//						else
 						{
-							pSessionInfo->fLoginCode = FALSE;
+							/*2017.06.27*/
+							if (pSessionInfo->fLoginCode)
+								pSessionInfo->fLoginCode = FALSE;
+							/*end*/
 
-//							MsgHdr.nLength = (memlen(pSendBuff->szData) - 1);
-//							SendSocketMsgS (&MsgHdr, MsgHdr.nLength, , 0, NULL);					
-
-							MsgHdr.nLength = sizeof(_TDEFAULTMESSAGE) + (memlen(pSendBuff->szData) - 1);
-
-							SendSocketMsgS (&MsgHdr, sizeof(_TDEFAULTMESSAGE), (char *)&DefMsg, (memlen(pSendBuff->szData) - 1), pSendBuff->szData);
-						}
-						else
-						{
 							if (*pSendBuff->szData == '#')
 							{
 								if (memlen(pSendBuff->szData) > _DEFBLOCKSIZE + 1)
 								{
-									if (*(pSendBuff->szData + _DEFBLOCKSIZE + 1) == '!')	// 3[#? !]
+									if (*(pSendBuff->szData + _DEFBLOCKSIZE + 2) == '!')	// 3[#? !]
 									{
-										*(pSendBuff->szData + _DEFBLOCKSIZE + 1) = '\0';
+										*(pSendBuff->szData + _DEFBLOCKSIZE + 2) = '\0';
 										fnDecodeMessageA(&DefMsg, (pSendBuff->szData + 1));		// 2[#?] ? = Code
 		
 										MsgHdr.nLength = sizeof(_TDEFAULTMESSAGE);
@@ -79,12 +84,12 @@ DWORD WINAPI ThreadFuncForMsg(LPVOID lpParameter)
 									}
 									else
 									{
-										nBodyLen = memlen(pSendBuff->szData + _DEFBLOCKSIZE + 2) - 2;	// 2 = '!\0'
+										nBodyLen = memlen(pSendBuff->szData + _DEFBLOCKSIZE + 1) - 2;	// 2 = '!\0'
 
-										pData = pSendBuff->szData + _DEFBLOCKSIZE + 2;				
+										pData = pSendBuff->szData + _DEFBLOCKSIZE + 1;				
 										pData[nBodyLen] = '\0';
 
-										fnDecodeMessageA(&DefMsg, (pSendBuff->szData + 2));		// 2[#?] ? = Code
+										fnDecodeMessageA(&DefMsg, (pSendBuff->szData + 1));		// 2[#?] ? = Code
 
 										if (DefMsg.wIdent == CM_SAY)
 										{
