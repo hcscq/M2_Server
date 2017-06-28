@@ -83,10 +83,11 @@ public:
 
 	CMapCellInfo*		m_pMapCellInfo;
 
-	char				m_szMapName[16];
-	char				m_szMapTextName[40];
 	BYTE				m_btSeries;					// 瘤开 盔家 加己
 	BYTE				m_btSeriesVal;				// 瘤开 盔家 加己蔼
+
+	char				m_szMapName[16];
+	char				m_szMapTextName[40];
 	TMIRMAPEX			m_exMapDiscEx;
 
 public:

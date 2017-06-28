@@ -1175,10 +1175,12 @@ void CPlayerObject::Initialize()
 
 		m_btBright = g_nMirDayTime;
 
+		AddProcess(this, RM_SENDUSEITEMS, 0, 0, 0, 0, NULL);
+
 		AddProcess(this, RM_ABILITY, 0, 0, 0, 0, NULL);
 		AddProcess(this, RM_SUBABILITY, 0, 0, 0, 0, NULL);
 		AddProcess(this, RM_DAYCHANGING, 0, 0, 0, 0, NULL);
-		AddProcess(this, RM_SENDUSEITEMS, 0, 0, 0, 0, NULL);
+
 		AddProcess(this, RM_SENDMYMAGIC, 0, 0, 0, 0, NULL);
 
 		// BEGIN : Send Attack Mode Msg
@@ -1526,10 +1528,7 @@ void CPlayerObject::SendNewMap()
 		_TDEFAULTMESSAGE	DefMsg;
 		char				szEncodeMsg[256];
 																			
-		int nPos = fnEncode6BitBufA((unsigned char *)m_pMap->m_szMapName, szEncodeMsg, memlen(m_pMap->m_szMapName) - 1, sizeof(szEncodeMsg));
-		nPos += fnEncode6BitBufA((unsigned char *)m_pMap->m_szMapTextName, &szEncodeMsg[nPos], memlen(m_pMap->m_szMapTextName) - 1, sizeof(szEncodeMsg)-nPos);
-
-		nPos += fnEncode6BitBufA((unsigned char *)&(m_pMap->m_exMapDiscEx), &szEncodeMsg[nPos], sizeof(TMIRMAPEX), sizeof(szEncodeMsg) - nPos);
+		int nPos = fnEncode6BitBufA((unsigned char *)m_pMap+sizeof(MAPFILEHEADER)+6, szEncodeMsg, sizeof(CMirMap)- sizeof(MAPFILEHEADER) - 6, sizeof(szEncodeMsg));
 
 		szEncodeMsg[nPos] = '\0';
 

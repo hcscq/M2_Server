@@ -66,7 +66,7 @@ void ProcMakeSocketStr(char *lpMsg)
 
 			if (lpMsgHeader->nLength > sizeof(_TDEFAULTMESSAGE))
 			{
-				lpDefMsg->nLen = lpMsgHeader->nLength - sizeof(_TDEFAULTMESSAGE) + DEFBLOCKSIZE;
+				lpDefMsg->nLen = lpMsgHeader->nLength - sizeof(_TDEFAULTMESSAGE) + DEFBLOCKSIZE-1;
 				nPos = fnEncodeMessageA(lpDefMsg, &pszData[1], sizeof(pSessionInfo->SendBuffer) - pSessionInfo->nSendBufferLen - 1);
 //				nPos = fnEncodeMessage((char *)lpDefMsg + sizeof(_TDEFAULTMESSAGE) , &szPacket[nPos + 1], sizeof(szPacket) - nPos - 1);
 				memmove(&pszData[nPos + 1], (lpMsg + sizeof(_TMSGHEADER) + sizeof(_TDEFAULTMESSAGE)), lpMsgHeader->nLength - sizeof(_TDEFAULTMESSAGE));
@@ -78,7 +78,7 @@ void ProcMakeSocketStr(char *lpMsg)
 				nPos = fnEncodeMessageA(lpDefMsg, &pszData[1], sizeof(pSessionInfo->SendBuffer) - pSessionInfo->nSendBufferLen - 1);
 				nPos++;
 			}
-
+			
 			pszData[nPos] = '!';
 			pszData[++nPos] = '\0';
 		}

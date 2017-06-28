@@ -83,6 +83,8 @@ CMirMap::CMirMap()
 {
 	m_exMapDiscEx = TMIRMAPEX();
 	m_pMapCellInfo = NULL;
+	memset(m_szMapName, 0, sizeof(m_szMapName));
+	memset(m_szMapTextName, 0, sizeof(m_szMapTextName));
 }
 
 CMirMap::~CMirMap()
