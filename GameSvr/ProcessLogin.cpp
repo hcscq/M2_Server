@@ -85,6 +85,8 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 		pUserInfo->m_pxPlayerObject = &g_xPlayerObjectArr[nIndex];
 		
 		memcpy(&pUserInfo->m_THumanRcd, &pReadyUserInfo->m_THumanRcd, sizeof(pUserInfo->m_THumanRcd));
+		memcpy(pUserInfo->m_szCharName, pReadyUserInfo->m_THumanRcd.szCharName, sizeof(pUserInfo->m_szCharName));
+		memcpy(pUserInfo->m_szUserID, pReadyUserInfo->m_THumanRcd.szUserID, sizeof(pUserInfo->m_szUserID));
 
 		pUserInfo->Unlock();
 

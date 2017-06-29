@@ -2607,14 +2607,35 @@ void CPlayerObject::Operate()
 							
 							CharDesc.Feature	= lpProcessMsg->pCharObject->GetFeatureToLong();
 							CharDesc.Status		= lpProcessMsg->pCharObject->m_nCharStatus;
-
-							nPos = 	fnEncode6BitBufA((unsigned char *)&CharDesc, szEncodeMsg, sizeof(_TCHARDESC), sizeof(szEncodeMsg));
-
-							if (lpProcessMsg->pCharObject->m_wObjectType & _OBJECT_HUMAN)
-								nPos +=	fnEncode6BitBufA((unsigned char *)&((CPlayerObject *)lpProcessMsg->pCharObject)->m_tFeatureEx, &szEncodeMsg[nPos], sizeof(_TOBJECTFEATUREEX), sizeof(szEncodeMsg) - nPos);
-							
+							/**/
+							char szUncodeMsg[sizeof(szEncodeMsg)];
+							nPos = sizeof(CharDesc);
+							memcpy(szUncodeMsg, &CharDesc, nPos);
+							if (lpProcessMsg->pCharObject->m_wObjectType & _OBJECT_HUMAN) {
+								memset(&szUncodeMsg[nPos++],1,1);
+								memcpy(&szUncodeMsg[nPos], (unsigned char *)&((CPlayerObject *)lpProcessMsg->pCharObject)->m_tFeatureEx, sizeof(_TOBJECTFEATUREEX));
+								nPos += sizeof(_TOBJECTFEATUREEX);
+							}
+							else
+								memset(&szUncodeMsg[nPos++], 0, 1);
 							if (lpProcessMsg->pszData)
-								nPos += fnEncode6BitBufA((unsigned char *)lpProcessMsg->pszData, &szEncodeMsg[nPos], memlen(lpProcessMsg->pszData) - 1, sizeof(szEncodeMsg) - nPos);
+							{
+								int nLen = memlen(lpProcessMsg->pszData);
+								memset(&szUncodeMsg[nPos++],1,1);
+								memcpy(&szUncodeMsg[nPos], lpProcessMsg->pszData, nLen);
+								nPos += nLen;
+							}
+							else
+								memset(&szUncodeMsg[nPos++], 0, 1);
+							nPos = fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
+
+							//nPos = 	fnEncode6BitBufA((unsigned char *)&CharDesc, szEncodeMsg, sizeof(_TCHARDESC), sizeof(szEncodeMsg));
+
+							//if (lpProcessMsg->pCharObject->m_wObjectType & _OBJECT_HUMAN)
+							//	nPos +=	fnEncode6BitBufA((unsigned char *)&((CPlayerObject *)lpProcessMsg->pCharObject)->m_tFeatureEx, &szEncodeMsg[nPos], sizeof(_TOBJECTFEATUREEX), sizeof(szEncodeMsg) - nPos);
+							//
+							//if (lpProcessMsg->pszData)
+							//	nPos += fnEncode6BitBufA((unsigned char *)lpProcessMsg->pszData, &szEncodeMsg[nPos], memlen(lpProcessMsg->pszData) - 1, sizeof(szEncodeMsg) - nPos);
 
 							szEncodeMsg[nPos] = '\0';
 
@@ -2961,8 +2982,14 @@ void CPlayerObject::Operate()
 					case RM_SENDUSEITEMS:
 					{
 						fnMakeDefMessage(&DefMsg, SM_SENDUSEITEMS, 0, 0, 0, 0);
-						nPos = fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, sizeof(m_pUserInfo->m_THumanRcd.szCharGuid), sizeof(szEncodeMsg));
-						nPos += fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szTakeItem, &szEncodeMsg[nPos], sizeof(m_pUserInfo->m_THumanRcd.szTakeItem), sizeof(szEncodeMsg));
+						char szUncodeMsg[sizeof(szEncodeMsg)];
+						nPos = sizeof(m_pUserInfo->m_THumanRcd.szCharGuid);
+						memcpy(szUncodeMsg, m_pUserInfo->m_THumanRcd.szCharGuid,nPos);
+						memcpy(&szUncodeMsg[nPos], m_pUserInfo->m_THumanRcd.szTakeItem,sizeof(m_pUserInfo->m_THumanRcd.szTakeItem));
+						nPos += sizeof(m_pUserInfo->m_THumanRcd.szTakeItem);
+						nPos = fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
+						//nPos = fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, sizeof(m_pUserInfo->m_THumanRcd.szCharGuid), sizeof(szEncodeMsg));
+						//nPos += fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szTakeItem, &szEncodeMsg[nPos], sizeof(m_pUserInfo->m_THumanRcd.szTakeItem), sizeof(szEncodeMsg));
 						szEncodeMsg[nPos] = '\0';
 						SendSocket(&DefMsg, szEncodeMsg);
 
