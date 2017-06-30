@@ -2983,7 +2983,7 @@ void CPlayerObject::Operate()
 					{
 						fnMakeDefMessage(&DefMsg, SM_SENDUSEITEMS, 0, 0, 0, 0);
 						char szUncodeMsg[sizeof(szEncodeMsg)];
-						nPos = sizeof(m_pUserInfo->m_THumanRcd.szCharGuid);
+						nPos = DEFGUIDLEN;
 						memcpy(szUncodeMsg, m_pUserInfo->m_THumanRcd.szCharGuid,nPos);
 						memcpy(&szUncodeMsg[nPos], m_pUserInfo->m_THumanRcd.szTakeItem,sizeof(m_pUserInfo->m_THumanRcd.szTakeItem));
 						nPos += sizeof(m_pUserInfo->m_THumanRcd.szTakeItem);

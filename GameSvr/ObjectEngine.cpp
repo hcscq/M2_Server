@@ -3267,7 +3267,7 @@ void CCharObject::SendSocket(_LPTDEFAULTMESSAGE lpDefMsg, char *pszPacket)
 	{
 		if (pszPacket)
 		{
-			int nLength = memlen(pszPacket);
+			int nLength = memlen(pszPacket)-1;
 
 			if (nLength >= 8096) 
 			{
@@ -3281,7 +3281,7 @@ void CCharObject::SendSocket(_LPTDEFAULTMESSAGE lpDefMsg, char *pszPacket)
 
 			memmove(lpSendBuff->szData, (char *)&MsgHdr, sizeof(_TMSGHEADER));
 			memmove(&lpSendBuff->szData[sizeof(_TMSGHEADER)], lpDefMsg, sizeof(_TDEFAULTMESSAGE));
-			memmove(&lpSendBuff->szData[sizeof(_TMSGHEADER) + sizeof(_TDEFAULTMESSAGE)], pszPacket, MsgHdr.nLength - sizeof(_TDEFAULTMESSAGE));
+			memmove(&lpSendBuff->szData[sizeof(_TMSGHEADER) + sizeof(_TDEFAULTMESSAGE)], pszPacket, nLength);
 			
 			lpSendBuff->szData[lpSendBuff->nLen] = '\0';
 		}
