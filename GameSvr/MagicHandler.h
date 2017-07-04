@@ -51,13 +51,19 @@ public:
 	short	sDefSpell;
 	short	sDefPower;
 	short	sDefMaxPower;
+
+	BYTE	sRange;
+	int		nCastTime;
+	BYTE	btIcon;
 	
 	short	sJob;
 
-	short	sNeed[3];
-	int		nTrain[3];
+	USHORT	sNeed[3];
+	USHORT	sTrain[3];
 	
 	short	sDelay;
+	short	sBaseCost;
+	short	sLevCost;
 
 public:
 	int		GetPower13(int nPwr, int nLevel);

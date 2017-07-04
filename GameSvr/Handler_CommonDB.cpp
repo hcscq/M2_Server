@@ -438,11 +438,11 @@ void InitMagicInfo()
 				g_pMagicInfo[i].sDefMaxPower	= atoi( pRec->Get( "FLD_DEFMAXPOWER" ) );
 				g_pMagicInfo[i].sJob			= atoi( pRec->Get( "FLD_JOB" ) );
 				g_pMagicInfo[i].sNeed[0]		= atoi( pRec->Get( "FLD_NEEDL1" ) );
-				g_pMagicInfo[i].nTrain[0]		= atoi( pRec->Get( "FLD_L1TRAIN" ) );
+				g_pMagicInfo[i].sTrain[0]		= atoi( pRec->Get( "FLD_L1TRAIN" ) );
 				g_pMagicInfo[i].sNeed[1]		= atoi( pRec->Get( "FLD_NEEDL2" ) );
-				g_pMagicInfo[i].nTrain[1]		= atoi( pRec->Get( "FLD_L2TRAIN" ) );
+				g_pMagicInfo[i].sTrain[1]		= atoi( pRec->Get( "FLD_L2TRAIN" ) );
 				g_pMagicInfo[i].sNeed[2]		= atoi( pRec->Get( "FLD_NEEDL3" ) );
-				g_pMagicInfo[i].nTrain[2]		= atoi( pRec->Get( "FLD_L3TRAIN" ) );
+				g_pMagicInfo[i].sTrain[2]		= atoi( pRec->Get( "FLD_L3TRAIN" ) );
 				g_pMagicInfo[i].sDelay			= atoi( pRec->Get( "FLD_DELAY" ) );
 			}
 		}

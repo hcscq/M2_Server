@@ -24,18 +24,18 @@ BOOL CMagicInfo::CheckMagicLevelup(CCharObject *pCharObject, _LPTHUMANMAGICRCD l
 
 	if (lptMagicRcd->btLevel < 3/*MaxTrainLevel*/)
 	{
-		if (lptMagicRcd->nCurrTrain >= nTrain[nLevel])
+		if (lptMagicRcd->nCurrTrain >= sTrain[nLevel])
 		{
 			if (lptMagicRcd->btLevel < 3/*MaxTrainLevel*/)
 			{
-				lptMagicRcd->nCurrTrain -= nTrain[nLevel];
+				lptMagicRcd->nCurrTrain -= sTrain[nLevel];
 				lptMagicRcd->btLevel	+= 1;
 				
 				pCharObject->UpdateDelayProcessCheckParam1(pCharObject, RM_MAGIC_LVEXP, 0, lptMagicRcd->nCurrTrain, lptMagicRcd->btLevel, lptMagicRcd->btMagicID, NULL, 800);
 //				CheckMagicSpecialAbility (pum);
 			}
 			else
-				lptMagicRcd->nCurrTrain = nTrain[nLevel];
+				lptMagicRcd->nCurrTrain = sTrain[nLevel];
 
 			return TRUE;
 		}

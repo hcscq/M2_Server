@@ -203,8 +203,8 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHuman)
 {
 	char szQuery[1024];
-	char szItemMakeIndex[43];
-	memset(szItemMakeIndex,0,sizeof(szItemMakeIndex));
+	char *pItemMakeIndex;
+	//memset(szItemMakeIndex,0,sizeof(szItemMakeIndex));
 
 	sprintf( szQuery, "SELECT * FROM TBL_CHARACTER WHERE FLD_LOGINID='%s' AND FLD_INDEX=%d AND FLD_ISDELETED=0", lpLoadHuman->szUserID,lpLoadHuman->btCharIndex );
 
@@ -247,51 +247,53 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 	
 		for (int i = 0; i < sizeof(lptHumanRcd->szTakeItem)/sizeof(_TUSERITEMRCD); i++) 
 		{
-			strcpy(szItemMakeIndex, pRec->Get(FLD_NAME[i]));
-			if (strlen(szItemMakeIndex) <= sizeof(szItemMakeIndex)) continue;
-			sprintf(szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE  FLD_MAKEINDEX='%s' AND FLD_ISDELETED=0", szItemMakeIndex);
+			lptHumanRcd->szTakeItem[i].btIsEmpty = true;
+			pItemMakeIndex = pRec->Get(FLD_NAME[i]);
+			if (memlen(pItemMakeIndex) < DEFGUIDLEN) continue;
+			
+			sprintf(szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE  FLD_MAKEINDEX='%s' AND FLD_ISDELETED=0", pItemMakeIndex);
 			if (pRec2->Execute(szQuery)&&pRec2->Fetch()) {
 				//lptHumanRcd->szTakeItem[i] = new _TUSERITEMRCD;
 				lptHumanRcd->szTakeItem[i].btIsEmpty = false;
-				lptHumanRcd->szTakeItem[i].szMakeIndex[0] = *(pRec->Get("FLD_STDTYPE"));
-				memcpy(&lptHumanRcd->szTakeItem[i].szMakeIndex[1], pRec->Get("FLD_MAKEDATE"), 6);
-				memcpy(&lptHumanRcd->szTakeItem[i].szMakeIndex[7], pRec->Get("FLD_MAKEINDEX"), 36);
+				lptHumanRcd->szTakeItem[i].szMakeIndex[0] = *(pRec2->Get("FLD_STDTYPE"));
+				memcpy(&lptHumanRcd->szTakeItem[i].szMakeIndex[1], pRec2->Get("FLD_MAKEDATE"), 6);
+				memcpy(&lptHumanRcd->szTakeItem[i].szMakeIndex[7], pRec2->Get("FLD_MAKEINDEX"), 36);
 
-				lptHumanRcd->szTakeItem[i].nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
-				lptHumanRcd->szTakeItem[i].nDura = atoi(pRec->Get("FLD_DURA"));
-				lptHumanRcd->szTakeItem[i].nDuraMax = atoi(pRec->Get("FLD_DURAMAX"));
-				lptHumanRcd->szTakeItem[i].usCount = atoi(pRec->Get("FLD_Count"));
-				lptHumanRcd->szTakeItem[i].btValue[0] = atoi(pRec->Get("FLD_AC"));
-				lptHumanRcd->szTakeItem[i].btValue[1] = atoi(pRec->Get("FLD_MAC"));
-				lptHumanRcd->szTakeItem[i].btValue[2] = atoi(pRec->Get("FLD_DC"));
-				lptHumanRcd->szTakeItem[i].btValue[3] = atoi(pRec->Get("FLD_MC"));
-				lptHumanRcd->szTakeItem[i].btValue[4] = atoi(pRec->Get("FLD_SC"));
-				lptHumanRcd->szTakeItem[i].btValue[5] = atoi(pRec->Get("FLD_Accuracy"));
-				lptHumanRcd->szTakeItem[i].btValue[6] = atoi(pRec->Get("FLD_Agility"));
-				lptHumanRcd->szTakeItem[i].btValue[7] = atoi(pRec->Get("FLD_HP"));
-				lptHumanRcd->szTakeItem[i].btValue[8] = atoi(pRec->Get("FLD_MP"));
-				lptHumanRcd->szTakeItem[i].btValue[9] = atoi(pRec->Get("FLD_Strong"));
-				lptHumanRcd->szTakeItem[i].btValue[10] = atoi(pRec->Get("FLD_MagicResist"));
-				lptHumanRcd->szTakeItem[i].btValue[11] = atoi(pRec->Get("FLD_PoisonResist"));
-				lptHumanRcd->szTakeItem[i].btValue[12] = atoi(pRec->Get("FLD_HealthRecovery"));
+				lptHumanRcd->szTakeItem[i].nStdIndex = atoi(pRec2->Get("FLD_STDINDEX"));
+				lptHumanRcd->szTakeItem[i].nDura = atoi(pRec2->Get("FLD_DURA"));
+				lptHumanRcd->szTakeItem[i].nDuraMax = atoi(pRec2->Get("FLD_DURAMAX"));
+				lptHumanRcd->szTakeItem[i].usCount = atoi(pRec2->Get("FLD_Count"));
+				lptHumanRcd->szTakeItem[i].btValue[0] = atoi(pRec2->Get("FLD_AC"));
+				lptHumanRcd->szTakeItem[i].btValue[1] = atoi(pRec2->Get("FLD_MAC"));
+				lptHumanRcd->szTakeItem[i].btValue[2] = atoi(pRec2->Get("FLD_DC"));
+				lptHumanRcd->szTakeItem[i].btValue[3] = atoi(pRec2->Get("FLD_MC"));
+				lptHumanRcd->szTakeItem[i].btValue[4] = atoi(pRec2->Get("FLD_SC"));
+				lptHumanRcd->szTakeItem[i].btValue[5] = atoi(pRec2->Get("FLD_Accuracy"));
+				lptHumanRcd->szTakeItem[i].btValue[6] = atoi(pRec2->Get("FLD_Agility"));
+				lptHumanRcd->szTakeItem[i].btValue[7] = atoi(pRec2->Get("FLD_HP"));
+				lptHumanRcd->szTakeItem[i].btValue[8] = atoi(pRec2->Get("FLD_MP"));
+				lptHumanRcd->szTakeItem[i].btValue[9] = atoi(pRec2->Get("FLD_Strong"));
+				lptHumanRcd->szTakeItem[i].btValue[10] = atoi(pRec2->Get("FLD_MagicResist"));
+				lptHumanRcd->szTakeItem[i].btValue[11] = atoi(pRec2->Get("FLD_PoisonResist"));
+				lptHumanRcd->szTakeItem[i].btValue[12] = atoi(pRec2->Get("FLD_HealthRecovery"));
 
-				lptHumanRcd->szTakeItem[i].btValue[13] = atoi(pRec->Get("FLD_ManaRecovery"));
-				lptHumanRcd->szTakeItem[i].btValue[14] = atoi(pRec->Get("FLD_PoisonRecovery"));
-				lptHumanRcd->szTakeItem[i].btValue[15] = atoi(pRec->Get("FLD_CriticalRate"));
-				lptHumanRcd->szTakeItem[i].btValue[16] = atoi(pRec->Get("FLD_CriticalDamage"));
-				lptHumanRcd->szTakeItem[i].btValue[17] = atoi(pRec->Get("FLD_Freezing"));
-				lptHumanRcd->szTakeItem[i].btValue[18] = atoi(pRec->Get("FLD_PoisonAttack"));
-				lptHumanRcd->szTakeItem[i].btValue[19] = atoi(pRec->Get("FLD_RefinedValue"));
-				lptHumanRcd->szTakeItem[i].btValue[20] = atoi(pRec->Get("FLD_RefineAdded"));
+				lptHumanRcd->szTakeItem[i].btValue[13] = atoi(pRec2->Get("FLD_ManaRecovery"));
+				lptHumanRcd->szTakeItem[i].btValue[14] = atoi(pRec2->Get("FLD_PoisonRecovery"));
+				lptHumanRcd->szTakeItem[i].btValue[15] = atoi(pRec2->Get("FLD_CriticalRate"));
+				lptHumanRcd->szTakeItem[i].btValue[16] = atoi(pRec2->Get("FLD_CriticalDamage"));
+				lptHumanRcd->szTakeItem[i].btValue[17] = atoi(pRec2->Get("FLD_Freezing"));
+				lptHumanRcd->szTakeItem[i].btValue[18] = atoi(pRec2->Get("FLD_PoisonAttack"));
+				lptHumanRcd->szTakeItem[i].btValue[19] = atoi(pRec2->Get("FLD_RefinedValue"));
+				lptHumanRcd->szTakeItem[i].btValue[20] = atoi(pRec2->Get("FLD_RefineAdded"));
 				/*FLD_DuraChanged|FLD_Identified|FLD_Cursed|FLD_WeddingRing*/
-				lptHumanRcd->szTakeItem[i].btValue[21] = atoi(pRec->Get("FLD_Switchs"));
-				strcpy(lptHumanRcd->szTakeItem[i].szBoundGuid, pRec->Get("FLD_SoulBoundGuid"));
+				lptHumanRcd->szTakeItem[i].btValue[21] = atoi(pRec2->Get("FLD_Switchs"));
+				strcpy(lptHumanRcd->szTakeItem[i].szBoundGuid, pRec2->Get("FLD_SoulBoundGuid"));
 
 				ZeroMemory(lptHumanRcd->szTakeItem[i].szPrefixName, sizeof(lptHumanRcd->szTakeItem[i].szPrefixName));
-				strcpy(lptHumanRcd->szTakeItem[i].szPrefixName, pRec->Get("FLD_PREFIXNAME"));
+				strcpy(lptHumanRcd->szTakeItem[i].szPrefixName, pRec2->Get("FLD_PREFIXNAME"));
 
-				lptHumanRcd->szTakeItem[i].sbtValue[0] = atoi(pRec->Get("FLD_AttackSpeed"));
-				lptHumanRcd->szTakeItem[i].sbtValue[1] = atoi(pRec->Get("FLD_Luck"));
+				lptHumanRcd->szTakeItem[i].sbtValue[0] = atoi(pRec2->Get("FLD_AttackSpeed"));
+				lptHumanRcd->szTakeItem[i].sbtValue[1] = atoi(pRec2->Get("FLD_Luck"));
 			}
 		}
 	}

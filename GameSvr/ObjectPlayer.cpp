@@ -180,7 +180,7 @@ BOOL CPlayerObject::ReadBook(char *pszMakeIndex)
 				tClientMagicRcd.tStdMagic.btEffect		= (BYTE)g_pMagicInfo[lpHumanMagicRcd->btMagicID].sEffect;
 				tClientMagicRcd.tStdMagic.btEffectType	= (BYTE)g_pMagicInfo[lpHumanMagicRcd->btMagicID].sEffectType;
 				memcpy(&tClientMagicRcd.tStdMagic.sNeed, g_pMagicInfo[lpHumanMagicRcd->btMagicID].sNeed, sizeof(tClientMagicRcd.tStdMagic.sNeed));
-				memcpy(&tClientMagicRcd.tStdMagic.nTrain, g_pMagicInfo[lpHumanMagicRcd->btMagicID].nTrain, sizeof(tClientMagicRcd.tStdMagic.nTrain));
+				memcpy(&tClientMagicRcd.tStdMagic.sTrain, g_pMagicInfo[lpHumanMagicRcd->btMagicID].sTrain, sizeof(tClientMagicRcd.tStdMagic.sTrain));
 				tClientMagicRcd.tStdMagic.btDefSpell	= (BYTE)g_pMagicInfo[lpHumanMagicRcd->btMagicID].sDefSpell;
 				tClientMagicRcd.tStdMagic.nDelayTime	= g_pMagicInfo[lpHumanMagicRcd->btMagicID].sDelay;
 

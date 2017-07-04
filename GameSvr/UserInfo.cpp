@@ -293,7 +293,7 @@ int CUserInfo::EncodeMyMagic(char *pszEncodeMsg, int nBuffSize, int& nPos)
 	{
 		_LPTHUMANMAGICRCD	lptUserMagicRcd;
 		_TCLIENTMAGICRCD	tClientMagicRcd;
-
+		char szUncodeImagic[4096];
 		PLISTNODE pListNode = m_lpTMagicRcd.GetHead();
 
 		while (pListNode)
@@ -310,20 +310,28 @@ int CUserInfo::EncodeMyMagic(char *pszEncodeMsg, int nBuffSize, int& nPos)
 				tClientMagicRcd.tStdMagic.btEffect		= (BYTE)g_pMagicInfo[lptUserMagicRcd->btMagicID].sEffect;
 				tClientMagicRcd.tStdMagic.btEffectType	= (BYTE)g_pMagicInfo[lptUserMagicRcd->btMagicID].sEffectType;
 				memcpy(&tClientMagicRcd.tStdMagic.sNeed, g_pMagicInfo[lptUserMagicRcd->btMagicID].sNeed, sizeof(tClientMagicRcd.tStdMagic.sNeed));
-				memcpy(&tClientMagicRcd.tStdMagic.nTrain, g_pMagicInfo[lptUserMagicRcd->btMagicID].nTrain, sizeof(tClientMagicRcd.tStdMagic.nTrain));
+				memcpy(&tClientMagicRcd.tStdMagic.sTrain, g_pMagicInfo[lptUserMagicRcd->btMagicID].sTrain, sizeof(tClientMagicRcd.tStdMagic.sTrain));
 				tClientMagicRcd.tStdMagic.btDefSpell	= (BYTE)g_pMagicInfo[lptUserMagicRcd->btMagicID].sDefSpell;
 				tClientMagicRcd.tStdMagic.nDelayTime	= g_pMagicInfo[lptUserMagicRcd->btMagicID].sDelay;
+				tClientMagicRcd.tStdMagic.sRange = g_pMagicInfo[lptUserMagicRcd->btMagicID].sRange;
+				tClientMagicRcd.tStdMagic.nCastTime = g_pMagicInfo[lptUserMagicRcd->btMagicID].nCastTime;
+				tClientMagicRcd.tStdMagic.btIcon = g_pMagicInfo[lptUserMagicRcd->btMagicID].btIcon;
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientMagicRcd, pszEncodeMsg + nPos, sizeof(_TCLIENTMAGICRCD), nBuffSize - nPos);
+				tClientMagicRcd.tStdMagic.sBaseCost = g_pMagicInfo[lptUserMagicRcd->btMagicID].sBaseCost;
+				tClientMagicRcd.tStdMagic.sLevCost = g_pMagicInfo[lptUserMagicRcd->btMagicID].sLevCost;
 
-				*(pszEncodeMsg + nPos) = '/';
+				memcpy(&szUncodeImagic[nCnt*sizeof(_TCLIENTMAGICRCD)],&tClientMagicRcd,sizeof(_TCLIENTMAGICRCD));
+				//nPos +=	fnEncode6BitBufA((unsigned char *)&tClientMagicRcd, pszEncodeMsg + nPos, sizeof(_TCLIENTMAGICRCD), nBuffSize - nPos);
 
-				nPos++;
+				//*(pszEncodeMsg + nPos) = '/';
+
+				//nPos++;
 				nCnt++;
 			}
 
 			pListNode = m_lpTMagicRcd.GetNext(pListNode);
 		}
+		nPos += fnEncode6BitBufA((unsigned char*)szUncodeImagic, pszEncodeMsg + nPos, sizeof(_TCLIENTMAGICRCD), nBuffSize - nPos);
 	}
 
 	return nCnt;

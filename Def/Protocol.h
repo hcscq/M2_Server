@@ -376,7 +376,7 @@ typedef struct tag_TLOADMUHAN
 #pragma pack(1)
 typedef struct tag_TUSERITEMRCD
 {
-	BYTE		btIsEmpty=true;
+	BYTE		btIsEmpty;
 	char		szMakeIndex[43];
 	WORD		nStdIndex;
 	WORD		nDura;
@@ -504,7 +504,7 @@ typedef struct tag_THUMANMAGICRCD
 	BYTE		btMagicID;
 	char		btLevel;
 	char		btUseKey;
-	int			nCurrTrain;
+	USHORT			nCurrTrain;
 } _THUMANMAGICRCD, *_LPTHUMANMAGICRCD;
 
 typedef struct tag_TSTANDARDMAGIC
@@ -513,11 +513,19 @@ typedef struct tag_TSTANDARDMAGIC
 	BYTE	btEffect;
 	short	sSpell;
 	BYTE	btDefSpell;
+
+	short	sBaseCost;
+	short	sLevCost;
+	BYTE	btIcon;
 	
-	short	sNeed[3];
-	int		nTrain[3];
+	USHORT	sNeed[3];
+	USHORT	sTrain[3];
 	
 	int		nDelayTime;
+
+	BYTE	sRange;
+	int		nCastTime;
+
 } _TSTANDARDMAGIC, *_LPTSTANDARDMAGIC;
 
 typedef struct tag_TCLIENTMAGICRCD
@@ -525,7 +533,7 @@ typedef struct tag_TCLIENTMAGICRCD
 	BYTE			btMagicID;
 	char			btLevel;
 	char			btUseKey;
-	int				nCurrTrain;
+	USHORT			nCurrTrain;
 
 	_TSTANDARDMAGIC	tStdMagic;
 } _TCLIENTMAGICRCD, *_LPTCLIENTMAGICRCD;
