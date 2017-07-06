@@ -77,7 +77,7 @@ public:
 
 	DWORD							m_dwGold;
 	CWHList<_LPTGENERALITEMRCD>		m_xTGenItemRcd;
-	CWHList<_LPTUSERITEMRCD>		m_xTItemRcd;
+	CWHList<_LPTUSERITEMRCD>			m_xTItemRcd;
 			
 public:
 	CMonsterObject();

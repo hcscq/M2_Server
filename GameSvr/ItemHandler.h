@@ -36,7 +36,7 @@ public:
 
 	virtual		void GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd) = 0;
 //	virtual		void UpgradeRandomItem(_LPTMAKEITEMRCD lpMakeItemRcd) = 0;
-	virtual		void GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMRCD lpUserItemRcd) = 0;
+	virtual		void GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd) = 0;
 };
 
 class CStdItem : public CItem
@@ -46,7 +46,7 @@ public:
 
 	virtual		void GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd);
 //	virtual		void UpgradeRandomItem(_LPTMAKEITEMRCD lpMakeItemRcd) {};
-	virtual		void GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMRCD lpUserItemRcd) {};
+	virtual		void GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd) {};
 };
 
 class CStdItemSpecial : public CItem
@@ -56,6 +56,7 @@ public:
 
 	WORD		wAniCount;
 	WORD		wSource;
+	WORD		Index;
 
 	BYTE		wAC;				// Defence
 	BYTE		wAC2;				// Defence Max
@@ -94,5 +95,5 @@ public:
 
 	virtual		void GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd);
 //	virtual		void UpgradeRandomItem(_LPTMAKEITEMRCD lpMakeItemRcd);
-	virtual		void GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMRCD lpUserItemRcd);
+	virtual		void GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd);
 };

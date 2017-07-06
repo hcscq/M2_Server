@@ -324,7 +324,7 @@ public:
 	void	Disappear();
 	void	MakeGhost();
 
-	BOOL	DropItemDown(_LPTUSERITEMRCD lpTItemRcd, int nRange, BOOL fIsGenItem);
+	BOOL	DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL fIsGenItem);
 
 	CCharObject* AddCreatureSysop(int nX, int nY, CMonRaceInfo* pMonRaceInfo, BOOL fSearch);
 

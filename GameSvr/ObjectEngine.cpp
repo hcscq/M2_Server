@@ -567,7 +567,7 @@ begin
    end;
 end;
 */
-BOOL CCharObject::DropItemDown(_LPTUSERITEMRCD lpTItemRcd, int nRange, BOOL fIsGenItem)
+BOOL CCharObject::DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL fIsGenItem)
 {
 	CMapItem* xpMapItem = new CMapItem;
 
@@ -1883,7 +1883,7 @@ void CCharObject::StruckDamage(int nDamage)
 
 		if (m_pUserInfo)
 		{
-			_LPTUSERITEMRCD	lptDress = m_pUserInfo->GetDress();
+			_LPTUSERITEMABILITY	lptDress = m_pUserInfo->GetDress();
 
 			if (lptDress)
 			{
@@ -1911,7 +1911,7 @@ void CCharObject::StruckDamage(int nDamage)
 					AddProcess(this, RM_DURACHANGE, U_DRESS, lptDress->nDura, lptDress->nDuraMax, 0); 
 			}
 
-			_LPTUSERITEMRCD	lptUseItem;
+			_LPTUSERITEMABILITY	lptUseItem;
 
 			for (int i = 0; i < 8; i++)
 			{
@@ -2010,7 +2010,7 @@ void CCharObject::DoDamageWeapon(int nDamage)
 {
 	if (m_pUserInfo)
 	{
-		_LPTUSERITEMRCD	lptWeapon = m_pUserInfo->GetWeapon();
+		_LPTUSERITEMABILITY	lptWeapon = m_pUserInfo->GetWeapon();
 
 		if (lptWeapon)
 		{

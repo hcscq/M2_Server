@@ -68,7 +68,9 @@ typedef struct tag_TSEARCHTABLE
 #define _ITEM_ACTION_UPDATE			4
 
 // **************************************************************************************
-
+class CItem;
+class CStdItem;
+class CStdItemSpecial;
 #include "..\Def\EnDecode.h"
 #include "..\Def\Protocol.h"
 #include "..\Def\ServerSockHandler.h"

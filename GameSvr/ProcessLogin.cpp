@@ -153,13 +153,24 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 
 			for (int i = 0; i < pReadyUserInfo->m_nNumOfItem; i++)
 			{
-				_LPTUSERITEMRCD lpTItemRcd = new _TUSERITEMRCD;
+				_LPTUSERITEMABILITY lpTItemRcd = new _TUSERITEMABILITY;
 
 				if (lpTItemRcd)
 				{
-					fnDecode6BitBufA(pszData, (char *)lpTItemRcd, sizeof(_TUSERITEMRCD));
+					fnDecode6BitBufA(pszData, (char *)lpTItemRcd, sizeof(_TUSERITEMABILITY));
 					pUserInfo->m_lpTItemRcd.AddNewNode(lpTItemRcd);
 					pszData += ITEMRCDBLOCKSIZE;
+				}
+			}
+		}
+		//if(pUserInfo->m_THumanRcd)
+		for (int i = 0; i < CHARTAKEITEMCNT; i++)
+		{
+			if (!pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
+			{
+				for (int j = 0; j < g_nStdItemSpecial; j++) {
+					if (g_pStdItemSpecial[j].Index == pUserInfo->m_THumanRcd.szTakeItem[i].nStdIndex)
+						pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem = &g_pStdItemSpecial[j];
 				}
 			}
 		}

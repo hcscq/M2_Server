@@ -145,7 +145,7 @@ void CUserInfo::MakeGenItem(_LPTGENERALITEMRCD lptGenItemRcd)
 		tClientItemRcd.nDura		= lptGenItemRcd->nDura;
 		tClientItemRcd.nDuraMax		= lptGenItemRcd->nDuraMax;
 
-		int nIdx = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
+		int nIdx = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg));
 		szEncodeMsg[nIdx] = '\0';
 
 		m_pxPlayerObject->SendSocket(&SendDefMsg, szEncodeMsg);
@@ -160,7 +160,7 @@ int	CUserInfo::GetDressFeature()
 
 		while (pListNode)
 		{
-			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
+			_LPTUSERITEMABILITY lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 			/*BECAUSE ADD ISEMPTY*/
 			if (memcmp(m_THumanRcd.szTakeItem[U_DRESS].szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
 				return g_pStdItemSpecial[lpTItemRcd->nStdIndex].wShape;
@@ -180,7 +180,7 @@ int	CUserInfo::GetWeaponFeature()
 
 		while (pListNode)
 		{
-			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
+			_LPTUSERITEMABILITY lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 		/*BECAUSE ADD ISEMPTY*/
 			if (memcmp(m_THumanRcd.szTakeItem[U_WEAPON].szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
 				return g_pStdItemSpecial[lpTItemRcd->nStdIndex].wShape;
@@ -192,7 +192,7 @@ int	CUserInfo::GetWeaponFeature()
 	return 0;
 }
 
-_LPTUSERITEMRCD	CUserInfo::GetItem(char *pszMakeIndex)
+_LPTUSERITEMABILITY	CUserInfo::GetItem(char *pszMakeIndex)
 {
 	if (m_lpTItemRcd.GetCount())
 	{
@@ -200,7 +200,7 @@ _LPTUSERITEMRCD	CUserInfo::GetItem(char *pszMakeIndex)
 
 		while (pListNode)
 		{
-			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
+			_LPTUSERITEMABILITY lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 		/*offset 7=STDTYPE|MAKE DATE + item guid*/
 			if (memcmp(pszMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
 				return lpTItemRcd;
@@ -500,7 +500,7 @@ int CUserInfo::CalcBagWeight()
 
 		while (pListNode)
 		{
-			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
+			_LPTUSERITEMABILITY lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 
 			if (lpTItemRcd)
 				nWeight += g_pStdItemSpecial[lpTItemRcd->nStdIndex].wWeight;
@@ -531,7 +531,7 @@ int CUserInfo::CalcBagWeight()
 
 int CUserInfo::CalcWearWeightEx(int nIndex)
 {
-	_LPTUSERITEMRCD lptItemRcd;
+	_LPTUSERITEMABILITY lptItemRcd;
 	int				nWeight = 0;
 
 	for (int i = 0; i < 8; i++)
@@ -558,7 +558,7 @@ BOOL CUserInfo::UserDropItem(int nItemIndex, char *pszMakeIndex)
 
 		while (pListNode)
 		{
-			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
+			_LPTUSERITEMABILITY lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 		
 			if (memcmp(pszMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
 			{
@@ -596,7 +596,7 @@ BOOL CUserInfo::UserDropGenItem(int nItemIndex, char *pszMakeIndex)
 		
 			if (memcmp(pszMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
 			{
-				if (m_pxPlayerObject->DropItemDown((_LPTUSERITEMRCD)lpTItemRcd, 2, TRUE))
+				if (m_pxPlayerObject->DropItemDown((_LPTUSERITEMABILITY)lpTItemRcd, 2, TRUE))
 				{
 //					delete lpTItemRcd;
 					m_lpTGenItemRcd.RemoveNode(pListNode);
@@ -975,7 +975,7 @@ void CUserInfo::CloseUserHuman()
 
 		while (pListNode)
 		{
-			_LPTUSERITEMRCD lpUserItemRcd = m_lpTItemRcd.GetData(pListNode);
+			_LPTUSERITEMABILITY lpUserItemRcd = m_lpTItemRcd.GetData(pListNode);
 
 			if (lpUserItemRcd) 
 			{

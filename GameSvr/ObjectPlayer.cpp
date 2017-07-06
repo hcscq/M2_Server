@@ -290,7 +290,7 @@ BOOL CPlayerObject::ServerGetEatItem(int nItemIndex, char *pszMakeIndex)
 	return fFlag;
 }
 
-void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
+void CPlayerObject::SendAddItem(_LPTUSERITEMABILITY lpTItemRcd)
 {
 	_TDEFAULTMESSAGE	SendDefMsg;
 	_TCLIENTITEMRCD		tClientItemRcd;
@@ -304,9 +304,9 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 		g_pStdItemSpecial[lpTItemRcd->nStdIndex].GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 
 		if (strlen(lpTItemRcd->szPrefixName))
-			strcpy(tClientItemRcd.tStdItem.szPrefixName, lpTItemRcd->szPrefixName);
+			strcpy(tClientItemRcd.szPrefixName, lpTItemRcd->szPrefixName);
 		else
-			ZeroMemory(tClientItemRcd.tStdItem.szPrefixName, sizeof(tClientItemRcd.tStdItem.szPrefixName));
+			ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
 	}
 	else
 	{
@@ -319,7 +319,7 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 	tClientItemRcd.nDura		= lpTItemRcd->nDura;
 	tClientItemRcd.nDuraMax		= lpTItemRcd->nDuraMax;
 
-	int nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
+	int nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg));
 	szEncodeMsg[nPos] = '\0';
 
 	SendSocket(&SendDefMsg, szEncodeMsg);
@@ -356,7 +356,7 @@ BOOL CPlayerObject::PickUp()
 			{
 				if (m_pMap->RemoveObject(m_nCurrX, m_nCurrY, OS_ITEMOBJECT, (VOID *)pMapItem))
 				{
-					_LPTUSERITEMRCD lptItemRcd = (_LPTUSERITEMRCD)pMapItem->pItem;
+					_LPTUSERITEMABILITY lptItemRcd = (_LPTUSERITEMABILITY)pMapItem->pItem;
 
 					if (int nUpdate = UpdateItemToDB(lptItemRcd, _ITEM_ACTION_PICKUP))
 					{
@@ -443,7 +443,7 @@ begin
 end;
 */
 
-int CPlayerObject::UpdateItemToDB(_LPTUSERITEMRCD lpMakeItemRcd, int nAction)
+int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction)
 {
 	char	szQuery[1024];
 
@@ -868,7 +868,7 @@ void CPlayerObject::RecalcAbilitys()
 	m_WAbility.HandWeight	= 0;
 	m_WAbility.WearWeight	= 0;
 
-	_LPTUSERITEMRCD lpUserItemRcd = NULL;
+	_LPTUSERITEMABILITY lpUserItemRcd = NULL;
 
 	for (int i = U_DRESS; i <= U_RINGR; i++)
 	{
@@ -1013,7 +1013,7 @@ void CPlayerObject::SendBagItems()
 
 		while (pListNode)
 		{
-			_LPTUSERITEMRCD	lptUserItemRcd = m_pUserInfo->m_lpTItemRcd.GetData(pListNode);
+			_LPTUSERITEMABILITY	lptUserItemRcd = m_pUserInfo->m_lpTItemRcd.GetData(pListNode);
 
 			if (lptUserItemRcd)
 			{
@@ -1026,11 +1026,11 @@ void CPlayerObject::SendBagItems()
 				tClientItemRcd.nDuraMax		= lptUserItemRcd->nDuraMax;
 
 				if (strlen(lptUserItemRcd->szPrefixName))
-					strcpy(tClientItemRcd.tStdItem.szPrefixName, lptUserItemRcd->szPrefixName);
+					strcpy(tClientItemRcd.szPrefixName, lptUserItemRcd->szPrefixName);
 				else
-					ZeroMemory(tClientItemRcd.tStdItem.szPrefixName, sizeof(tClientItemRcd.tStdItem.szPrefixName));
+					ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg) - nPos);
+				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg) - nPos);
 
 				szEncodeMsg[nPos++] = '/';
 			}
@@ -1060,7 +1060,7 @@ void CPlayerObject::SendBagItems()
 
 				g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg) - nPos);
+				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg) - nPos);
 
 				szEncodeMsg[nPos++] = '/';
 			}
@@ -1284,7 +1284,7 @@ void CPlayerObject::MakeFeature()
 	m_tFeatureEx.dwWearColor	= 0xFFFF;
 }
 
-BOOL CPlayerObject::CheckTakeOnItem(WORD wWhere, _LPTUSERITEMRCD lpTItemRcd)
+BOOL CPlayerObject::CheckTakeOnItem(WORD wWhere, _LPTUSERITEMABILITY lpTItemRcd)
 {
 	TCHAR	wszMsg[64];
 	char	szMsg[64];
@@ -1415,7 +1415,7 @@ void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, char *pszItemIndex)
 {
 	_TDEFAULTMESSAGE	DefMsg;
 
-	_LPTUSERITEMRCD lpTItemRcd = m_pUserInfo->GetItem(pszItemIndex);
+	_LPTUSERITEMABILITY lpTItemRcd = m_pUserInfo->GetItem(pszItemIndex);
 	
 	if (lpTItemRcd)
 	{
@@ -1462,7 +1462,7 @@ void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, char *pszItemIndex)
 
 void CPlayerObject::ServerGetTakeOffItem(WORD wWhere, char *pszItemIndex)
 {
-	_LPTUSERITEMRCD		lpTItemRcd = NULL;
+	_LPTUSERITEMABILITY		lpTItemRcd = NULL;
 	_TDEFAULTMESSAGE	DefMsg;
 
 //		PLISTNODE pListNode = m_pUserInfo->m_lpTItemRcd.GetHead();
@@ -2985,9 +2985,24 @@ void CPlayerObject::Operate()
 						char szUncodeMsg[sizeof(szEncodeMsg)];
 						nPos = DEFGUIDLEN;
 						memcpy(szUncodeMsg, m_pUserInfo->m_THumanRcd.szCharGuid,nPos);
-						memcpy(&szUncodeMsg[nPos], m_pUserInfo->m_THumanRcd.szTakeItem,sizeof(m_pUserInfo->m_THumanRcd.szTakeItem));
-						nPos += sizeof(m_pUserInfo->m_THumanRcd.szTakeItem);
+						_TCLIENTITEMRCD tClientItem;
+						for (int i=0;i<CHARTAKEITEMCNT;i++) 
+						{
+							if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
+							{
+								m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetStandardItem(&tClientItem);
+								m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetUpgradeStdItem(&tClientItem, &m_pUserInfo->m_THumanRcd.szTakeItem[i]);
+								memcpy(&szUncodeMsg[nPos], &tClientItem, sizeof(_TCLIENTITEMRCD));
+							}
+							else
+								memset(&szUncodeMsg[nPos], 0, sizeof(_TCLIENTITEMRCD));
+							nPos += sizeof(_TCLIENTITEMRCD);
+
+						}
+						//nPos += sizeof(m_pUserInfo->m_THumanRcd.szTakeItem);
 						nPos = fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
+
+						
 						//nPos = fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, sizeof(m_pUserInfo->m_THumanRcd.szCharGuid), sizeof(szEncodeMsg));
 						//nPos += fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szTakeItem, &szEncodeMsg[nPos], sizeof(m_pUserInfo->m_THumanRcd.szTakeItem), sizeof(szEncodeMsg));
 						szEncodeMsg[nPos] = '\0';

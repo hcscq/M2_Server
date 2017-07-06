@@ -46,7 +46,7 @@ public:
 
 	void		SendMapName();
 	void		SendNewMap();
-	void		SendAddItem(_LPTUSERITEMRCD lpTItemRcd);
+	void		SendAddItem(_LPTUSERITEMABILITY lpTItemRcd);
 
 	BOOL		EatItem(char *pszMakeIndex);
 	BOOL		ReadBook(char *pszMakeIndex);
@@ -56,9 +56,9 @@ public:
 
 	void		Whisper(char *pszChar, char *pszMsg);
 
-	int			UpdateItemToDB(_LPTUSERITEMRCD lpMakeItemRcd, int nAction);
+	int			UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction);
 
-	BOOL		CheckTakeOnItem(WORD wWhere, _LPTUSERITEMRCD lpTItemRcd);
+	BOOL		CheckTakeOnItem(WORD wWhere, _LPTUSERITEMABILITY lpTItemRcd);
 	void		ServerGetTakeOnGenItem(WORD wWhere, char *pszItemIndex);
 	void		ServerGetTakeOnItem(WORD wWhere, char *pszItemIndex);
 	void		ServerGetTakeOffItem(WORD wWhere, char *pszItemIndex);

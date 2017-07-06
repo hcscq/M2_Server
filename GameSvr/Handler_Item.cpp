@@ -52,7 +52,7 @@ void CStdItemSpecial::GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd)
 	lpClientItemRcd->tStdItem.nPrice			= (UINT)dwPrice;
 }
 
-void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMRCD lpUserItemRcd)
+void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd)
 {
 /*	switch (lpUserItemRcd->szMakeIndex[0])
 	{

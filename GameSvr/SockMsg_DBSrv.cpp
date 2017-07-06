@@ -153,11 +153,11 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 
 								for (int i = 0; i < LOBYTE(DefMsg.wParam); i++)
 								{
-									_LPTUSERITEMRCD lpTItemRcd = new _TUSERITEMRCD;
+									_LPTUSERITEMABILITY lpTItemRcd = new _TUSERITEMABILITY;
 
 									if (lpTItemRcd)
 									{
-										fnDecode6BitBufA(pszData, (char *)lpTItemRcd, sizeof(_TUSERITEMRCD));
+										fnDecode6BitBufA(pszData, (char *)lpTItemRcd, sizeof(_TUSERITEMABILITY));
 										pReadUserInfo->m_pUserInfo->m_lpTItemRcd.AddNewNode(lpTItemRcd);
 										pszData += ITEMRCDBLOCKSIZE;
 									}
@@ -185,13 +185,13 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 						}
 						case DBR_MAKEITEMRCD:
 						{
-							pUserInfo = (CUserInfo *)DefMsg.nRecog;
+							pUserInfo = (CUserInfo *)DefMsg.nRecog; 
 
-							_LPTUSERITEMRCD lpTItemRcd = new _TUSERITEMRCD;
+							_LPTUSERITEMABILITY lpTItemRcd = new _TUSERITEMABILITY;
 
 							if (lpTItemRcd)
 							{
-								nPos = fnDecode6BitBufA((pszDevide + DEFBLOCKSIZE), (char *)lpTItemRcd, sizeof(_TUSERITEMRCD));
+								nPos = fnDecode6BitBufA((pszDevide + DEFBLOCKSIZE), (char *)lpTItemRcd, sizeof(_TUSERITEMABILITY));
 								
 								pUserInfo->m_lpTItemRcd.AddNewNode(lpTItemRcd);
 
@@ -208,7 +208,7 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 								tClientItemRcd.nDura		= lpTItemRcd->nDura;
 								tClientItemRcd.nDuraMax		= lpTItemRcd->nDuraMax;
 
-								nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
+								nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg));
 								szEncodeMsg[nPos] = '\0';
 
 								pUserInfo->m_pxPlayerObject->SendSocket(&SendDefMsg, szEncodeMsg);
@@ -222,11 +222,11 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 							
 							pUserInfo = pPlayerObject->m_pUserInfo;
 							
-							_LPTUSERITEMRCD lpTItemRcd = new _TUSERITEMRCD;
+							_LPTUSERITEMABILITY lpTItemRcd = new _TUSERITEMABILITY;
 
 							if (lpTItemRcd)
 							{
-								nPos = fnDecode6BitBufA((pszDevide + DEFBLOCKSIZE), (char *)lpTItemRcd, sizeof(_TUSERITEMRCD));
+								nPos = fnDecode6BitBufA((pszDevide + DEFBLOCKSIZE), (char *)lpTItemRcd, sizeof(_TUSERITEMABILITY));
 								
 								pUserInfo->m_lpTItemRcd.AddNewNode(lpTItemRcd);
 
@@ -243,7 +243,7 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 								tClientItemRcd.nDura		= lpTItemRcd->nDura;
 								tClientItemRcd.nDuraMax		= lpTItemRcd->nDuraMax;
 
-								nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
+								nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg));
 								szEncodeMsg[nPos] = '\0';
 
 								pUserInfo->m_pxPlayerObject->SendSocket(&SendDefMsg, szEncodeMsg);

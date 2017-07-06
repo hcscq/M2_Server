@@ -8,6 +8,7 @@
 #define ITEMRCDBLOCKSIZE		70			// _TUSERITEMRCD
 #define MAGICRCDBLOCKSIZE		10
 #define GENITEMRCDBLOCKSIZE		18
+#define CHARTAKEITEMCNT			10
 
 #define HOWMANYMAGICS			31
 
@@ -374,9 +375,8 @@ typedef struct tag_TLOADMUHAN
 #define U_RINGR				8
 
 #pragma pack(1)
-typedef struct tag_TUSERITEMRCD
+typedef struct tag_TUSERITEMABILITY
 {
-	BYTE		btIsEmpty;
 	char		szMakeIndex[43];
 	WORD		nStdIndex;
 	WORD		nDura;
@@ -386,34 +386,7 @@ typedef struct tag_TUSERITEMRCD
 	char		szBoundGuid[36];
 	char		sbtValue[2];
 	char		szPrefixName[20];
-} _TUSERITEMRCD, *_LPTUSERITEMRCD;
-typedef struct tag_THUMANRCD
-{
-	char		szUserID[16];
-	char		szCharName[20];
-	char		szCharGuid[36];
-
-	BYTE		btIndex;
-	BYTE		btJob;
-	BYTE		btGender;
-	_TUSERITEMRCD		szTakeItem[10];
-	BYTE		szLevel;	
-	BYTE		szHair;
-	BYTE		nDirection;
-	char		szMapName[15];
-
-	BYTE		btAttackMode;
-	BYTE		fIsAdmin;
-
-	short		nCX;
-	short		nCY;
-
-	DWORD		dwGold;
-
-	WORD		wHairColor;
-
-	int			nExp;
-} _THUMANRCD, *_LPTHUMANRCD;
+} _TUSERITEMABILITY, *_LPTUSERITEMABILITY;
 
 typedef struct tag_TMAKEITEMRCD
 {
@@ -449,6 +422,7 @@ typedef struct tag_TSTANDARDITEM
 	BYTE		btAniCount;         // 1보다 크면 애니메이션 되는 아이템
 	BYTE		btSource;           // 재질 (0은 기본, 1보다 크면 더 단단함)
 	BYTE		btNeedIdentify;     // $01 (아이댄티파이 안 된 것)
+	WORD		Index;
 	WORD		wLooks;             // 그림 번호
 	WORD		wDuraMax;
 	WORD		wAC;				// 방어력
@@ -461,14 +435,51 @@ typedef struct tag_TSTANDARDITEM
 	UINT		nPrice;
 } _TSTANDARDITEM, *_LPTSTANDARDITEM;
 
-typedef struct tag_TCLIENTITEMRCD
+typedef struct tag_TUSERITEMRCD:tag_TUSERITEMABILITY
 {
-	char			szMakeIndex[12];
-	int				nDura;
-	int				nDuraMax;
-	_TSTANDARDITEM	tStdItem;
+	//char			szMakeIndex[12];
+	//int				nDura;
+	//int				nDuraMax;
+	CStdItemSpecial	*lptStdItem;
+} _TUSERITEMRCD, *_LPTUSERITEMRCD;
+
+typedef struct tag_TCLIENTITEMRCD :tag_TUSERITEMABILITY
+{
+	_TSTANDARDITEM		tStdItem;
 } _TCLIENTITEMRCD, *_LPTCLIENTITEMRCD;
 
+typedef struct tag_USEITEMRCD:tag_TUSERITEMRCD 
+{
+	BYTE		  btIsEmpty;
+}_TUSEITEMRCD,*_LPTUSEITEMRCD;
+
+typedef struct tag_THUMANRCD
+{
+	char		szUserID[16];
+	char		szCharName[20];
+	char		szCharGuid[36];
+
+	BYTE		btIndex;
+	BYTE		btJob;
+	BYTE		btGender;
+	_TUSEITEMRCD		szTakeItem[10];
+	BYTE		szLevel;
+	BYTE		szHair;
+	BYTE		nDirection;
+	char		szMapName[15];
+
+	BYTE		btAttackMode;
+	BYTE		fIsAdmin;
+
+	short		nCX;
+	short		nCY;
+
+	DWORD		dwGold;
+
+	WORD		wHairColor;
+
+	int			nExp;
+} _THUMANRCD, *_LPTHUMANRCD;
 typedef struct tag_TQUERYCHR
 {
 	BYTE		btIndex;

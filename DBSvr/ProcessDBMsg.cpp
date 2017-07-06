@@ -152,7 +152,6 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 
 			public Awake Awake = new Awake();
 			*/
-			pItem->btIsEmpty = false;
 			pItem->szMakeIndex[0] = *(pRec->Get( "FLD_STDTYPE" ));
 			memcpy( &pItem->szMakeIndex[1], pRec->Get( "FLD_MAKEDATE" ), 6 );
 			memcpy( &pItem->szMakeIndex[7], pRec->Get( "FLD_MAKEINDEX" ), 36 );
@@ -244,7 +243,6 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 
 		char FLD_NAME[10][30] = { "FLD_DRESS_ID" ,"FLD_WEAPON_ID" ,"FLD_LEFTHAND_ID" ,"FLD_RIGHTHAND_ID" ,"FLD_HELMET_ID" ,"FLD_NECKLACE_ID" ,
 			"FLD_ARMRINGL_ID" ,"FLD_ARMRINGR_ID" ,"FLD_RINGL_ID" ,"FLD_RINGR_ID" };
-	
 		for (int i = 0; i < sizeof(lptHumanRcd->szTakeItem)/sizeof(_TUSERITEMRCD); i++) 
 		{
 			lptHumanRcd->szTakeItem[i].btIsEmpty = true;
@@ -326,7 +324,7 @@ void GetLoadHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, int nR
 	int							nHorse = 0;
 	
 	char						szEncodeMsg2[8096];
-	
+	memset(&tHumanRcd, 0, sizeof(_THUMANRCD));
 	if (GetHumanRcd(lpLoadHuman->szCharName, &tHumanRcd, lpLoadHuman))		// Fetch Character Data
 	{
 		GetHumanItemRcd(lpLoadHuman->szCharGuid, &xUserItemRcdList);		// Fetch Item Data
