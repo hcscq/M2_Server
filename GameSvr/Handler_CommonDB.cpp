@@ -117,7 +117,7 @@ void InitStdItemSpecial()
 	if (g_nStdItemSpecial < 0) return;
 
 	g_pStdItemSpecial = new CStdItemSpecial[g_nStdItemSpecial];
-
+	memset(g_pStdItemSpecial,0,sizeof(g_pStdItemSpecial));
 	sprintf( szQuery, "SELECT * FROM TBL_STDITEM ORDER BY FLD_INDEX");
 
 	pRec = g_pConnCommon->CreateRecordset();
@@ -132,6 +132,7 @@ void InitStdItemSpecial()
 
 				g_pStdItemSpecial[i].wStdMode		= (SHORT)atoi( pRec->Get( "FLD_STDMODE" ) );
 				g_pStdItemSpecial[i].btType			= (BYTE)atoi( pRec->Get( "FLD_TYPE" ) );
+				g_pStdItemSpecial[i].Index			= (LONG)atoi(pRec->Get("FLD_Index"));
 				g_pStdItemSpecial[i].wShape			= (SHORT)atoi( pRec->Get( "FLD_SHAPE" ) );
 				g_pStdItemSpecial[i].wWeight		= (SHORT)atoi( pRec->Get( "FLD_WEIGHT" ) );
 				g_pStdItemSpecial[i].wAniCount		= (SHORT)atoi( pRec->Get( "FLD_ANICOUNT" ) );
@@ -152,6 +153,11 @@ void InitStdItemSpecial()
 				g_pStdItemSpecial[i].wNeedLevel		= (SHORT)atoi( pRec->Get( "FLD_NEEDLEVEL" ) );
 				g_pStdItemSpecial[i].dwPrice		= (LONG)atoi( pRec->Get( "FLD_PRICE" ) );
 				g_pStdItemSpecial[i].dwStock		= (LONG)atoi( pRec->Get( "FLD_STOCK" ) );
+
+				g_pStdItemSpecial[i].HP				= (LONG)atoi(pRec->Get("FLD_HP"));
+				g_pStdItemSpecial[i].MP				= (LONG)atoi(pRec->Get("FLD_MP"));
+				g_pStdItemSpecial[i].AttackSpeed	= (BYTE)atoi(pRec->Get("FLD_ATTACKSPEED"));
+				g_pStdItemSpecial[i].Luck			= (BYTE)atoi(pRec->Get("FLD_LUCK"));
 
 				g_pStdItemSpecial[i].m_btWater		= (BYTE)atoi( pRec->Get( "FLD_WATER1" ) );
 				g_pStdItemSpecial[i].m_btWater2		= (BYTE)atoi( pRec->Get( "FLD_WATER2" ) );

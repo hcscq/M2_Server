@@ -23,7 +23,9 @@
 #include <commctrl.h>
 #include <time.h>
 #include <process.h>
-
+class CItem;
+class CStdItem;
+class CStdItemSpecial;
 
 #include "resource.h"
 

@@ -27,6 +27,9 @@
 
 #include "resource.h"
 
+class CItem;
+class CStdItem;
+class CStdItemSpecial;
 #include "..\Def\Queue.h"
 #include "..\Def\EnDecode.h"
 #include "..\Def\ServerSockHandler.h"

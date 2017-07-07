@@ -2986,10 +2986,12 @@ void CPlayerObject::Operate()
 						nPos = DEFGUIDLEN;
 						memcpy(szUncodeMsg, m_pUserInfo->m_THumanRcd.szCharGuid,nPos);
 						_TCLIENTITEMRCD tClientItem;
+						memset(&tClientItem,0,sizeof(_TCLIENTITEMRCD));
 						for (int i=0;i<CHARTAKEITEMCNT;i++) 
 						{
 							if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
 							{
+								g_pStdItemSpecial[0].GetStandardItem(&tClientItem);
 								m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetStandardItem(&tClientItem);
 								m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetUpgradeStdItem(&tClientItem, &m_pUserInfo->m_THumanRcd.szTakeItem[i]);
 								memcpy(&szUncodeMsg[nPos], &tClientItem, sizeof(_TCLIENTITEMRCD));
@@ -3007,7 +3009,7 @@ void CPlayerObject::Operate()
 						//nPos += fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szTakeItem, &szEncodeMsg[nPos], sizeof(m_pUserInfo->m_THumanRcd.szTakeItem), sizeof(szEncodeMsg));
 						szEncodeMsg[nPos] = '\0';
 						SendSocket(&DefMsg, szEncodeMsg);
-
+						//delete tClientItem;
 						break;
 					}
 					case RM_SENDMYMAGIC:

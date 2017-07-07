@@ -241,7 +241,7 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 
 		lptHumanRcd->fIsAdmin = (BYTE)*pRec->Get("FLD_ISADMIN");
 
-		char FLD_NAME[10][30] = { "FLD_DRESS_ID" ,"FLD_WEAPON_ID" ,"FLD_LEFTHAND_ID" ,"FLD_RIGHTHAND_ID" ,"FLD_HELMET_ID" ,"FLD_NECKLACE_ID" ,
+		char FLD_NAME[10][20] = { "FLD_DRESS_ID" ,"FLD_WEAPON_ID" ,"FLD_LEFTHAND_ID" ,"FLD_RIGHTHAND_ID" ,"FLD_HELMET_ID" ,"FLD_NECKLACE_ID" ,
 			"FLD_ARMRINGL_ID" ,"FLD_ARMRINGR_ID" ,"FLD_RINGL_ID" ,"FLD_RINGR_ID" };
 		for (int i = 0; i < sizeof(lptHumanRcd->szTakeItem)/sizeof(_TUSERITEMRCD); i++) 
 		{

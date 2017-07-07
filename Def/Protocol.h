@@ -4,8 +4,8 @@
 
 #define DEFBLOCKSIZE			22
 #define DEFGUIDLEN				36
-#define HUMANRCDBLOCKSIZE		1906//256
-#define ITEMRCDBLOCKSIZE		70			// _TUSERITEMRCD
+#define HUMANRCDBLOCKSIZE		1959//256
+#define ITEMRCDBLOCKSIZE		180//70			// _TUSERITEMRCD
 #define MAGICRCDBLOCKSIZE		10
 #define GENITEMRCDBLOCKSIZE		18
 #define CHARTAKEITEMCNT			10
@@ -425,6 +425,12 @@ typedef struct tag_TSTANDARDITEM
 	WORD		Index;
 	WORD		wLooks;             // 그림 번호
 	WORD		wDuraMax;
+
+	WORD		HP;
+	WORD		MP;
+	BYTE		AttackSpeed;
+	BYTE		Luck;
+
 	WORD		wAC;				// 방어력
 	WORD		wMAC;				// 마항력
 	WORD		wDC;				// 데미지

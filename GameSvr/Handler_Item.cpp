@@ -50,6 +50,10 @@ void CStdItemSpecial::GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd)
 	lpClientItemRcd->tStdItem.btNeed			= (BYTE)wNeed;
 	lpClientItemRcd->tStdItem.btNeedLevel		= (BYTE)wNeedLevel;
 	lpClientItemRcd->tStdItem.nPrice			= (UINT)dwPrice;
+	lpClientItemRcd->tStdItem.HP				= HP;
+	lpClientItemRcd->tStdItem.MP				= MP;
+	lpClientItemRcd->tStdItem.AttackSpeed		= AttackSpeed;
+	lpClientItemRcd->tStdItem.Luck				= Luck;
 }
 
 void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd)

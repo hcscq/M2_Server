@@ -159,6 +159,7 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 				{
 					fnDecode6BitBufA(pszData, (char *)lpTItemRcd, sizeof(_TUSERITEMABILITY));
 					pUserInfo->m_lpTItemRcd.AddNewNode(lpTItemRcd);
+
 					pszData += ITEMRCDBLOCKSIZE;
 				}
 			}
@@ -169,8 +170,10 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 			if (!pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
 			{
 				for (int j = 0; j < g_nStdItemSpecial; j++) {
-					if (g_pStdItemSpecial[j].Index == pUserInfo->m_THumanRcd.szTakeItem[i].nStdIndex)
+					if (g_pStdItemSpecial[j].Index == pUserInfo->m_THumanRcd.szTakeItem[i].nStdIndex) {
 						pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem = &g_pStdItemSpecial[j];
+						break;
+					}
 				}
 			}
 		}

@@ -75,7 +75,7 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 							pReadyUserInfo2->m_nNumOfItem		= LOBYTE(DefMsg.wParam);
 
 							fnDecode6BitBufA((pszDevide + DEFBLOCKSIZE), (char *)&pReadyUserInfo2->m_THumanRcd, sizeof(_THUMANRCD));
-							
+
 							memmove(pReadyUserInfo2->pszData, pszDevide + DEFBLOCKSIZE + HUMANRCDBLOCKSIZE, memlen(pszDevide + DEFBLOCKSIZE + HUMANRCDBLOCKSIZE));
 
 							g_xReadyUserInfoList2.AddNewNode(pReadyUserInfo2);

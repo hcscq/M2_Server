@@ -58,6 +58,11 @@ public:
 	WORD		wSource;
 	WORD		Index;
 
+	WORD		HP;
+	WORD		MP;
+	BYTE		AttackSpeed;
+	BYTE		Luck;
+
 	BYTE		wAC;				// Defence
 	BYTE		wAC2;				// Defence Max
 	BYTE		wMAC;				// Magic Defence

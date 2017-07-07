@@ -30,7 +30,9 @@
 #include <process.h>
 
 #include "resource.h"
-
+class CItem;
+class CStdItem;
+class CStdItemSpecial;
 #include "..\Def\EnDecode.h"
 #include "..\Def\ServerSockHandler.h"
 #include "..\Def\Misc.h"
