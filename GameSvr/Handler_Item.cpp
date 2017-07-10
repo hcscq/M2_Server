@@ -54,6 +54,12 @@ void CStdItemSpecial::GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd)
 	lpClientItemRcd->tStdItem.MP				= MP;
 	lpClientItemRcd->tStdItem.AttackSpeed		= AttackSpeed;
 	lpClientItemRcd->tStdItem.Luck				= Luck;
+
+	lpClientItemRcd->tStdItem.wAC =MAKEWORD( wAC,wAC2);
+	lpClientItemRcd->tStdItem.wMAC = MAKEWORD(wMAC,wMAC2);
+	lpClientItemRcd->tStdItem.wDC = MAKEWORD(wDC, wDC2);
+	lpClientItemRcd->tStdItem.wMC = MAKEWORD(wMC, wMC2);
+	lpClientItemRcd->tStdItem.wSC = MAKEWORD(wSC, wSC2);
 }
 
 void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd)

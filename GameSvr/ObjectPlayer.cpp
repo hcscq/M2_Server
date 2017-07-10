@@ -2269,7 +2269,7 @@ void CPlayerObject::Operate()
 
 	if (nCount)
 	{
-		char				szEncodeMsg[2048];
+		char				szEncodeMsg[4096];
 		_TMESSAGEBODYWL		MsgBodyWL;
 		_TSHORTMSSEAGE		tsMsg;
 		_TCHARDESC			CharDesc;
@@ -2989,17 +2989,15 @@ void CPlayerObject::Operate()
 						memset(&tClientItem,0,sizeof(_TCLIENTITEMRCD));
 						for (int i=0;i<CHARTAKEITEMCNT;i++) 
 						{
+							szUncodeMsg[nPos++] = m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty;
 							if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
 							{
-								g_pStdItemSpecial[0].GetStandardItem(&tClientItem);
 								m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetStandardItem(&tClientItem);
-								m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetUpgradeStdItem(&tClientItem, &m_pUserInfo->m_THumanRcd.szTakeItem[i]);
+								memcpy(&tClientItem, &m_pUserInfo->m_THumanRcd.szTakeItem[i],sizeof(tag_TUSERITEMABILITY));
+								//m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetUpgradeStdItem(&tClientItem, &m_pUserInfo->m_THumanRcd.szTakeItem[i]);
 								memcpy(&szUncodeMsg[nPos], &tClientItem, sizeof(_TCLIENTITEMRCD));
+								nPos += sizeof(_TCLIENTITEMRCD);
 							}
-							else
-								memset(&szUncodeMsg[nPos], 0, sizeof(_TCLIENTITEMRCD));
-							nPos += sizeof(_TCLIENTITEMRCD);
-
 						}
 						//nPos += sizeof(m_pUserInfo->m_THumanRcd.szTakeItem);
 						nPos = fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
