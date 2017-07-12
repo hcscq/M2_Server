@@ -1,6 +1,41 @@
 #pragma once
 
 #pragma pack(1)
+typedef struct tagMir2MapHeader
+{
+	/** 地图宽度(横向长度) */
+	WORD	wWidth;
+	/** 地图高度(纵向长度) */
+	WORD	wHeight;
+	/** 标题 */
+	CHAR	szDesc[17];
+	/** 更新日期 */
+	CHAR	szDate[8];
+	/** 保留字符 */
+	CHAR	szReserved[23];
+}Mir2MapHeader, *LPMir2MapHeader;
+
+typedef struct tagMir2MapTile {
+
+	/** 背景图索引 */
+	WORD	wBngImgIdx;//tile
+					/** 补充背景图索引 */
+	WORD	wMidImgIdx;//smstile
+				   /** 对象图索引 */
+	WORD	wObjImgIdx;
+	/** 门索引 */
+	byte	bDoorIdx;
+	/** 门偏移 */
+	byte	bDoorOffset;
+	/** 动画帧数 */
+	byte	bAniFrame;
+	/** 动画跳帧数 */
+	byte	bAniTick;
+	/** 资源文件索引 */
+	byte	bObjFileIdx;
+	/** 亮度 */
+	byte	bLight;
+}Mir2MapTile, *LPMir2MapTile;
 typedef struct tagMAPFILEHEADER
 {
 	CHAR	szDesc[20];
@@ -94,7 +129,7 @@ public:
 	CMirMap();
 	~CMirMap();
 
-	BOOL			LoadMapData(char *pszName);
+	BOOL			LoadMapData(char *pszName,const int mapType=_Mir2Map);
 	VOID			FreeMapData();
 	BOOL			CanMove(int nX, int nY, int nFlag = FALSE);
 	BOOL			CanSafeWalk(int nX, int nY);

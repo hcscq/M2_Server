@@ -132,74 +132,131 @@ BOOL CMirMap::IsValidObject(int nX, int nY, int nCheckRange, CCharObject* pCharO
 	return FALSE;
 }
 
-BOOL CMirMap::LoadMapData(char *pszName)
+BOOL CMirMap::LoadMapData(char *pszName, const int mapType)
 {
 	HANDLE			hFile;
 	LPCELLINFO		pstCellInfo;
+	LPMir2MapTile	lpMir2CellInfo;
 	TCHAR			szMapName[15];
 	TCHAR			szMapFileName[256];
 	TCHAR			szPath[128];
 
 	jRegGetKey(_GAME_SERVER_REGISTRY, _TEXT("MapFileLoc"), (LPBYTE)szPath);
 
-	MultiByteToWideChar(CP_ACP, 0, pszName, -1, szMapName, sizeof(szMapName)/sizeof(TCHAR));
+	MultiByteToWideChar(CP_ACP, 0, pszName, -1, szMapName, sizeof(szMapName) / sizeof(TCHAR));
 
 	lstrcpy(szMapFileName, szPath);
 	lstrcat(szMapFileName, _TEXT("\\"));
 	lstrcat(szMapFileName, szMapName);
 
-/*	WCHAR pBuf[MAX_PATH];                                   
+	/*	WCHAR pBuf[MAX_PATH];
 
-	GetCurrentDirectory(MAX_PATH, pBuf); */                 
+		GetCurrentDirectory(MAX_PATH, pBuf); */
 
 	hFile = CreateFile(szMapFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	int a= GetLastError();
-	if ( hFile != INVALID_HANDLE_VALUE )
+	int a = GetLastError();
+	if (hFile != INVALID_HANDLE_VALUE)
 	{
 		DWORD		dwReadLen;
 
 		FreeMapData();
 
-		ReadFile(hFile, &m_stMapFH, sizeof(MAPFILEHEADER), &dwReadLen, NULL);
+		if (mapType == _Mir3Map) {
+			ReadFile(hFile, &m_stMapFH, sizeof(MAPFILEHEADER), &dwReadLen, NULL);
 
-		int nMapSize = m_stMapFH.shWidth * m_stMapFH.shHeight;
+			int nMapSize = m_stMapFH.shWidth * m_stMapFH.shHeight;
 
-		SetFilePointer(hFile, sizeof(TILEINFO) * (nMapSize) / 4, 0, FILE_CURRENT);
+			SetFilePointer(hFile, sizeof(TILEINFO) * (nMapSize) / 4, 0, FILE_CURRENT);
 
-		pstCellInfo = new CELLINFO[nMapSize];
+			pstCellInfo = new CELLINFO[nMapSize];
 
-		if (pstCellInfo)
+			if (pstCellInfo)
+			{
+				ReadFile(hFile, pstCellInfo, sizeof(CELLINFO) * (nMapSize), &dwReadLen, NULL);
+
+				CloseHandle(hFile);
+
+				m_pMapCellInfo = new CMapCellInfo[nMapSize];
+
+				if (m_pMapCellInfo)
+				{
+					for (int i = 0; i < nMapSize; i++)
+					{
+						m_pMapCellInfo[i].m_chFlag = pstCellInfo[i].cFlag;
+						m_pMapCellInfo[i].m_sLightNEvent = pstCellInfo[i].shLigntNEvent;
+
+						//					if (m_pMapCellInfo[i].m_chFlag & 0x01)
+						//						m_pMapCellInfo[i].m_xpObjectList = new CWHList<_LPTOSOBJECT>;
+						//					else
+						m_pMapCellInfo[i].m_xpObjectList = NULL;
+					}
+				}
+
+				int nSize = sizeof(m_pMapCellInfo);
+
+				delete[] pstCellInfo;
+				pstCellInfo = NULL;
+
+				InsertLogMsgParam(IDS_LOADMAPFILE_GOOD, szMapFileName, LOGPARAM_STR);
+
+				g_xMirMapList.AddNewNode(this);
+
+				return TRUE;
+			}
+		}
+		else if(mapType==_Mir2Map)
 		{
-			ReadFile(hFile, pstCellInfo, sizeof(CELLINFO) * (nMapSize), &dwReadLen, NULL);
-			
+			Mir2MapHeader tMir2MapHeader;
+
+			ZeroMemory(&tMir2MapHeader, sizeof(Mir2MapHeader));
+
+			ReadFile(hFile, &tMir2MapHeader, sizeof(Mir2MapHeader), &dwReadLen, NULL);
+
+			m_stMapFH.shWidth = tMir2MapHeader.wWidth;
+
+			m_stMapFH.shHeight = tMir2MapHeader.wHeight;
+
+			int nMapSize = tMir2MapHeader.wHeight*tMir2MapHeader.wWidth;
+
+			lpMir2CellInfo = new Mir2MapTile[nMapSize];
+
+			ReadFile(hFile, lpMir2CellInfo, sizeof(Mir2MapTile)*nMapSize, &dwReadLen, NULL);
 			CloseHandle(hFile);
 
 			m_pMapCellInfo = new CMapCellInfo[nMapSize];
-
-			if (m_pMapCellInfo)
+			for (int i = 0; i < nMapSize; i++) 
 			{
-				for (int i = 0; i < nMapSize; i++)
-				{
-					m_pMapCellInfo[i].m_chFlag			= pstCellInfo[i].cFlag;
-					m_pMapCellInfo[i].m_sLightNEvent	= pstCellInfo[i].shLigntNEvent;
 
-//					if (m_pMapCellInfo[i].m_chFlag & 0x01)
-//						m_pMapCellInfo[i].m_xpObjectList = new CWHList<_LPTOSOBJECT>;
-//					else
-						m_pMapCellInfo[i].m_xpObjectList = NULL;
-				}
+				//if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
+				//	Cells[x, y] = Cell.HighWall; //Can Fire Over.
+
+				//offSet += 2;
+				//if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
+				//	Cells[x, y] = Cell.LowWall; //Can't Fire Over.
+
+				//offSet += 2;
+
+				//if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
+				//	Cells[x, y] = Cell.HighWall; //No Floor Tile.
+
+				//if (Cells[x, y] == null) Cells[x, y] = new Cell{ Attribute = CellAttribute.Walk };
+
+				//offSet += 4;
+
+				//if (fileBytes[offSet] > 0)
+				//	DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+
+				//offSet += 3;
+
+				//byte light = fileBytes[offSet++];
+
+				//if (light >= 100 && light <= 119)
+				//	Cells[x, y].FishingAttribute = (sbyte)(light - 100);
+				//CMapCellInfo m_chFlag CanWalk|CanFire|....
+				m_pMapCellInfo[i].m_chFlag = CANWALK|CANFIRE;
+				if (lpMir2CellInfo[i].wMidImgIdx & 0x8000)
+					m_pMapCellInfo[i].m_chFlag = m_pMapCellInfo[i].m_chFlag&CANNOTWALK&CANNOTFIRE;
 			}
-
-			int nSize = sizeof(m_pMapCellInfo);
-
-			delete [] pstCellInfo;
-			pstCellInfo = NULL;
-
-			InsertLogMsgParam(IDS_LOADMAPFILE_GOOD, szMapFileName, LOGPARAM_STR);
-
-			g_xMirMapList.AddNewNode(this);
-
-			return TRUE;
 		}
 	}
 

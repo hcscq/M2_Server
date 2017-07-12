@@ -9,6 +9,13 @@
 #define MAGICRCDBLOCKSIZE		10
 #define GENITEMRCDBLOCKSIZE		18
 #define CHARTAKEITEMCNT			10
+/*MAP*/
+#define _Mir2Map				0
+#define _Mir3Map				1
+#define CANWALK					128
+#define CANFIRE					64
+#define CANNOTWALK				127
+#define CANNOTFIRE				193
 
 #define HOWMANYMAGICS			31
 
