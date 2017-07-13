@@ -224,8 +224,11 @@ BOOL CMirMap::LoadMapData(char *pszName, const int mapType)
 			CloseHandle(hFile);
 
 			m_pMapCellInfo = new CMapCellInfo[nMapSize];
+			int nDoorCnt = 0;
 			for (int i = 0; i < nMapSize; i++) 
 			{
+#pragma region  m2 client read 
+
 
 				//if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
 				//	Cells[x, y] = Cell.HighWall; //Can Fire Over.
@@ -252,11 +255,24 @@ BOOL CMirMap::LoadMapData(char *pszName, const int mapType)
 
 				//if (light >= 100 && light <= 119)
 				//	Cells[x, y].FishingAttribute = (sbyte)(light - 100);
+#pragma endregion
 				//CMapCellInfo m_chFlag CanWalk|CanFire|....
 				m_pMapCellInfo[i].m_chFlag = CANWALK|CANFIRE;
 				if (lpMir2CellInfo[i].wMidImgIdx & 0x8000)
 					m_pMapCellInfo[i].m_chFlag = m_pMapCellInfo[i].m_chFlag&CANNOTWALK&CANNOTFIRE;
+				m_pMapCellInfo[i].m_xpObjectList = NULL;
+				if (lpMir2CellInfo[i].bDoorIdx)
+					m_pMapCellInfo[i].m_sLightNEvent = DOOREVENT;
 			}
+			delete[] lpMir2CellInfo;
+			lpMir2CellInfo = NULL;
+
+			InsertLogMsgParam(IDS_LOADMAPFILE_GOOD, szMapFileName, LOGPARAM_STR);
+
+			g_xMirMapList.AddNewNode(this);
+
+			return TRUE;
+
 		}
 	}
 

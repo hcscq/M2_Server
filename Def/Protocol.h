@@ -12,10 +12,12 @@
 /*MAP*/
 #define _Mir2Map				0
 #define _Mir3Map				1
-#define CANWALK					128
-#define CANFIRE					64
-#define CANNOTWALK				127
-#define CANNOTFIRE				193
+#define CANWALK					1
+#define CANFIRE					2
+#define CANNOTWALK				256
+#define CANNOTFIRE				255
+#define DOOREVENT				0x02
+
 
 #define HOWMANYMAGICS			31
 

@@ -19,9 +19,9 @@ typedef struct tagMir2MapTile {
 
 	/** 背景图索引 */
 	WORD	wBngImgIdx;//tile
-					/** 补充背景图索引 */
+	/** 补充背景图索引 */
 	WORD	wMidImgIdx;//smstile
-				   /** 对象图索引 */
+	/** 对象图索引 */
 	WORD	wObjImgIdx;
 	/** 门索引 */
 	byte	bDoorIdx;
