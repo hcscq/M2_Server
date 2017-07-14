@@ -199,8 +199,11 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 
 								if (lpTItemRcd->szMakeIndex[0] != 'G')
 								{
-									g_pStdItemSpecial[lpTItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
-									g_pStdItemSpecial[lpTItemRcd->nStdIndex].GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
+									CStdItemSpecial* lpStdItem;
+
+									GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+									lpStdItem->GetStandardItem(&tClientItemRcd);
+									lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 								}
 
 								memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, 12);
@@ -234,8 +237,11 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 
 								if (lpTItemRcd->szMakeIndex[0] != 'G')
 								{
-									g_pStdItemSpecial[lpTItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
-									g_pStdItemSpecial[lpTItemRcd->nStdIndex].GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
+									CStdItemSpecial* lpStdItem;
+
+									GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+									lpStdItem->GetStandardItem(&tClientItemRcd);
+									lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 								}
 
 								memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, 12);

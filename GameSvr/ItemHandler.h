@@ -30,13 +30,13 @@ public:
 	DWORD		dwPrice;
 
 	BYTE		m_btType;
-
+	WORD		Index;
 public:
 	int			GetUpgrade(int nCount, int nRandom);
 
 	virtual		void GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd) = 0;
 //	virtual		void UpgradeRandomItem(_LPTMAKEITEMRCD lpMakeItemRcd) = 0;
-	virtual		void GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd) = 0;
+	virtual		void GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd) = 0; 
 };
 
 class CStdItem : public CItem
@@ -56,7 +56,6 @@ public:
 
 	WORD		wAniCount;
 	WORD		wSource;
-	WORD		Index;
 
 	WORD		HP;
 	WORD		MP;

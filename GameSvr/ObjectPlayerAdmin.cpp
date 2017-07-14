@@ -10,12 +10,13 @@ BOOL			UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, char *pszUserID, char *
 void CPlayerObject::CmdChangeItemPrefix(char *pszParam1, char *pszParam2)
 {
 	_LPTUSERITEMABILITY lpUserItemRcd = NULL;
+	CStdItemSpecial* lpStdItem;
 
 	for (int i = U_DRESS; i <= U_RINGR; i++)
 	{
 		if (lpUserItemRcd = m_pUserInfo->GetAccessory(i))
 		{
-			if (strcmp(pszParam1, g_pStdItemSpecial[lpUserItemRcd->nStdIndex].szName) == 0)
+			if (strcmp(pszParam1, GetStdItemByIndex(lpUserItemRcd->nStdIndex,lpStdItem)->szName) == 0)
 			{
 				strcpy(lpUserItemRcd->szPrefixName, pszParam2);
 				

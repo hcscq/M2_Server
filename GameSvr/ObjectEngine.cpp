@@ -587,8 +587,10 @@ BOOL CCharObject::DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL 
 	}
 	else
 	{
-		xpMapItem->wLooks		= (WORD)g_pStdItemSpecial[lpTItemRcd->nStdIndex].dwLooks;
-		xpMapItem->btAniCount	= (BYTE)g_pStdItemSpecial[lpTItemRcd->nStdIndex].wAniCount;
+		CStdItemSpecial* lpStdItem;
+		GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem);
+		xpMapItem->wLooks		= (WORD)lpStdItem->dwLooks;
+		xpMapItem->btAniCount	= (BYTE)lpStdItem->wAniCount;
 		
 		xpMapItem->pItem		= (LONG)lpTItemRcd;
 		
@@ -596,10 +598,10 @@ BOOL CCharObject::DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL 
 		{
 			strcpy(xpMapItem->szName, lpTItemRcd->szPrefixName);
 			strcat(xpMapItem->szName, " ");
-			strcat(xpMapItem->szName, g_pStdItemSpecial[lpTItemRcd->nStdIndex].szName);
+			strcat(xpMapItem->szName, lpStdItem->szName);
 		}
 		else
-			strcpy(xpMapItem->szName, g_pStdItemSpecial[lpTItemRcd->nStdIndex].szName);
+			strcpy(xpMapItem->szName, lpStdItem->szName);
 	}
 
 	int nX, nY;

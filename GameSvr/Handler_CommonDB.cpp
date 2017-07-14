@@ -117,6 +117,7 @@ void InitStdItemSpecial()
 	if (g_nStdItemSpecial < 0) return;
 
 	g_pStdItemSpecial = new CStdItemSpecial[g_nStdItemSpecial];
+
 	//memset(g_pStdItemSpecial,0, g_nStdItemSpecial*sizeof(CStdItemSpecial));
 	sprintf( szQuery, "SELECT * FROM TBL_STDITEM ORDER BY FLD_INDEX");
 

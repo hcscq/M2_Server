@@ -531,11 +531,13 @@ void CMonsterObject::MonGetRandomItems()
 										break;
 								}
 
-								lpTItemRcd->nDura		= g_pStdItemSpecial[pMonItem->m_wItemIndex].wDuraMax;
-								lpTItemRcd->nDuraMax	= g_pStdItemSpecial[pMonItem->m_wItemIndex].wDuraMax;
+								CStdItemSpecial* lpStdItem;
+								GetStdItemByIndex(pMonItem->m_wItemIndex, lpStdItem);
+								lpTItemRcd->nDura		= lpStdItem->wDuraMax;
+								lpTItemRcd->nDuraMax	= lpStdItem->wDuraMax;
 
 								if (rand() % 10 == 0)
-									g_pStdItemSpecial[pMonItem->m_wItemIndex].UpgradeRandomItem(lpTItemRcd->btValue, lpTItemRcd->nDura, lpTItemRcd->nDuraMax);
+									lpStdItem->UpgradeRandomItem(lpTItemRcd->btValue, lpTItemRcd->nDura, lpTItemRcd->nDuraMax);
 
 								m_xTItemRcd.AddNewNode(lpTItemRcd);
 //								MakeItemToDB(&MakeItemRcd);

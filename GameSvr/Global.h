@@ -54,6 +54,7 @@ extern int							g_nNumOfMonGenInfo;
 extern CMonRaceInfo*				g_pMonRaceInfo;
 extern int							g_nNumOfMonRaceInfo;
 extern CStdItemSpecial*				g_pStdItemSpecial;
+extern inline CStdItemSpecial * GetStdItemByIndex(WORD stdItemIndex, CStdItemSpecial* lpStdItem);
 extern int							g_nStdItemSpecial;
 extern CStdItem*					g_pStdItemEtc;
 extern int							g_nStdItemEtc;

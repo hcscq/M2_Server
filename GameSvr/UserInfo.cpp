@@ -157,14 +157,13 @@ int	CUserInfo::GetDressFeature()
 	if (m_lpTItemRcd.GetCount())
 	{
 		PLISTNODE pListNode = m_lpTItemRcd.GetHead();
-
+		CStdItemSpecial* lpStdItem;
 		while (pListNode)
 		{
 			_LPTUSERITEMABILITY lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 			/*BECAUSE ADD ISEMPTY*/
 			if (memcmp(m_THumanRcd.szTakeItem[U_DRESS].szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
-				return g_pStdItemSpecial[lpTItemRcd->nStdIndex].wShape;
-
+				return GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem)->wShape;					
 			pListNode = m_lpTItemRcd.GetNext(pListNode);
 		}
 	}
@@ -177,13 +176,13 @@ int	CUserInfo::GetWeaponFeature()
 	if (m_lpTItemRcd.GetCount())
 	{
 		PLISTNODE pListNode = m_lpTItemRcd.GetHead();
-
+		CStdItemSpecial* lpStdItem;
 		while (pListNode)
 		{
 			_LPTUSERITEMABILITY lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 		/*BECAUSE ADD ISEMPTY*/
 			if (memcmp(m_THumanRcd.szTakeItem[U_WEAPON].szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
-				return g_pStdItemSpecial[lpTItemRcd->nStdIndex].wShape;
+				return GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem)->wShape;//g_pStdItemSpecial[lpTItemRcd->nStdIndex].wShape;
 
 			pListNode = m_lpTItemRcd.GetNext(pListNode);
 		}
@@ -497,13 +496,13 @@ int CUserInfo::CalcBagWeight()
 	if (m_lpTItemRcd.GetCount())
 	{
 		PLISTNODE pListNode = m_lpTItemRcd.GetHead();
-
+		CStdItemSpecial* lpStdItem;
 		while (pListNode)
 		{
 			_LPTUSERITEMABILITY lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 
 			if (lpTItemRcd)
-				nWeight += g_pStdItemSpecial[lpTItemRcd->nStdIndex].wWeight;
+				nWeight += GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem)->wWeight;
 
 			pListNode = m_lpTItemRcd.GetNext(pListNode);
 		}
@@ -533,7 +532,7 @@ int CUserInfo::CalcWearWeightEx(int nIndex)
 {
 	_LPTUSERITEMABILITY lptItemRcd;
 	int				nWeight = 0;
-
+	CStdItemSpecial* lpStdItem;
 	for (int i = 0; i < 8; i++)
 	{
 		if ((i != nIndex) && (i != U_WEAPON) && (i != U_RIGHTHAND))
@@ -541,7 +540,7 @@ int CUserInfo::CalcWearWeightEx(int nIndex)
 			lptItemRcd = GetUseItem(i);
 
 			if (lptItemRcd)
-				nWeight += g_pStdItemSpecial[lptItemRcd->nStdIndex].wWeight;
+				nWeight += GetStdItemByIndex(lptItemRcd->nStdIndex,lpStdItem)->wWeight;
 		}
 	}
 

@@ -300,8 +300,11 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMABILITY lpTItemRcd)
 
 	if (lpTItemRcd->szMakeIndex[0] != 'G')
 	{
-		g_pStdItemSpecial[lpTItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
-		g_pStdItemSpecial[lpTItemRcd->nStdIndex].GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
+		CStdItemSpecial* lpStdItem;
+
+		GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+		lpStdItem->GetStandardItem(&tClientItemRcd);
+		lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 
 		if (strlen(lpTItemRcd->szPrefixName))
 			strcpy(tClientItemRcd.szPrefixName, lpTItemRcd->szPrefixName);
@@ -869,20 +872,22 @@ void CPlayerObject::RecalcAbilitys()
 	m_WAbility.WearWeight	= 0;
 
 	_LPTUSERITEMABILITY lpUserItemRcd = NULL;
+	CStdItemSpecial* lpStdItem;
 
 	for (int i = U_DRESS; i <= U_RINGR; i++)
 	{
 		if (lpUserItemRcd = m_pUserInfo->GetAccessory(i))
 		{
-			g_pStdItemSpecial[lpUserItemRcd->nStdIndex].ApplyItemParameters(&m_AddAbility);
+			GetStdItemByIndex(lpUserItemRcd->nStdIndex, lpStdItem);
+			lpStdItem->ApplyItemParameters(&m_AddAbility);
 
 			if ( i == U_RIGHTHAND || i == U_WEAPON )
-				m_WAbility.HandWeight += g_pStdItemSpecial[lpUserItemRcd->nStdIndex].wWeight;
+				m_WAbility.HandWeight += lpStdItem->wWeight;
 			else
-				m_WAbility.WearWeight += g_pStdItemSpecial[lpUserItemRcd->nStdIndex].wWeight; 
+				m_WAbility.WearWeight += lpStdItem->wWeight;
 
 			if ( i == U_WEAPON )
-				m_AddAbility.WeaponStrong = (BYTE)g_pStdItemSpecial[lpUserItemRcd->nStdIndex].dwRSource; // 무기의 강도. 강도가 높으면 잘 안 뽀개짐
+				m_AddAbility.WeaponStrong = (BYTE)lpStdItem->dwRSource; // 무기의 강도. 강도가 높으면 잘 안 뽀개짐
 		}
 	}
 
@@ -1010,15 +1015,16 @@ void CPlayerObject::SendBagItems()
 	if (nCnt)
 	{
 		PLISTNODE pListNode = m_pUserInfo->m_lpTItemRcd.GetHead();
-
+		CStdItemSpecial* lpStdItem;
 		while (pListNode)
 		{
 			_LPTUSERITEMABILITY	lptUserItemRcd = m_pUserInfo->m_lpTItemRcd.GetData(pListNode);
 
 			if (lptUserItemRcd)
 			{
-				g_pStdItemSpecial[lptUserItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
-				g_pStdItemSpecial[lptUserItemRcd->nStdIndex].GetUpgradeStdItem(&tClientItemRcd, lptUserItemRcd);
+				GetStdItemByIndex(lptUserItemRcd->nStdIndex, lpStdItem);
+				lpStdItem->GetStandardItem(&tClientItemRcd);
+				lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lptUserItemRcd);
 
 				memcpy(tClientItemRcd.szMakeIndex, lptUserItemRcd->szMakeIndex, 12);
 				
@@ -1288,16 +1294,17 @@ BOOL CPlayerObject::CheckTakeOnItem(WORD wWhere, _LPTUSERITEMABILITY lpTItemRcd)
 {
 	TCHAR	wszMsg[64];
 	char	szMsg[64];
-
-	int		nNeed		= g_pStdItemSpecial[lpTItemRcd->nStdIndex].wNeed;
-	int		nNeedLevel	= g_pStdItemSpecial[lpTItemRcd->nStdIndex].wNeedLevel;;
-	int		nWeight		= g_pStdItemSpecial[lpTItemRcd->nStdIndex].wWeight;
+	CStdItemSpecial* lpStdItem;
+	GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+	int		nNeed		= lpStdItem->wNeed;
+	int		nNeedLevel	= lpStdItem->wNeedLevel;;
+	int		nWeight		= lpStdItem->wWeight;
 
 	if (wWhere == U_DRESS)
 	{
 		if (lpTItemRcd->szMakeIndex[0] != 'B') return FALSE;
 
-		if (g_pStdItemSpecial[lpTItemRcd->nStdIndex].wStdMode == 10)	// 남자옷
+		if (lpStdItem->wStdMode == 10)	// 남자옷
 		{
 			if (m_tFeature.btGender != 0)
 			{
@@ -1308,7 +1315,7 @@ BOOL CPlayerObject::CheckTakeOnItem(WORD wWhere, _LPTUSERITEMABILITY lpTItemRcd)
 				return FALSE;
 			}
 		}
-		else if (g_pStdItemSpecial[lpTItemRcd->nStdIndex].wStdMode == 11)	// 여자옷
+		else if (lpStdItem->wStdMode == 11)	// 여자옷
 		{
 			if (m_tFeature.btGender != 1)
 			{
