@@ -417,7 +417,7 @@ void CGateInfo::GetSelectCharacter(SOCKET s, char *pszPacket)
 
 		int nPos2 = fnEncode6BitBufA((unsigned char *)szServerIP, szEncodeData, memlen(szServerIP) -1, sizeof(szEncodeData));
 		
-		fnMakeDefMessageA(&DefaultMsg, SM_STARTPLAY,DEFBLOCKSIZE+nPos2 , 0, 0, 0, 0);
+		fnMakeDefMessageA(&DefaultMsg, SM_STARTPLAY,DEFBLOCKSIZE+nPos2 , 0, 4, 0, 0);
 		nPos = fnEncodeMessageA(&DefaultMsg, szEncodeMsg, sizeof(szEncodeMsg));
 
 		memmove(szEncodePacket, szEncodeMsg, nPos);
