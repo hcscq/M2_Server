@@ -123,7 +123,7 @@ char *GetGuidSZ(char *szDest)
 {
 	GUID guid;
 	CoCreateGuid(&guid);
-	sprintf_s(szDest, 64, "{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
+	sprintf_s(szDest, 37, "%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
 		guid.Data1, guid.Data2, guid.Data3,
 		guid.Data4[0], guid.Data4[1],
 		guid.Data4[2], guid.Data4[3],

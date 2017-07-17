@@ -551,7 +551,6 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 	char szDate[24];
 	char szMakeIndex[43];
 	GetDate( szDate );
-
 //	if (strcmp(szDate, g_szYesterDay) != 0)
 //	{
 	/* use Guid 2017.06.23
@@ -576,7 +575,7 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 	char szUserID[32];
 	char szCharName[32];
 	byte btCharIndex;
-	char szGuid[36];
+	char szGuid[37];
 	if (lpHumanLoad)
 	{
 		strcpy(szUserID, lpHumanLoad->szUserID);

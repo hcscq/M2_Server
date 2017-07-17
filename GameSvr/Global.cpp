@@ -65,7 +65,6 @@ CStdItemSpecial*			g_pStdItemSpecial = NULL;		// Standard Item List
 inline CStdItemSpecial * GetStdItemByIndex(WORD stdItemIndex, CStdItemSpecial* lpStdItem) {
 	lpStdItem = g_pStdItemSpecial;
 	for (int i = 0; lpStdItem&&i < g_nStdItemSpecial&&lpStdItem->Index != stdItemIndex; i++, lpStdItem++);
-	//while (i<g_nStdItemSpecial&&lpStdItem&&lpStdItem->Index != stdItemIndex)lpStdItem++;
 	return lpStdItem;
 }
 int							g_nStdItemSpecial = 0;

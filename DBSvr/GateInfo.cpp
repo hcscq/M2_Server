@@ -225,7 +225,7 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 	char				szEncodeMsg[32];
 	int					nPos;
 	char				szQuery[2048];
-	char				szCharGuid[36];
+	char				szCharGuid[37];
 	//TCHAR				szName[20];
 	//MultiByteToWideChar(CP_ACP, 0, lpTCreateChr->szName, -1, szName, sizeof(szName) / sizeof(TCHAR));
 	ChangeSpaceToNull(lpTCreateChr->szID);
