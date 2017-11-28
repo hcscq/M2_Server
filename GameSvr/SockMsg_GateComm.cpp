@@ -255,6 +255,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 						{
 							if ( pUserInfo->m_btCurrentMode == USERMODE_PLAYGAME)
 							{
+								InsertLogMsg(_T("Recive GameData on playing mode."));
 								if ( pMsgHeader->nSocket == pUserInfo->m_sock )
 									pUserInfo->ProcessUserMessage(completionPacket + sizeof( _TMSGHEADER ) );
 							}
@@ -262,6 +263,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 							{
 								pUserInfo->Lock();
 								pUserInfo->DoClientCertification( completionPacket + sizeof( _TMSGHEADER ) + sizeof(_TDEFAULTMESSAGE) );
+								InsertLogMsg(_T("DoClientCertification."));
 								pUserInfo->Unlock();
 							}
 						}

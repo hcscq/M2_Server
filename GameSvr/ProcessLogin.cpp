@@ -77,7 +77,7 @@ void MakeItemToDB(int nReadyUserInfo, char *pszUserId, char *pszCharName, _LPTMA
 BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 {
 	int nIndex = g_xPlayerObjectArr.GetFreeKey();
-
+	InsertLogMsg(_T("Ready to load player."));
 	if (nIndex >= 0)
 	{
 		pUserInfo->Lock();
@@ -193,10 +193,10 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 		pUserInfo->m_pxPlayerObject->Unlock();
 
 		g_xUserInfoList.AddNewNode(pUserInfo);
-
+		InsertLogMsg(_T("PlayerLoad sucess."));
 		return TRUE;
 	}
-
+	InsertLogMsg(_T("PlayerLoad failed."));
 	return FALSE;
 }
 
@@ -267,7 +267,7 @@ UINT WINAPI ProcessLogin(LPVOID lpParameter)
 								pReadyUserInfo = g_xReadyUserInfoList2.GetData(pReadyListNode);
 
 								if ((strcmp(pReadyUserInfo->m_THumanRcd.szUserID, pUserInfo->m_szUserID) == 0) &&
-									(pReadyUserInfo->m_THumanRcd.btIndex == pUserInfo->m_THumanRcd.btIndex))
+									(pReadyUserInfo->m_THumanRcd.btIndex == pUserInfo->m_THumanRcd.btIndex))//死循环错误 此时 pUserInfo->m_THumanRcd 为空,pUserInfo->m_THumanRcd 将在LoadPlayer 中加载
 								{
 									if (LoadPlayer(pReadyUserInfo, pUserInfo))
 									{

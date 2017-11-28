@@ -130,7 +130,6 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 				case GM_SERVERUSERINDEX:
 				{
 					CSessionInfo* pSessionInfo = g_UserInfoArray.GetData(lpMsgHeader->wUserGateIndex);
-
 					if (pSessionInfo)
 						pSessionInfo->nServerUserIndex = lpMsgHeader->wUserListIndex;
 
