@@ -149,7 +149,7 @@ STRINGTABLE
 BEGIN
     IDS_CONFLVS_LABEL5      "游戏网关之外的IP地址"
     IDS_TAB_LABEL1          "服务器设置"
-    IDS_ACCEPT_GATESERVER   "连接到游戏网关服务器(%s)。"
+    IDS_ACCEPT_GATESERVER   "游戏网关服务器(%s)已连接。"
     IDS_OPEN_USER           "客户端(%s)一直试图连接到它。"
     IDS_CLOSE_USER          "客户端(%s)已终止了连接。"
     IDS_OPEN_GATE           "%d网关以打开。"

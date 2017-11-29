@@ -314,8 +314,15 @@ UINT WINAPI		ClientWorkerThread(LPVOID lpParameter)
 
 		WSAGetOverlappedResult(g_csock, &ClientOverlapped.Overlapped, &dwBytesTransferred, FALSE, &dwFlags);
 
-		if (dwBytesTransferred == 0)
+		if (dwBytesTransferred == 0)//IDS_DISCONNECT_GAMESERVER
+		{
+			InsertLogMsg(IDS_DISCONNECT_GAMESERVER);
+			KillTimer(g_hMainWnd, _ID_TIMER_KEEPALIVE);
+			closesocket(g_csock);
+			g_csock = INVALID_SOCKET;
+			SetTimer(g_hMainWnd, _ID_TIMER_CONNECTSERVER, 2000, (TIMERPROC)OnTimerProc);
 			break;
+		}
 
 		ClientOverlapped.DataBuf.buf[dwBytesTransferred] = '\0';
 

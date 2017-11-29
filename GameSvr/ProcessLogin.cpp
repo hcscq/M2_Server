@@ -266,8 +266,8 @@ UINT WINAPI ProcessLogin(LPVOID lpParameter)
 							{
 								pReadyUserInfo = g_xReadyUserInfoList2.GetData(pReadyListNode);
 
-								if ((strcmp(pReadyUserInfo->m_THumanRcd.szUserID, pUserInfo->m_szUserID) == 0) &&
-									(pReadyUserInfo->m_THumanRcd.btIndex == pUserInfo->m_THumanRcd.btIndex))//死循环错误 此时 pUserInfo->m_THumanRcd 为空,pUserInfo->m_THumanRcd 将在LoadPlayer 中加载
+								if ((strcmp(pReadyUserInfo->m_THumanRcd.szUserID, pUserInfo->m_szUserID) == 0) //&&(pReadyUserInfo->m_THumanRcd.btIndex == pUserInfo->m_THumanRcd.btIndex)
+									)//死循环错误 此时 pUserInfo->m_THumanRcd 为空,pUserInfo->m_THumanRcd 将在LoadPlayer 中加载
 								{
 									if (LoadPlayer(pReadyUserInfo, pUserInfo))
 									{
