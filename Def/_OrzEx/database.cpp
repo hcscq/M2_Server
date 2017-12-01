@@ -172,7 +172,7 @@ bool CConnection::Init( SQLHENV hEnv, char *pDSN, char *pID, char *pPassword )
 		CDatabase::DiagRec( SQL_HANDLE_DBC, m_hDBConn );
 
 		if ( nResult != SQL_SUCCESS_WITH_INFO ){
-			MessageBox(NULL,_T("数据库为空！"),_T("登陆网关"),MB_OKCANCEL);
+			MessageBox(NULL,_T("连接数据库失败！"),_T("登陆服务器"),MB_OKCANCEL);
 			return false;
 		}
 	}

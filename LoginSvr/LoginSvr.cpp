@@ -183,7 +183,7 @@ BOOL InitInstance(HANDLE hInstance, int nCmdShow)
 	if (WSAStartup(MAKEWORD(2, 2), &g_wsd) != 0)
 		return (FALSE);
 
-	GetDBManager()->Init( InsertLogMsg, "LEGENDOFMIR", "sa", "123" );//SQL CONNECTION-HCS
+	GetDBManager()->Init( InsertLogMsg, "LEGENDOFMIR", "sa", "Huangchangsheng2" );//SQL CONNECTION-HCS
 
 	//
 //	BYTE	btInstalled;

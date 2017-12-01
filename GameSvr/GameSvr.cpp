@@ -203,8 +203,8 @@ BOOL InitInstance(HANDLE hInstance, int nCmdShow)
 	g_MirDB.SetDiagRec( __cbDBMsg );
 	g_MirDB.Init();
 
-	g_pConnCommon	= g_MirDB.CreateConnection( "LEGENDOFMIR", "sa", "123" );
-	g_pConnGame		= g_MirDB.CreateConnection( "LEGENDOFMIR", "sa", "123" );//szDatabase
+	g_pConnCommon	= g_MirDB.CreateConnection( "LEGENDOFMIR", "sa", "Huangchangsheng2" );
+	g_pConnGame		= g_MirDB.CreateConnection( "LEGENDOFMIR", "sa", "Huangchangsheng2" );//szDatabase
 
 	return TRUE;
 }

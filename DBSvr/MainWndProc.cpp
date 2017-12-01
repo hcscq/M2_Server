@@ -103,11 +103,11 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 			jRegGetKey(_DB_SERVER_REGISTRY, _TEXT("Device"), (LPBYTE)wszDatabase);
 			WideCharToMultiByte(CP_ACP, 0, wszDatabase, -1, szDatabase, sizeof(szDatabase), NULL, NULL);//该函数映射一个unicode字符串到一个多字节字符串。
 	//szDatabase
-			if(!GetDBManager()->Init( InsertLogMsg,szDatabase , "sa", "123" )){
+			if(!GetDBManager()->Init( InsertLogMsg,szDatabase , "sa", "Huangchangsheng2" )){
 				InsertLogMsg( _T("数据库连接失败,无法启动服务！\n") );
 				return;
 			}
-			CConnection *pConn = GetDBManager()->m_dbMain.CreateConnection( szDatabase, "sa", "123" );
+			CConnection *pConn = GetDBManager()->m_dbMain.CreateConnection( szDatabase, "sa", "Huangchangsheng2" );
 			if ( pConn )
 			{
 				if ( !GetTblStartPoint()->Init( pConn ) )
