@@ -113,7 +113,7 @@ BEGIN
     IDS_CONNECT_LOGINSERVER "登录服务器已连接。"
     IDS_DISCONNECT_LOGINSERVER "登陆服务器连接以断开。"
     IDS_PROGRAM_QUIT        "关闭登录网关服务器？"
-    IDS_PROGRAM_TITLE       "热血传奇2 - 登录网关"
+    IDS_PROGRAM_TITLE       "Legend Of Mir2 - 登录网关"
     IDS_CANT_CONNECT        "无法连接到登录服务器。10秒后将尝试重新连接。"
     IDS_APPLY_RECONNECT     "尝试连接到登录服务器(%s)。"
 END

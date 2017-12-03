@@ -113,7 +113,7 @@ BEGIN
     IDS_CONNECT_LOGINSERVER "连接到数据库服务器。"
     IDS_DISCONNECT_LOGINSERVER "与数据库服务器连接断开。"
     IDS_PROGRAM_QUIT        "是否关闭角色网关？"
-    IDS_PROGRAM_TITLE       "热血传奇2 - 角色网关"
+    IDS_PROGRAM_TITLE       "Legend Of Mir2 - 角色网关"
     IDS_CANT_CONNECT        "无法连接到数据库服务器。稍后将尝试重新连接。"
     IDS_APPLY_RECONNECT     "尝试连接到数据库服务器。"
 END

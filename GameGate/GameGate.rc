@@ -116,7 +116,7 @@ BEGIN
     IDS_CONNECT_LOGINSERVER "游戏服务器已连接。"
     IDS_DISCONNECT_LOGINSERVER "游戏服务器与连接已丢失。"
     IDS_PROGRAM_QUIT        "是否退出游戏网关服务器？"
-    IDS_PROGRAM_TITLE       "热血传奇2 - 游戏网关服务器"
+    IDS_PROGRAM_TITLE       "Legend Of Mir2 - 游戏网关服务器"
     IDS_CANT_CONNECT        "无法连接到游戏服务器。10秒后尝试重新连接。"
     IDS_APPLY_RECONNECT     "游戏将尝试连接到服务器。"
     IDS_LOAD_ABUSIVE        "过滤信息读取成功(%d)。"
