@@ -30,7 +30,7 @@
 #define CM_CHANGEPASSWORD		2003
 #define CM_UPDATEUSER			2004
 
-#define CM_SELECTSERVER			104
+#define CM_SELECTSERVER			2005
 
 /*for .net client begin*/
 #define CM_CLIENTVERSION		0
@@ -63,10 +63,15 @@
 #define CM_NEWCHR				101
 #define CM_DELCHR				102
 #define CM_SELCHR				103
+
 /*.net client*/
 #define CM_NEWCHRA				6
 #define CM_DELCHRA				7
 #define CM_START				8
+//#define CM_TURN					10
+//#define CM_WALK					11
+//#define CM_RUN					12
+//#define CM_CHAT					13
 /*end*/
 #define	SM_QUERYCHR				520
 #define	SM_NEWCHR_SUCCESS		521
