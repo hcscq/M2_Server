@@ -1,5 +1,6 @@
 #include "stdafx.h"
-
+void SendExToServer(char *pszPacket);
+void UpdateStatusBar(BOOL fGrow);
 LPARAM OnServerSockMsg(WPARAM wParam, LPARAM lParam);
 LPARAM OnClientSockMsg(WPARAM wParam, LPARAM lParam);
 
@@ -21,6 +22,8 @@ extern HANDLE					g_hMsgThread;
 
 extern HANDLE					g_hIOCP;
 extern HANDLE					g_hAcceptThread;
+
+extern CWHList<CSessionInfo*>	g_xSessionList;
 
 SOCKET			g_ssock = INVALID_SOCKET;
 SOCKADDR_IN		g_saddr;
@@ -122,12 +125,39 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 		{
 			g_fTerminated = TRUE;
 
-/*			if (g_hAcceptThread != INVALID_HANDLE_VALUE)
+			if (g_hAcceptThread != INVALID_HANDLE_VALUE)
 			{
 				TerminateThread(g_hAcceptThread, 0);
 				WaitForSingleObject(g_hAcceptThread, INFINITE);
 				CloseHandle(g_hAcceptThread);
 				g_hAcceptThread = INVALID_HANDLE_VALUE;
+			}
+
+			char					szMsg[32];
+			PLISTNODE pListNode = g_xSessionList.GetHead();
+			CSessionInfo*			pSessionInfo = NULL;
+			char *pszPos = NULL;
+
+			while (pListNode) {
+				szMsg[0] = '%';
+				szMsg[1] = 'X';
+				pSessionInfo = g_xSessionList.GetData(pListNode);
+
+				pszPos = ValToAnsiStr((int)pSessionInfo->sock, &szMsg[2]);
+
+				*pszPos++ = '$';
+				*pszPos = '\0';
+
+				SendExToServer(szMsg);
+
+				pListNode = g_xSessionList.RemoveNode(pListNode);
+
+				closesocket(pSessionInfo->sock);
+				pSessionInfo->sock = INVALID_SOCKET;
+
+				UpdateStatusBar(FALSE);
+
+				GlobalFree(pSessionInfo);
 			}
 
 			if (g_hMsgThread != INVALID_HANDLE_VALUE)
@@ -137,7 +167,7 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 				CloseHandle(g_hMsgThread);
 				g_hMsgThread = INVALID_HANDLE_VALUE;
 			}
-*/
+
 			closesocket(g_csock);
 			closesocket(g_ssock);
 			ClearSocket(g_ssock);

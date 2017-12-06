@@ -168,16 +168,26 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 		case IDM_STARTSERVICE:
 		{
-			if(!g_pConnCommon||!g_pConnGame){if(!g_pConnGame)InsertLogMsg(_T("g_pConnGame数据库连接不可用，服务启动失败。"));if(!g_pConnCommon)InsertLogMsg(_T("g_pConnCommon数据库连接不可用，服务启动失败。"));return;}
-			g_fTerminated = FALSE;
-
+			if(!g_pConnCommon||!g_pConnGame){
+				if(!g_pConnGame)
+					InsertLogMsg(_T("g_pConnGame数据库连接不可用，服务启动失败。"));
+				if(!g_pConnCommon)
+					InsertLogMsg(_T("g_pConnCommon数据库连接不可用，服务启动失败。"));
+				return;
+			}
 			CMapInfo* pMapInfo = InitDataInDatabase();
-
+			if (pMapInfo == NULL) 
+			{
+				InsertLogMsg(_T("加载地图信息失败，服务启动失败。"));
+				SendMessage(g_hMainWnd, IDM_STOPSERVICE, NULL, NULL);
+				return;
+			}
 			UINT			dwThreadIDForMsg = 0;
 			unsigned long	hThreadForMsg = 0;
 
 			hThreadForMsg = _beginthreadex(NULL, 0, InitializingServer, pMapInfo, 0, &dwThreadIDForMsg);
 
+			g_fTerminated = FALSE;
 			SwitchMenuItem(TRUE);
 
 			return;

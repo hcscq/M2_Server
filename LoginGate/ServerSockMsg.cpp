@@ -104,6 +104,8 @@ void CloseSession(int s)
 
 	closesocket(s);
 
+	s = INVALID_SOCKET;
+
 	UpdateStatusBar(FALSE);
 }
 
@@ -215,6 +217,8 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 		{
 				InsertLogMsg(_TEXT("WSARecv() failed"));
 			
+				g_xSessionList.RemoveNodeByData(pSessionInfo);
+
 				CloseSession(pSessionInfo->sock);
 				continue;
 		}
