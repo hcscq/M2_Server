@@ -496,13 +496,17 @@ int CUserInfo::CalcBagWeight()
 	if (m_lpTItemRcd.GetCount())
 	{
 		PLISTNODE pListNode = m_lpTItemRcd.GetHead();
-		CStdItemSpecial* lpStdItem;
+		CStdItemSpecial* lpStdItem=NULL;
+		_LPTUSERITEMABILITY lpTItemRcd;
 		while (pListNode)
 		{
-			_LPTUSERITEMABILITY lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
+			lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 
-			if (lpTItemRcd)
-				nWeight += GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem)->wWeight;
+			if (lpTItemRcd) {
+				GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+				if (lpStdItem != NULL)
+					nWeight += lpStdItem->wWeight;
+			}
 
 			pListNode = m_lpTItemRcd.GetNext(pListNode);
 		}
