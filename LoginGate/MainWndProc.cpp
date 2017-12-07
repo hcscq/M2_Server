@@ -134,7 +134,7 @@ void OnCommand(WPARAM wParam, LPARAM lParam)
 			}
 
 			char					szMsg[32];
-			PLISTNODE pListNode = g_xSessionList.GetHead();
+			PLISTNODE pListNode		= g_xSessionList.GetHead();
 			CSessionInfo*			pSessionInfo = NULL;
 			char *pszPos = NULL;
 

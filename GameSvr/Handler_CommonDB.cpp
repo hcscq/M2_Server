@@ -17,7 +17,7 @@ CMapInfo* InitMapInfo(int nServerIndex)
 
 	g_pConnCommon->DestroyRecordset( pRec );
 
-	if (g_nNumOfMapInfo < 0) return NULL;
+	if (g_nNumOfMapInfo <= 0) return NULL;
 
 	CMapInfo* pMapInfo = new CMapInfo[g_nNumOfMapInfo];
 
