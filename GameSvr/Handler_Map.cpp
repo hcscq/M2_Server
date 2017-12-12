@@ -46,6 +46,8 @@ void LoadMap(CMapInfo* pMapInfo)
 		memcpy(&szFullName[nLen], ".map", 4);
 		szFullName[nLen + 4] = '\0';
 
+		pMirMap->m_exMapDiscEx.m_usMiniMap= pMapInfo->mMiniMap;
+
 		pMirMap->LoadMapData(szFullName);
 	}
 }

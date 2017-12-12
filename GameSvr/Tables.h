@@ -110,6 +110,8 @@ public:
 
 	BYTE		btMapSeries;
 	BYTE		btMapSeriesValue;
+
+	USHORT		mMiniMap;
 };
 
 class CMoveMapEventInfo

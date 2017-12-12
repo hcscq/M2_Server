@@ -40,6 +40,8 @@ CMapInfo* InitMapInfo(int nServerIndex)
 
 				pMapInfo[i].btMapSeries			= atoi( pRec->Get( "FLD_MAPSERIES" ) );
 				pMapInfo[i].btMapSeriesValue	= atoi( pRec->Get( "FLD_MAPSERIESVAL" ) );
+
+				pMapInfo[i].mMiniMap			= atoi(pRec->Get("FLD_MINIMAP"));
 			}
 		}
 	}
