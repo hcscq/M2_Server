@@ -119,8 +119,8 @@ BEGIN
     IDS_PROGRAM_TITLE       "Legend Of Mir2 - 游戏网关服务器"
     IDS_CANT_CONNECT        "无法连接到游戏服务器。10秒后尝试重新连接。"
     IDS_APPLY_RECONNECT     "游戏将尝试连接到服务器。"
-    IDS_LOAD_ABUSIVE        "过滤信息读取成功(%d)。"
-    IDS_LOADFAIL_ABUSIVE    "过滤信息文件读取失败。"
+    IDS_LOAD_ABUSIVE        "过滤信息加载成功(%d)。"
+    IDS_LOADFAIL_ABUSIVE    "过滤信息文件加载失败。"
     IDS_CONNECT_GAMESERVER  "连接游戏服务器(%s)."
 END
 

@@ -479,7 +479,7 @@ void CGateInfo::ProcAddUser(SOCKET s, char *pszData)
 	char *token = strtok( szEntryInfo, seps );
 
 	if ( !ParseUserEntry( szEntryInfo, &UserEntryInfo ) )
-		fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE,0, 0, 0, 0);
+		fnMakeDefMessageA(&DefMsg, SM_NEWID_SUCCESS, DEFBLOCKSIZE,0, 2, 0, 0);
 	else
 	{	
 		char szQuery[1024];
@@ -490,10 +490,10 @@ void CGateInfo::ProcAddUser(SOCKET s, char *pszData)
 		CRecordset *pRec = GetDBManager()->CreateRecordset();
 
 		if (!pRec->Execute( szQuery ))
-			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE,0, 0, 0, 0);
+			fnMakeDefMessageA(&DefMsg, SM_NEWID_SUCCESS, DEFBLOCKSIZE,0, 1, 0, 0);
 
 		if ( pRec->Fetch() )
-			fnMakeDefMessageA(&DefMsg, SM_NEWID_FAIL, DEFBLOCKSIZE,0, 0, 0, 0);
+			fnMakeDefMessageA(&DefMsg, SM_NEWID_SUCCESS, DEFBLOCKSIZE,0, 7, 0, 0);
 		else
 		{
 			GetDBManager()->DestroyRecordset( pRec );
@@ -586,9 +586,9 @@ void CGateInfo::ProcLogin(SOCKET s, char *pszData)
 				CRecordset *pRec = GetDBManager()->CreateRecordset();
 
 				if ( !pRec->Execute( szQuery ) || !pRec->Fetch() )
-					fnMakeDefMessageA( &DefMsg, SM_LOGIN, DEFBLOCKSIZE,0, SM_RE_ID_NOTFOUND, 0, 0 );
+					fnMakeDefMessageA( &DefMsg, SM_PASSWD_FAIL, DEFBLOCKSIZE,0, SM_RE_ID_NOTFOUND, 0, 0 );
 				else if ( CompareDBString( pszPassword, pRec->Get( "FLD_PASSWORD" ) ) != 0 )
-					fnMakeDefMessageA( &DefMsg, SM_LOGIN, DEFBLOCKSIZE, 0,SM_RE_ID_WRONGPASS, 0, 0 );
+					fnMakeDefMessageA( &DefMsg, SM_PASSWD_FAIL, DEFBLOCKSIZE, 0,SM_RE_ID_WRONGPASS, 0, 0 );
 				else
 				{
 					int nCertCode = atoi( pRec->Get( "FLD_CERTIFICATION" ) );

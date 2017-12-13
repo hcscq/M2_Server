@@ -55,7 +55,8 @@ UINT WINAPI ProcessGateMsg(LPVOID lpParameter)
 											fnDecode6BitBufA((pszBegin + _DEFBLOCKSIZE + 1), (char *)&tDelChr, sizeof(_TDELCHR));
 											pGateInfo->DeleteExistCharacter(pSendBuff->sock, &tDelChr);
 											break;
-										case CM_SELCHR:case CM_START:
+										case CM_SELCHR:
+										case CM_START:
 											pGateInfo->GetSelectCharacter(pSendBuff->sock, (pszBegin + _DEFBLOCKSIZE + 1));
 											break;
 									}

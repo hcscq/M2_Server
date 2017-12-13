@@ -167,7 +167,7 @@ BEGIN
     IDS_OPEN_USER           "客户端(%s)一直试图连接到它。"
     IDS_CLOSE_USER          "客户端(%s)已终止了连接。"
     IDS_CONNECTDB           "Legend Of Mir2连接到数据库。"
-    IDS_LOADACCOUNTRECORDS  "读取玩家帐号信息。"
+    IDS_LOADACCOUNTRECORDS  "加载玩家帐号信息。"
     IDS_BOUNDACCOUNTRECORDS "％d记录我读过一个用户帐户信息。"
     IDS_COMPLETENEWUSER     "用户ID[％s]已建立。"
     IDS_OPEN_PORT           "端口:%d已打开。"
