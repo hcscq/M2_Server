@@ -2355,7 +2355,7 @@ void CPlayerObject::Operate()
 					case CM_POWERHIT:
 					{
 						if (!m_fIsDead)
-						{
+						{//BOOL CCharObject::HitXY(WORD wIdent, int nX, int nY, int nDir, int nHitStyle)
 							if (HitXY(lpProcessMsg->wIdent, lpProcessMsg->lParam1, lpProcessMsg->lParam2, lpProcessMsg->wParam, lpProcessMsg->lParam3))
 								memmove(szEncodeMsg, _MSG_GOOD, sizeof(_MSG_GOOD));
 							else

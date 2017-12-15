@@ -1070,6 +1070,8 @@ void CCharObject::UpdateProcess(CCharObject* pCharObject, WORD wIdent, WORD wPar
 
 void CCharObject::AddProcess(CCharObject* pCharObject, WORD wIdent, WORD wParam, DWORD lParam1, DWORD lParam2, DWORD lParam3, char *pszData)
 {
+	// HitXY(WORD wIdent,			int nX,					 int nY,			int nDir,				int nHitStyle)
+	//(HitXY(lpProcessMsg->wIdent, lpProcessMsg->lParam1, lpProcessMsg->lParam2, lpProcessMsg->wParam, lpProcessMsg->lParam3))
 //	EnterCriticalSection(&m_cs);
 
 	_LPTPROCESSMSG lpProcessMsg = new _TPROCESSMSG;

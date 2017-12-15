@@ -726,13 +726,16 @@ void CUserInfo::ProcessUserMessage(char *pszPacket)
 
 	switch (lpDefMsg->wIdent)
 	{
+		//							HitXY(WORD wIdent,				int nX,					int nY,				  int nDir,				int nHitStyle)
+		//							(HitXY(lpProcessMsg->wIdent,	lpProcessMsg->lParam1, lpProcessMsg->lParam2, lpProcessMsg->wParam, lpProcessMsg->lParam3))
+		//AddProcess(CCharObject* pCharObject, WORD wIdent,			WORD wParam,			DWORD lParam1,		  DWORD lParam2,		 DWORD lParam3,        char *pszData)
 		case CM_HIT:
 		case CM_POWERHIT:
 		case CM_LONGHIT:
 		case CM_WIDEHIT:
 		case CM_HEAVYHIT:
-		case CM_BIGHIT:
-		case CM_FIREHIT:
+		case CM_BIGHIT://									wIdent				nX					nY						nDir					nHitStyle
+		case CM_FIREHIT://									wIdent				wParam			lParam1						lParam2					lParam3
 			m_pxPlayerObject->AddProcess(m_pxPlayerObject, lpDefMsg->wIdent, lpDefMsg->wTag, LOWORD(lpDefMsg->nRecog), HIWORD(lpDefMsg->nRecog), lpDefMsg->wParam, NULL);
 			break;
 		case CM_TURN:

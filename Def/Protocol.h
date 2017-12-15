@@ -65,6 +65,7 @@
 #define CM_NEWCHR				101
 #define CM_DELCHR				102
 #define CM_SELCHR				103
+#define CM_LOGOUT				104
 
 /*.net client*/
 #define CM_NEWCHRA				6
@@ -99,6 +100,7 @@
 // Client To Server Commands
 #define CM_QUERYUSERNAME        80
 #define CM_QUERYBAGITEMS        81
+
 
 #define CM_DROPITEM             1000
 #define CM_PICKUP               1001
