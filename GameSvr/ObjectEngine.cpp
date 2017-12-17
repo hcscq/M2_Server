@@ -2051,13 +2051,13 @@ BOOL CCharObject::_Attack(WORD wHitMode, CCharObject* pObject)
 
 	if (pObject)
 	{
-		if (wHitMode == CM_POWERHIT && m_pUserInfo->m_fPowerHitSkill)
+		if (wHitMode == HIT_POWERHIT && m_pUserInfo->m_fPowerHitSkill)
 		{
 			m_pUserInfo->m_fPowerHitSkill = FALSE;
 			nPower += m_btHitPlus;
 		}
 
-		if (wHitMode == CM_FIREHIT && m_pUserInfo->m_fFireHitSkill)
+		if (wHitMode == HIT_FIREHIT && m_pUserInfo->m_fFireHitSkill)
 		{
 			m_pUserInfo->m_fFireHitSkill = FALSE;
 			
@@ -2066,14 +2066,14 @@ BOOL CCharObject::_Attack(WORD wHitMode, CCharObject* pObject)
 	}
 	else
 	{
-		if (wHitMode == CM_POWERHIT && m_pUserInfo->m_fPowerHitSkill)
+		if (wHitMode == HIT_POWERHIT && m_pUserInfo->m_fPowerHitSkill)
 		{
 			m_pUserInfo->m_fPowerHitSkill = FALSE;
 			nPower += m_btHitPlus;
 		}
 	}
 
-	if (wHitMode == CM_LONGHIT)
+	if (wHitMode == HIT_LONGHIT)
 	{
 		nSecPwr	= 0;
 
@@ -2086,7 +2086,7 @@ BOOL CCharObject::_Attack(WORD wHitMode, CCharObject* pObject)
 			SwordLongAttack(nSecPwr);
 	}
 
-	if (wHitMode == CM_WIDEHIT)
+	if (wHitMode == HIT_WIDEHIT)
 	{
 		nSecPwr	= 0;
 
@@ -2181,7 +2181,7 @@ BOOL CCharObject::HitXY(WORD wIdent, int nX, int nY, int nDir, int nHitStyle)
 	{
 		if (m_nCurrX == nX && m_nCurrY == nY)
 		{
-			if (wIdent == CM_WIDEHIT && m_pUserInfo->m_lpTMagicBanwolSkill)
+			if (nHitStyle == HIT_WIDEHIT && m_pUserInfo->m_lpTMagicBanwolSkill)
 			{
 				if (m_WAbility.MP > 0)
 				{
@@ -2191,7 +2191,7 @@ BOOL CCharObject::HitXY(WORD wIdent, int nX, int nY, int nDir, int nHitStyle)
 					HealthSpellChanged();
 				}
 				else
-					wIdent = CM_HIT;
+					nHitStyle = HIT_NONE;
 			}
 
 			m_nDirection		= nDir;
@@ -2201,7 +2201,7 @@ BOOL CCharObject::HitXY(WORD wIdent, int nX, int nY, int nDir, int nHitStyle)
 
 			if (pObject)
 			{
-				if (_Attack(wIdent, pObject))
+				if (_Attack(nHitStyle, pObject))
 				{
 					SelectTarget(pObject);
 
@@ -2215,24 +2215,25 @@ BOOL CCharObject::HitXY(WORD wIdent, int nX, int nY, int nDir, int nHitStyle)
 
 			if (m_wObjectType & _OBJECT_HUMAN)
 			{
-				switch (wIdent)
-				{
-					case CM_HIT:
-						AddRefMsg(RM_HIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
-						break;
-					case CM_WIDEHIT:
-						AddRefMsg(RM_WIDEHIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
-						break;
-					case CM_LONGHIT:
-						AddRefMsg(RM_LONGHIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
-						break;
-					case CM_FIREHIT:
-						AddRefMsg(RM_FIREHIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
-						break;
-					case CM_POWERHIT:
-						AddRefMsg(RM_POWERHIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
-						break;
-				}
+				AddRefMsg(RM_HIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
+				//switch (nHitStyle)
+				//{
+				//	case HIT_NONE:
+				//		AddRefMsg(RM_HIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
+				//		break;
+				//	case HIT_WIDEHIT:
+				//		AddRefMsg(RM_WIDEHIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
+				//		break;
+				//	case HIT_LONGHIT:
+				//		AddRefMsg(RM_LONGHIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
+				//		break;
+				//	case HIT_FIREHIT:
+				//		AddRefMsg(RM_FIREHIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
+				//		break;
+				//	case HIT_POWERHIT:
+				//		AddRefMsg(RM_POWERHIT, nDir, m_nCurrX, m_nCurrY, nHitStyle, NULL);
+				//		break;
+				//}
 			}
 
 			if (m_pUserInfo->m_lpTMagicPowerHitSkill)		// 예도 검법

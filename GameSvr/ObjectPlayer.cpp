@@ -2349,10 +2349,10 @@ void CPlayerObject::Operate()
 						break;
 					}
 					case CM_HIT:
-					case CM_LONGHIT:
-					case CM_WIDEHIT:
-					case CM_FIREHIT:
-					case CM_POWERHIT:
+					//case CM_LONGHIT:
+					//case CM_WIDEHIT:
+					//case CM_FIREHIT:
+					//case CM_POWERHIT:
 					{
 						if (!m_fIsDead)
 						{//BOOL CCharObject::HitXY(WORD wIdent, int nX, int nY, int nDir, int nHitStyle)
@@ -2725,54 +2725,54 @@ void CPlayerObject::Operate()
 
 						break;
 					}
-					case RM_LONGHIT:
-					{
-						if (lpProcessMsg->pCharObject != this)
-						{
-							fnMakeDefMessage(&DefMsg, SM_LONGHIT, (int)lpProcessMsg->pCharObject, 
-												(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, lpProcessMsg->wParam);//lpProcessMsg->pCharObject->m_nLight);
-						
-							SendSocket(&DefMsg, NULL);
-						}
+					//case RM_LONGHIT:
+					//{
+					//	if (lpProcessMsg->pCharObject != this)
+					//	{
+					//		fnMakeDefMessage(&DefMsg, SM_LONGHIT, (int)lpProcessMsg->pCharObject, 
+					//							(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, lpProcessMsg->wParam);//lpProcessMsg->pCharObject->m_nLight);
+					//	
+					//		SendSocket(&DefMsg, NULL);
+					//	}
 
-						break;
-					}
-					case RM_WIDEHIT:
-					{
-						if (lpProcessMsg->pCharObject != this)
-						{
-							fnMakeDefMessage(&DefMsg, SM_WIDEHIT, (int)lpProcessMsg->pCharObject, 
-												(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, lpProcessMsg->wParam);//lpProcessMsg->pCharObject->m_nLight);
-						
-							SendSocket(&DefMsg, NULL);
-						}
+					//	break;
+					//}
+					//case RM_WIDEHIT:
+					//{
+					//	if (lpProcessMsg->pCharObject != this)
+					//	{
+					//		fnMakeDefMessage(&DefMsg, SM_WIDEHIT, (int)lpProcessMsg->pCharObject, 
+					//							(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, lpProcessMsg->wParam);//lpProcessMsg->pCharObject->m_nLight);
+					//	
+					//		SendSocket(&DefMsg, NULL);
+					//	}
 
-						break;
-					}
-					case RM_FIREHIT:
-					{
-						if (lpProcessMsg->pCharObject != this)
-						{
-							fnMakeDefMessage(&DefMsg, SM_FIREHIT, (int)lpProcessMsg->pCharObject, 
-												(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, lpProcessMsg->wParam);//lpProcessMsg->pCharObject->m_nLight);
-						
-							SendSocket(&DefMsg, NULL);
-						}
+					//	break;
+					//}
+					//case RM_FIREHIT:
+					//{
+					//	if (lpProcessMsg->pCharObject != this)
+					//	{
+					//		fnMakeDefMessage(&DefMsg, SM_FIREHIT, (int)lpProcessMsg->pCharObject, 
+					//							(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, lpProcessMsg->wParam);//lpProcessMsg->pCharObject->m_nLight);
+					//	
+					//		SendSocket(&DefMsg, NULL);
+					//	}
 
-						break;
-					}
-					case RM_POWERHIT:
-					{
-						if (lpProcessMsg->pCharObject != this)
-						{
-							fnMakeDefMessage(&DefMsg, SM_POWERHIT, (int)lpProcessMsg->pCharObject, 
-												(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, lpProcessMsg->wParam);//lpProcessMsg->pCharObject->m_nLight);
-						
-							SendSocket(&DefMsg, NULL);
-						}
+					//	break;
+					//}
+					//case RM_POWERHIT:
+					//{
+					//	if (lpProcessMsg->pCharObject != this)
+					//	{
+					//		fnMakeDefMessage(&DefMsg, SM_POWERHIT, (int)lpProcessMsg->pCharObject, 
+					//							(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, lpProcessMsg->wParam);//lpProcessMsg->pCharObject->m_nLight);
+					//	
+					//		SendSocket(&DefMsg, NULL);
+					//	}
 
-						break;
-					}
+					//	break;
+					//}
 					case RM_SPELL:
 					case RM_SPELL2:
 					{

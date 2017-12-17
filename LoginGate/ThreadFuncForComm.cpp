@@ -38,7 +38,7 @@ VOID WINAPI OnTimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 				jRegGetKey(_LOGINGATE_SERVER_REGISTRY, _TEXT("RemoteIP"), (LPBYTE)&dwIP);
 
 				if (!jRegGetKey(_LOGINGATE_SERVER_REGISTRY, _TEXT("RemotePort"), (LPBYTE)&nPort))
-					nPort = 5000;
+					nPort = 5500;
 
 				TCHAR	szSrvAddr[16];	
 				_stprintf(szSrvAddr, _T("%d.%d.%d.%d:%d"), g_caddr.sin_addr.s_net, g_caddr.sin_addr.s_host, 

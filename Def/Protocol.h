@@ -114,13 +114,13 @@
 #define CM_SITDOWN              3012
 #define CM_RUN                  3013
 #define CM_HIT                  3014
-#define CM_HEAVYHIT             3015
-#define CM_BIGHIT               3016
+//#define CM_HEAVYHIT             3015
+//#define CM_BIGHIT               3016
 #define CM_SPELL                3017
-#define CM_POWERHIT             3018
-#define CM_LONGHIT              3019
-#define CM_WIDEHIT              3024
-#define CM_FIREHIT              3025
+//#define CM_POWERHIT             3018
+//#define CM_LONGHIT              3019
+//#define CM_WIDEHIT              3024
+//#define CM_FIREHIT              3025
 #define CM_SAY                  3030
 #define CM_RIDE					3031
 

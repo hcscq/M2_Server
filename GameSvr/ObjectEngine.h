@@ -25,6 +25,15 @@
 #define DR_DOWNLEFT					5
 #define DR_LEFT						6
 #define DR_UPLEFT					7
+//Hit Style
+#define HIT_NONE				 10
+#define HIT_HEAVYHIT             11
+#define HIT_BIGHIT               12
+#define HIT_POWERHIT             13
+#define HIT_LONGHIT              14
+#define HIT_WIDEHIT              15
+#define HIT_FIREHIT              16
+#define HIT_CORSSWIDEHIT		 17
 
 #define _DOOR_NOT					0
 #define _DOOR_OPEN					1
