@@ -255,7 +255,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 						{
 							if ( pUserInfo->m_btCurrentMode == USERMODE_PLAYGAME)
 							{
-								InsertLogMsg(_T("Recive GameData on playing mode."));
+								//InsertLogMsg(_T("Recive GameData on playing mode."));
 								if ( pMsgHeader->nSocket == pUserInfo->m_sock )
 									pUserInfo->ProcessUserMessage(completionPacket + sizeof( _TMSGHEADER ) );
 							}
