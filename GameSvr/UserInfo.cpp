@@ -704,6 +704,8 @@ void CUserInfo::ProcessUserMessage(char *pszPacket)
 	if (m_pxPlayerObject->m_fIsCapture)
 	{
 		if (m_pxPlayerObject->m_hCaptureFile)
+			m_pxPlayerObject->m_hCaptureFile = fopen("capture.txt", "w+");
+		if (m_pxPlayerObject->m_hCaptureFile)
 		{
 			DWORD	dwWrite = 0;
 
@@ -711,15 +713,15 @@ void CUserInfo::ProcessUserMessage(char *pszPacket)
 
 			switch (lpDefMsg->wIdent)
 			{
-				case CM_SAY:
-				case CM_PICKUP:
-				{
-					char szDecodeMsg[512];
-					int nPos = fnDecode6BitBufA(pszPacket + sizeof(_TDEFAULTMESSAGE), szDecodeMsg, sizeof(szDecodeMsg));
-					szDecodeMsg[nPos] = '\0';
+			case CM_SAY:
+			case CM_PICKUP:
+			{
+				char szDecodeMsg[512];
+				int nPos = fnDecode6BitBufA(pszPacket + sizeof(_TDEFAULTMESSAGE), szDecodeMsg, sizeof(szDecodeMsg));
+				szDecodeMsg[nPos] = '\0';
 
-					fprintf(m_pxPlayerObject->m_hCaptureFile, "%s\r\n", szDecodeMsg);
-				}
+				fprintf(m_pxPlayerObject->m_hCaptureFile, "%s\r\n", szDecodeMsg);
+			}
 			}
 		}
 	}

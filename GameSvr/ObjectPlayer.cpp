@@ -2561,35 +2561,35 @@ void CPlayerObject::Operate()
 					case RM_MONSTERSAY:
 					{
 						if (lpProcessMsg->pszData)
-						{
+						{//fnMakeDefMessageW(_LPTDEFAULTMESSAGE lptdm, WORD wIdent, int nRecog, WORD wParam, WORD wTag, WORD wSeries)
 							switch (lpProcessMsg->wIdent)
 							{
 								case RM_HEAR:
-									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CHAT_COLOR3, _CHAT_COLOR1, 0);
+									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_SHOUT, _CHAT_COLOR1, 0);
 									break;
 								case RM_CRY:
-									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CHAT_COLOR1, _CHAT_COLOR7, 0);
+									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_SHOUT2, _CHAT_COLOR7, 0);
 									break;
 								case RM_WHISPER:
-									fnMakeDefMessage(&DefMsg, SM_WHISPER, (int)lpProcessMsg->pCharObject, 7, _CHAT_COLOR1, 0);
+									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_WHISPERIN, _CHAT_COLOR1, 0);
 									break;
 								case RM_SYSMESSAGE:
-									fnMakeDefMessage(&DefMsg, SM_SYSMESSAGE, (int)lpProcessMsg->pCharObject, _CHAT_COLOR3, _CHAT_COLOR8, 0);
+									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_SYSTEM, _CHAT_COLOR8, 0);
 									break;
 								case RM_SYSMESSAGE2:
-									fnMakeDefMessage(&DefMsg, SM_SYSMESSAGE, (int)lpProcessMsg->pCharObject, _CHAT_COLOR3, _CHAT_COLOR4, 0);
+									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_SYSTEM2, _CHAT_COLOR4, 0);
 									break;
 								case RM_GROUPMESSAGE:
-									fnMakeDefMessage(&DefMsg, SM_SYSMESSAGE, (int)lpProcessMsg->pCharObject, _CHAT_COLOR3, _CHAT_COLOR1, 0);
+									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_GROUP, _CHAT_COLOR1, 0);
 									break;
 								case RM_GUILDMESSAGE:
-									fnMakeDefMessage(&DefMsg, SM_GUILDMESSAGE, (int)lpProcessMsg->pCharObject, _CHAT_COLOR3, _CHAT_COLOR1, 0);
+									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_GUILD, _CHAT_COLOR1, 0);
 									break;
 								case RM_MERCHANTSAY:
 									fnMakeDefMessage(&DefMsg, SM_MERCHANTSAY, (int)lpProcessMsg->pCharObject, 0, 0, 1);
 									break;
 								case RM_MONSTERSAY:
-									fnMakeDefMessage(&DefMsg, SM_MONSTERSAY, (int)lpProcessMsg->pCharObject, _CHAT_COLOR3, _CHAT_COLOR1, 0);
+									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_SHOUT, _CHAT_COLOR1, 0);
 									break;
 							}
 

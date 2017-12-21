@@ -17,6 +17,24 @@
 #define _CHAT_COLOR7				6			//RGB(255, 255,   0); // 노랑색.
 #define _CHAT_COLOR8				7			//RGB(255, 128,   0); // 주황색
 
+#define _CT__CT_NORMAL					0
+#define _CT_SHOUT						1
+#define _CT_SYSTEM						2
+#define _CT_HINT						3
+#define _CT_ANNOUNCEMENT				4
+#define _CT_GROUP						5
+#define _CT_WHISPERIN					6
+#define _CT_WHISPEROUT					7
+#define _CT_GUILD						8
+#define _CT_TRAINER						9
+#define _CT_LEVELUP						10
+#define _CT_SYSTEM2						11
+#define _CT_RELATIONSHIP				12
+#define _CT_MENTOR						13
+#define _CT_SHOUT2						14
+#define _CT_SHOUT3						15
+
+
 #define DR_UP						0
 #define DR_UPRIGHT					1
 #define DR_RIGHT					2

@@ -89,7 +89,7 @@ public:
 
 	// For Administrator
 	BOOL		m_fIsCapture;
-	FILE		*m_hCaptureFile;
+	FILE		*m_hCaptureFile=NULL;
 
 protected:
 	BOOL		ProcessForAdminSaid(char *pszMsg);
