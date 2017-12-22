@@ -114,6 +114,7 @@
 #define CM_SITDOWN              3012
 #define CM_RUN                  3013
 #define CM_HIT                  3014
+#define CM_ATTACKMODE			3015
 //#define CM_HEAVYHIT             3015
 //#define CM_BIGHIT               3016
 #define CM_SPELL                3017
@@ -196,6 +197,7 @@
 #define SM_CHANGELIGHT          654
 #define SM_CHANGENAMECOLOR      656
 #define SM_CHARSTATUSCHANGED	657
+#define SM_ATTACKMODE			658
 
 #define SM_SUBABILITY           752
 
@@ -237,6 +239,7 @@
 #define RM_USERNAME				10043
 #define RM_LEVELUP				10045
 #define RM_CHANGENAMECOLOR      10046
+#define	RM_ATTACKMODE			10047
 
 #define RM_LOGON				10050
 #define RM_ABILITY				10051

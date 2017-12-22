@@ -495,7 +495,7 @@ void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int 
 							"( '%s', '%s', '%s' )", pszUserID, pszCharName, tItemRcd.szItem);
 
 			if ( !pRec->Execute( szTmp ) || pRec->GetRowCount() <= 0 )
-				InsertLogMsg(_T("SaveGenItemRcd 갱신 오류"));
+				InsertLogMsg(_T("SaveGenItemRcd 呵겨."));
 
 			GetDBManager()->DestroyRecordset( pRec );
 
@@ -530,7 +530,7 @@ BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMAN
 
 	if (!pRec->Execute( szSQL ) || pRec->GetRowCount() <= 0 )
 	{
-		InsertLogMsg(_T("SaveHumanRcd 갱신 오류"));
+		InsertLogMsg(_T("SaveHumanRcd 呵겨."));
 		GetDBManager()->DestroyRecordset( pRec );
 		return FALSE;		
 	}

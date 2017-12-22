@@ -1190,12 +1190,13 @@ void CPlayerObject::Initialize()
 		AddProcess(this, RM_SENDMYMAGIC, 0, 0, 0, 0, NULL);
 
 		// BEGIN : Send Attack Mode Msg
+		AddProcess(this, RM_ATTACKMODE, 0, m_pUserInfo->GetAttackMode(), 0, 0, NULL);
 		TCHAR	wszMsg[128];
 		char	szMsg[128];
 
-		LoadString(g_hInst, m_pUserInfo->GetAttackMode() + IDS_ATTACKMODE_ALL, wszMsg, sizeof(wszMsg)/sizeof(TCHAR));
-		WideCharToMultiByte(CP_ACP, 0, wszMsg, -1, szMsg, sizeof(szMsg), NULL, NULL);
-		SysMsg(szMsg, 1);
+		//LoadString(g_hInst, m_pUserInfo->GetAttackMode() + IDS_ATTACKMODE_ALL, wszMsg, sizeof(wszMsg)/sizeof(TCHAR));
+		//WideCharToMultiByte(CP_ACP, 0, wszMsg, -1, szMsg, sizeof(szMsg), NULL, NULL);
+		//SysMsg(szMsg, 1);
 
 		LoadString(g_hInst, IDS_ATTACKMODE_CHGMODE, wszMsg, sizeof(wszMsg)/sizeof(TCHAR));
 		WideCharToMultiByte(CP_ACP, 0, wszMsg, -1, szMsg, sizeof(szMsg), NULL, NULL);
@@ -2369,6 +2370,14 @@ void CPlayerObject::Operate()
 
 						break;
 					}
+					case CM_ATTACKMODE:
+						m_pUserInfo->m_THumanRcd.btAttackMode = lpProcessMsg->wParam;
+
+						fnMakeDefMessage(&DefMsg, SM_ATTACKMODE, (int)lpProcessMsg->pCharObject, 0, 0, m_pUserInfo->m_THumanRcd.btAttackMode);
+
+						SendSocket(&DefMsg, NULL);
+
+						break;
 					case CM_RIDE:
 					{
 						if (!m_fIsDead)
@@ -2550,6 +2559,12 @@ void CPlayerObject::Operate()
 
 						break;
 					}
+					case RM_ATTACKMODE:
+
+						fnMakeDefMessage(&DefMsg, SM_ATTACKMODE, (int)lpProcessMsg->pCharObject, 0, 0, m_pUserInfo->m_THumanRcd.btAttackMode);
+
+						SendSocket(&DefMsg, NULL);
+						break;
 					case RM_HEAR:
 					case RM_CRY:
 					case RM_WHISPER:
