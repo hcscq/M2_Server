@@ -507,14 +507,13 @@ void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int 
 BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMANRCD lptHumanRcd, int nRecog)
 {
 	char szSQL[1024];
-	char szEquipC[10][10] = { {"'%s'"},{"'%s'"} ,{"'%s'"}, {"'%s'"}, {" '%s'"}, {"'%s' "},{"'%s'"}, {" '%s'"} ,{" '%s'"}, {" '%s'"} };
 
-	char szEquip[10][66];
+	char szEquip[10][40];
 
 	for (int i = 0; i < 10; i++) {
 		/*0:STDType,1-6:MakeDate*/
 		if (memlen(lptHumanRcd->szTakeItem[i].szMakeIndex) > 7)
-			sprintf(szEquip[i], szEquipC[i], &lptHumanRcd->szTakeItem[i].szMakeIndex[7]);
+			sprintf(szEquip[i], "'%s'", &lptHumanRcd->szTakeItem[i].szMakeIndex[7]);
 		else
 			memcpy(szEquip[i], "NULL", sizeof("NULL"));
 	}
