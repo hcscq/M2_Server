@@ -1054,6 +1054,7 @@ void CUserInfo::SaveHumanToDB(char *pszUserAddr)
 	memcpy(tLoadHuman.szUserID, m_szUserID, memlen(m_szUserID));
 	memcpy(tLoadHuman.szCharName, m_szCharName, memlen(m_szCharName));
 	memcpy(tLoadHuman.szUserAddr, pszUserAddr, memlen(pszUserAddr));
+	tLoadHuman.btCharIndex = m_THumanRcd.btIndex;
 	tLoadHuman.nCertification	= m_nCertification;
 	
 	int nPos = fnEncodeMessageA(&Def, szEncodeMsg1, sizeof(szEncodeMsg1));

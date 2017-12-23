@@ -1190,7 +1190,7 @@ void CPlayerObject::Initialize()
 		AddProcess(this, RM_SENDMYMAGIC, 0, 0, 0, 0, NULL);
 
 		// BEGIN : Send Attack Mode Msg
-		AddProcess(this, RM_ATTACKMODE, 0, m_pUserInfo->GetAttackMode(), 0, 0, NULL);
+		AddProcess(this, RM_ATTACKMODE, 0, 0, 0, 0, NULL);
 		TCHAR	wszMsg[128];
 		char	szMsg[128];
 
@@ -1200,7 +1200,8 @@ void CPlayerObject::Initialize()
 
 		LoadString(g_hInst, IDS_ATTACKMODE_CHGMODE, wszMsg, sizeof(wszMsg)/sizeof(TCHAR));
 		WideCharToMultiByte(CP_ACP, 0, wszMsg, -1, szMsg, sizeof(szMsg), NULL, NULL);
-		SysMsg(szMsg, 1);
+		HintMsg(szMsg);
+		//SysMsg(szMsg, 1);
 		// END : Send Attack Mode Msg
 	}
 }
@@ -2605,6 +2606,9 @@ void CPlayerObject::Operate()
 									break;
 								case RM_MONSTERSAY:
 									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_SHOUT, _CHAT_COLOR1, 0);
+									break;
+								case RM_HINTMESSAGE:
+									fnMakeDefMessage(&DefMsg, SM_HEAR, (int)lpProcessMsg->pCharObject, _CT_HINT, _CHAT_COLOR1, 0);
 									break;
 							}
 

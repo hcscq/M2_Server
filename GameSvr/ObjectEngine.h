@@ -408,6 +408,7 @@ public:
 
 	__inline void SysMsg(char *pszMsg, int nMode) 
 		{ ( nMode == 1 ? AddProcess(this, RM_SYSMESSAGE2, 0, 0, 0, 0, pszMsg) : AddProcess(this, RM_SYSMESSAGE, 0, 0, 0, 0, pszMsg)); }
+	__inline void HintMsg(char *pszMsg) { AddProcess(this, RM_HINTMESSAGE, 0, 0, 0, 0, pszMsg); }
 	__inline LONG GetFeatureToLong()
 		{ return (LONG) MAKELONG(MAKEWORD(m_tFeature.btGender, m_tFeature.btWear), MAKEWORD(m_tFeature.btHair, m_tFeature.btWeapon)); }
 	__inline BYTE GetRPow(WORD wPower)

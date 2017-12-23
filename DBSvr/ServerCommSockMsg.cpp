@@ -185,7 +185,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 												case DB_MAKEITEMRCD:
 												{
 													lpSendUserData->lpbtAddData = new BYTE[sizeof(_TMAKEITEMRCD)];
-													fnDecode6BitBufA((pszDivide + DEFBLOCKSIZE + 75), (char *)lpSendUserData->lpbtAddData, sizeof(_TMAKEITEMRCD));
+													fnDecode6BitBufA((pszDivide + DEFBLOCKSIZE + 123), (char *)lpSendUserData->lpbtAddData, sizeof(_TMAKEITEMRCD));
 
 													lpSendUserData->lpbtAddData2 = NULL;
 													break;
@@ -193,13 +193,13 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 												case DB_SAVEHUMANRCD:
 												{
 													lpSendUserData->lpbtAddData = new BYTE[sizeof(_THUMANRCD)];
-													fnDecode6BitBufA((pszDivide + DEFBLOCKSIZE + 75), (char *)lpSendUserData->lpbtAddData, sizeof(_THUMANRCD));
+													fnDecode6BitBufA((pszDivide + DEFBLOCKSIZE + 123), (char *)lpSendUserData->lpbtAddData, sizeof(_THUMANRCD));
 
-													int nRemainLen = (int)(pszEnd - pszFirst) - (DEFBLOCKSIZE + 75 + HUMANRCDBLOCKSIZE);
+													int nRemainLen = (int)(pszEnd - pszFirst) - (DEFBLOCKSIZE + 123 + HUMANRCDBLOCKSIZE);
 
 													lpSendUserData->lpbtAddData2 = new BYTE[nRemainLen + 1];
 
-													memcpy(lpSendUserData->lpbtAddData2, (pszDivide + DEFBLOCKSIZE + 75 + HUMANRCDBLOCKSIZE), nRemainLen);
+													memcpy(lpSendUserData->lpbtAddData2, (pszDivide + DEFBLOCKSIZE + 123 + HUMANRCDBLOCKSIZE), nRemainLen);
 													lpSendUserData->lpbtAddData2[nRemainLen] = '\0';
 
 													break;

@@ -250,6 +250,7 @@
 #define RM_GROUPMESSAGE         10102
 #define RM_SYSMESSAGE2			10103
 #define RM_GUILDMESSAGE         10104
+#define RM_HINTMESSAGE          10105
 #define RM_ITEMSHOW             10110
 #define RM_ITEMHIDE             10111
 #define RM_DOOROPEN				10112

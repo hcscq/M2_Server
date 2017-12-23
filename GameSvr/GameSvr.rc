@@ -190,7 +190,7 @@ BEGIN
     IDS_ATTACKMODE_GROUP    "[人物攻击模式 : 编组攻击]"
     IDS_ATTACKMODE_GUILD    "[人物攻击模式 :行会模式]"
     IDS_ATTACKMODE_PKATTACK "[人物攻击模式: 善恶攻击]"
-    IDS_ATTACKMODE_CHGMODE  "改变攻击模式 : CTRL-H"
+    IDS_ATTACKMODE_CHGMODE  "改变攻击模式 : CTRL+H"
     IDS_FETCH_STDITEMETC    "加载标准物品信息%d。"
     IDS_FETCH_STDITEMACCESSORY "加载标准物品附属信息%d。"
 END

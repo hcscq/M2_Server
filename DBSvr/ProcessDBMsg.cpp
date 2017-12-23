@@ -507,24 +507,28 @@ void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int 
 BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMANRCD lptHumanRcd, int nRecog)
 {
 	char szSQL[1024];
-	char szTakeItem[10][65];
+	char szEquipC[10][10] = { {"'%s'"},{"'%s'"} ,{"'%s'"}, {"'%s'"}, {" '%s'"}, {"'%s' "},{"'%s'"}, {" '%s'"} ,{" '%s'"}, {" '%s'"} };
 
-	ZeroMemory(szTakeItem, sizeof(szTakeItem));
+	char szEquip[10][66];
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++) {
 		/*0:STDType,1-6:MakeDate*/
-		memmove(szTakeItem[i], &lptHumanRcd->szTakeItem[i].szMakeIndex[7], 36);
-
+		if (memlen(lptHumanRcd->szTakeItem[i].szMakeIndex) > 7)
+			sprintf(szEquip[i], szEquipC[i], &lptHumanRcd->szTakeItem[i].szMakeIndex[7]);
+		else
+			memcpy(szEquip[i], "NULL", sizeof("NULL"));
+	}
+	
 	sprintf(szSQL, "UPDATE TBL_CHARACTER SET FLD_JOB=%d, FLD_GENDER=%d, FLD_LEVEL=%d, FLD_DIRECTION=%d, FLD_CX=%d, FLD_CY=%d, "
-						"FLD_MAPNAME='%s', FLD_GOLD=%d, FLD_HAIR=%d, FLD_DRESS_ID='%s', FLD_WEAPON_ID='%s', "
-						"FLD_LEFTHAND_ID='%s', FLD_RIGHTHAND_ID='%s', FLD_HELMET_ID='%s', FLD_NECKLACE_ID='%s', "
-						"FLD_ARMRINGL_ID='%s', FLD_ARMRINGR_ID='%s', FLD_RINGL_ID='%s', FLD_RINGR_ID='%s', FLD_EXP=%d "
-						"WHERE FLD_CHARNAME='%s'",
+						"FLD_MAPNAME='%s', FLD_GOLD=%d, FLD_HAIR=%d, FLD_DRESS_ID=%s, FLD_WEAPON_ID=%s, "
+						"FLD_LEFTHAND_ID=%s, FLD_RIGHTHAND_ID=%s, FLD_HELMET_ID=%s, FLD_NECKLACE_ID=%s, "
+						"FLD_ARMRINGL_ID=%s, FLD_ARMRINGR_ID=%s, FLD_RINGL_ID=%s, FLD_RINGR_ID=%s, FLD_EXP=%d,FLD_ATTACKMODE=%d "
+						"WHERE FLD_GUID='%s'",
 						lptHumanRcd->btJob, lptHumanRcd->btGender, lptHumanRcd->szLevel, lptHumanRcd->nDirection,
 						lptHumanRcd->nCX, lptHumanRcd->nCY, lptHumanRcd->szMapName, lptHumanRcd->dwGold,
-						lptHumanRcd->szHair, szTakeItem[0], szTakeItem[1], szTakeItem[2], szTakeItem[3], szTakeItem[4], 
-						szTakeItem[5], szTakeItem[6], szTakeItem[7], szTakeItem[8], szTakeItem[9], lptHumanRcd->nExp,
-						lpLoadHuman->szCharName);
+						lptHumanRcd->szHair, szEquip[0], szEquip[1], szEquip[2], szEquip[3], szEquip[4],
+						szEquip[5], szEquip[6], szEquip[7], szEquip[8], szEquip[9], lptHumanRcd->nExp, lptHumanRcd->btAttackMode,
+						lptHumanRcd->szCharGuid);
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
 
