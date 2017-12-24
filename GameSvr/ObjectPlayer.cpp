@@ -2575,6 +2575,7 @@ void CPlayerObject::Operate()
 					case RM_GUILDMESSAGE:
 					case RM_MERCHANTSAY:
 					case RM_MONSTERSAY:
+					case RM_HINTMESSAGE:
 					{
 						if (lpProcessMsg->pszData)
 						{//fnMakeDefMessageW(_LPTDEFAULTMESSAGE lptdm, WORD wIdent, int nRecog, WORD wParam, WORD wTag, WORD wSeries)
