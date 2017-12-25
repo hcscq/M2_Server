@@ -185,7 +185,7 @@ DWORD WINAPI ServerWorkerThread(LPVOID CompletionPortID)
 												case DB_MAKEITEMRCD:
 												{
 													lpSendUserData->lpbtAddData = new BYTE[sizeof(_TMAKEITEMRCD)];
-													fnDecode6BitBufA((pszDivide + DEFBLOCKSIZE + 123), (char *)lpSendUserData->lpbtAddData, sizeof(_TMAKEITEMRCD));
+													fnDecode6BitBufA((pszDivide + DEFBLOCKSIZE + HUMLOADRDCVLOCKSIZE), (char *)lpSendUserData->lpbtAddData, sizeof(_TMAKEITEMRCD));
 
 													lpSendUserData->lpbtAddData2 = NULL;
 													break;
