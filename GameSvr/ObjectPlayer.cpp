@@ -560,7 +560,7 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction
 
 	if ( !pRec->Execute( szQuery ) || pRec->GetRowCount() <= 0 )
 	{
-		InsertLogMsg(_T("UpdateItemToDB : 갱신 오류"));
+		InsertLogMsg(_T("UpdateItemToDB : 呵겨."));
 		g_pConnGame->DestroyRecordset( pRec );
 
 		return 0;

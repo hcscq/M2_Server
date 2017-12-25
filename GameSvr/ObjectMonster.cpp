@@ -518,18 +518,19 @@ void CMonsterObject::MonGetRandomItems()
 
 								lpTItemRcd->nStdIndex = pMonItem->m_wItemIndex;
 								
-								switch (pMonItem->m_btItemType)
-								{
-									case 0:
-										memcpy(lpTItemRcd->szMakeIndex, "A00000000000", 12);
-										break;
-									case 1:
-										memcpy(lpTItemRcd->szMakeIndex, "B00000000000", 12);
-										break;
-									case 2:
-										memcpy(lpTItemRcd->szMakeIndex, "C00000000000", 12);
-										break;
-								}
+								//switch (pMonItem->m_btItemType)
+								//{
+								//	case 0:
+								//		memcpy(lpTItemRcd->szMakeIndex, "A00000000000", 12);
+								//		break;
+								//	case 1:
+								//		memcpy(lpTItemRcd->szMakeIndex, "B00000000000", 12);
+								//		break;
+								//	case 2:
+								//		memcpy(lpTItemRcd->szMakeIndex, "C00000000000", 12);
+								//		break;
+								//}
+								GetGuidSZ(lpTItemRcd->szMakeIndex);
 
 								CStdItemSpecial* lpStdItem;
 								GetStdItemByIndex(pMonItem->m_wItemIndex, lpStdItem);

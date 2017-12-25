@@ -452,7 +452,7 @@ char *SaveHumanMagicRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, 
 							pszUserID, pszCharName, tUserMagicRcd.btMagicID, tUserMagicRcd.btLevel, tUserMagicRcd.btUseKey, tUserMagicRcd.nCurrTrain);
 			
 			if ( !pRec->Execute( szTmp ) || pRec->GetRowCount() <= 0 )
-				InsertLogMsg(_T("SaveHumanMagicRcd 갱신 오류"));
+				InsertLogMsg(_T("SaveHumanMagicRcd 呵겨."));
 			
 			GetDBManager()->DestroyRecordset( pRec );
 
