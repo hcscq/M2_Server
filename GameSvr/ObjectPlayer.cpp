@@ -1026,7 +1026,7 @@ void CPlayerObject::SendBagItems()
 				lpStdItem->GetStandardItem(&tClientItemRcd);
 				lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lptUserItemRcd);
 
-				memcpy(tClientItemRcd.szMakeIndex, lptUserItemRcd->szMakeIndex, 12);
+				memcpy(tClientItemRcd.szMakeIndex, lptUserItemRcd->szMakeIndex, _MAKEITEMINDEX);
 				
 				tClientItemRcd.nDura		= lptUserItemRcd->nDura;
 				tClientItemRcd.nDuraMax		= lptUserItemRcd->nDuraMax;

@@ -59,7 +59,8 @@ void InitStdItemEtcInfo()
 	
 	pRec= g_pConnCommon->CreateRecordset();
 
-	sprintf( szQuery, "SELECT COUNT(*) AS FLD_COUNT FROM TBL_STDITEM_ETC");
+	//sprintf( szQuery, "SELECT COUNT(*) AS FLD_COUNT FROM TBL_STDITEM_ETC");
+	sprintf(szQuery, "SELECT COUNT(*) AS FLD_COUNT FROM TBL_STDITEM");
 
 	if (pRec->Execute( szQuery ))
 	{
@@ -73,7 +74,8 @@ void InitStdItemEtcInfo()
 
 	g_pStdItemEtc = new CStdItem[g_nStdItemEtc];
 
-	sprintf( szQuery, "SELECT * FROM TBL_STDITEM_ETC ORDER BY FLD_INDEX");
+	//sprintf( szQuery, "SELECT * FROM TBL_STDITEM_ETC ORDER BY FLD_INDEX");
+	sprintf(szQuery, "SELECT FLD_STDMODE,FLD_SHAPE,FLD_WEIGHT,FLD_LOOKS,FLD_DURAMAX,FLD_SOURCE,FLD_PRICE FROM TBL_STDITEM ORDER BY FLD_INDEX");
 
 	pRec = g_pConnCommon->CreateRecordset();
 	
@@ -89,8 +91,8 @@ void InitStdItemEtcInfo()
 				g_pStdItemEtc[i].wShape		= atoi( pRec->Get( "FLD_SHAPE" ) );
 				g_pStdItemEtc[i].wWeight	= atoi( pRec->Get( "FLD_WEIGHT" ) );
 				g_pStdItemEtc[i].dwLooks	= atoi( pRec->Get( "FLD_LOOKS" ) );
-				g_pStdItemEtc[i].wDuraMax	= atoi( pRec->Get( "FLD_VAL1" ) );
-				g_pStdItemEtc[i].dwRSource	= atoi( pRec->Get( "FLD_VAL2" ) );
+				g_pStdItemEtc[i].wDuraMax	= atoi( pRec->Get( "FLD_DURAMAX" ) );//FLD_VAL1
+				g_pStdItemEtc[i].dwRSource	= atoi( pRec->Get( "FLD_SOURCE" ) );//FLD_VAL2 FLD_DURAMAX,FLD_SOURCE
 				g_pStdItemEtc[i].dwPrice	= atoi( pRec->Get( "FLD_PRICE" ) );
 			}
 		}

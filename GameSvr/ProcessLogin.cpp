@@ -101,27 +101,27 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 		{
 			pUserInfo->m_nNumOfGenItems = pReadyUserInfo->m_nNumOfGenItem;
 
-			_TGENITEMRCD	GenItemRcd;
-			char			szVal[5];						
-
+			//_TGENITEMRCD	GenItemRcd;
+			//char			szVal[5];						
+			_LPTGENERALITEMRCD lptGenItemRcd;
 			for (int i = 0; i < pReadyUserInfo->m_nNumOfGenItem; i++)
 			{
-				_LPTGENERALITEMRCD lptGenItemRcd = new _TGENERALITEMRCD;
+				lptGenItemRcd = new _TGENERALITEMRCD;
 
 				if (lptGenItemRcd)
 				{
-					fnDecode6BitBufA(pszData, (char *)&GenItemRcd, sizeof(_TGENITEMRCD));
+					fnDecode6BitBufA(pszData, (char *)lptGenItemRcd, sizeof(_TGENERALITEMRCD));
 					
-					memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
+					//memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
 
-					ZeroMemory(szVal, sizeof(szVal));
+					//ZeroMemory(szVal, sizeof(szVal));
 
-					memcpy(szVal, &lptGenItemRcd->szMakeIndex[1], 3);
-					lptGenItemRcd->nStdIndex	= AnsiStrToVal(szVal);
-					memcpy(szVal, &lptGenItemRcd->szMakeIndex[4], 4);
-					lptGenItemRcd->nDura		= AnsiStrToVal(szVal);
-					memcpy(szVal, &lptGenItemRcd->szMakeIndex[8], 4);
-					lptGenItemRcd->nDuraMax		= AnsiStrToVal(szVal);
+					//memcpy(szVal, &lptGenItemRcd->szMakeIndex[1], 3);
+					//lptGenItemRcd->nStdIndex	= AnsiStrToVal(szVal);
+					//memcpy(szVal, &lptGenItemRcd->szMakeIndex[4], 4);
+					//lptGenItemRcd->nDura		= AnsiStrToVal(szVal);
+					//memcpy(szVal, &lptGenItemRcd->szMakeIndex[8], 4);
+					//lptGenItemRcd->nDuraMax		= AnsiStrToVal(szVal);
 
 					pUserInfo->m_lpTGenItemRcd.AddNewNode(lptGenItemRcd);
 			

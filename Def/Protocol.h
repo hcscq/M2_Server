@@ -422,7 +422,7 @@ typedef struct tag_TMAKEITEMRCD
 
 typedef struct tag_GENERALITEMRCD
 {
-	char		szMakeIndex[71];
+	char		szMakeIndex[43];
 	int			nStdIndex;
 	int			nDura;
 	int			nDuraMax;
@@ -430,10 +430,10 @@ typedef struct tag_GENERALITEMRCD
 
 
 
-typedef struct tag_TGENITEMRCD
-{
-	char		szItem[13];
-} _TGENITEMRCD, *_LPTGENITEMRCD;
+//typedef struct tag_TGENITEMRCD
+//{
+//	char		szItem[13];
+//} _TGENITEMRCD, *_LPTGENITEMRCD;
 
 typedef struct tag_TSTANDARDITEM
 {
