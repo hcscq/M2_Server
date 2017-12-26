@@ -472,11 +472,11 @@ void CMonsterObject::Initialize()
 
 void CMonsterObject::MakeGenItem(_LPTGENERALITEMRCD lptGenItemRcd)
 {
-	_TGENITEMRCD		GenItemRcd;
+	//_TGENERALITEMRCD		GenItemRcd;
 
-	sprintf(GenItemRcd.szItem, "G%03d%04d%04d", lptGenItemRcd->nStdIndex, lptGenItemRcd->nDura, lptGenItemRcd->nDuraMax);
+	//sprintf(GenItemRcd.szItem, "G%03d%04d%04d", lptGenItemRcd->nStdIndex, lptGenItemRcd->nDura, lptGenItemRcd->nDuraMax);
 
-	memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
+	//memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
 
 	m_xTGenItemRcd.AddNewNode(lptGenItemRcd);
 }
@@ -530,10 +530,12 @@ void CMonsterObject::MonGetRandomItems()
 								//		memcpy(lpTItemRcd->szMakeIndex, "C00000000000", 12);
 								//		break;
 								//}
-								GetGuidSZ(lpTItemRcd->szMakeIndex);
+								
 
 								CStdItemSpecial* lpStdItem;
-								GetStdItemByIndex(pMonItem->m_wItemIndex, lpStdItem);
+								GetStdItemByIndex(pMonItem->m_wItemIndex, lpStdItem);//lpStdItem->MakeIndex generated when pick up
+
+								lpTItemRcd->szMakeIndex[0] = lpStdItem->btType;
 								lpTItemRcd->nDura		= lpStdItem->wDuraMax;
 								lpTItemRcd->nDuraMax	= lpStdItem->wDuraMax;
 

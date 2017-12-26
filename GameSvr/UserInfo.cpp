@@ -67,19 +67,19 @@ void CUserInfo::AddNewItem(char *pszItemName)
 
 				MakeItemRcd.nStdIndex		= i;
 
-				switch (g_pStdItemSpecial[i].btType)
-				{
-					case 0:
-						MakeItemRcd.szStdType		= 'A';
-						break;
-					case 1:
-						MakeItemRcd.szStdType		= 'B';
-						break;
-					case 2:
-						MakeItemRcd.szStdType		= 'C';
-						break;
-				}
-
+				//switch (g_pStdItemSpecial[i].btType)
+				//{
+				//	case 0:
+				//		MakeItemRcd.szStdType		= 'A';
+				//		break;
+				//	case 1:
+				//		MakeItemRcd.szStdType		= 'B';
+				//		break;
+				//	case 2:
+				//		MakeItemRcd.szStdType		= 'C';
+				//		break;
+				//}
+				MakeItemRcd.szStdType		= g_pStdItemSpecial[i].btType;
 				MakeItemRcd.nDura			= g_pStdItemSpecial[i].wDuraMax;
 				MakeItemRcd.nDuraMax		= g_pStdItemSpecial[i].wDuraMax;
 
@@ -109,6 +109,7 @@ void CUserInfo::AddNewItem(char *pszItemName)
 					lptGenItemRcd->nStdIndex	= i;
 					lptGenItemRcd->nDura		= g_pStdItemEtc[i].wDuraMax;
 					lptGenItemRcd->nDuraMax		= g_pStdItemEtc[i].dwRSource;
+					lptGenItemRcd->szMakeIndex[0] = g_pStdItemEtc[i].m_btType;
 
 					MakeGenItem(lptGenItemRcd);
 				}
@@ -124,11 +125,8 @@ void CUserInfo::MakeGenItem(_LPTGENERALITEMRCD lptGenItemRcd)
 	if (m_pxPlayerObject)
 	{
 		// Make Item on Server
-		_TGENITEMRCD		GenItemRcd;
-
-		sprintf(GenItemRcd.szItem, "G%03d%04d%04d", lptGenItemRcd->nStdIndex, lptGenItemRcd->nDura, lptGenItemRcd->nDuraMax);
-
-		memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
+		GetDate(&lptGenItemRcd->szMakeIndex[1]);
+		GetGuidSZ(&lptGenItemRcd->szMakeIndex[7]);
 
 		m_lpTGenItemRcd.AddNewNode(lptGenItemRcd);
 
@@ -368,7 +366,7 @@ int CUserInfo::EncodeGenItem(char *pszEncodeMsg, int nBuffSize, int& nPos)
 	if (m_lpTGenItemRcd.GetCount())
 	{
 		_LPTGENERALITEMRCD	lptGenItemRcd;
-		_TGENITEMRCD		GenItemRcd;
+		//_TGENITEMRCD		GenItemRcd;
 		TCHAR				wszItem[13];
 
 		PLISTNODE pListNode = m_lpTGenItemRcd.GetHead();
@@ -379,10 +377,10 @@ int CUserInfo::EncodeGenItem(char *pszEncodeMsg, int nBuffSize, int& nPos)
 
 			if (lptGenItemRcd)
 			{
-				wsprintf(wszItem, _TEXT("G%03d%04d%04d"), lptGenItemRcd->nStdIndex, lptGenItemRcd->nDura, lptGenItemRcd->nDuraMax);
-				WideCharToMultiByte(CP_ACP, 0, wszItem, -1, GenItemRcd.szItem, sizeof(GenItemRcd.szItem), NULL, NULL);
+				//wsprintf(wszItem, _TEXT("G%03d%04d%04d"), lptGenItemRcd->nStdIndex, lptGenItemRcd->nDura, lptGenItemRcd->nDuraMax);
+				//WideCharToMultiByte(CP_ACP, 0, wszItem, -1, GenItemRcd.szItem, sizeof(GenItemRcd.szItem), NULL, NULL);
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&GenItemRcd, pszEncodeMsg + nPos, sizeof(_TGENITEMRCD), nBuffSize - nPos);
+				nPos +=	fnEncode6BitBufA((unsigned char *)lptGenItemRcd, pszEncodeMsg + nPos, sizeof(_TGENERALITEMRCD), nBuffSize - nPos);
 
 				*(pszEncodeMsg + nPos) = '/';
 
