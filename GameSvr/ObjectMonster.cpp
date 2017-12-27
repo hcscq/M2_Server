@@ -536,11 +536,11 @@ void CMonsterObject::MonGetRandomItems()
 								GetStdItemByIndex(pMonItem->m_wItemIndex, lpStdItem);//lpStdItem->MakeIndex generated when pick up
 
 								lpTItemRcd->szMakeIndex[0] = lpStdItem->btType;
-								lpTItemRcd->nDura		= lpStdItem->wDuraMax;
-								lpTItemRcd->nDuraMax	= lpStdItem->wDuraMax;
+								lpTItemRcd->wDura		= lpStdItem->wDuraMax;
+								lpTItemRcd->wDuraMax	= lpStdItem->wDuraMax;
 
 								if (rand() % 10 == 0)
-									lpStdItem->UpgradeRandomItem(lpTItemRcd->btValue, lpTItemRcd->nDura, lpTItemRcd->nDuraMax);
+									lpStdItem->UpgradeRandomItem(lpTItemRcd->btValue, lpTItemRcd->wDura, lpTItemRcd->wDuraMax);
 
 								m_xTItemRcd.AddNewNode(lpTItemRcd);
 //								MakeItemToDB(&MakeItemRcd);

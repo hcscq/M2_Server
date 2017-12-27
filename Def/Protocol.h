@@ -8,7 +8,7 @@
 #define HUMLOADRDCVLOCKSIZE		123
 #define ITEMRCDBLOCKSIZE		180//70			// _TUSERITEMRCD
 #define MAGICRCDBLOCKSIZE		10
-#define GENITEMRCDBLOCKSIZE		18
+#define GENITEMRCDBLOCKSIZE		74//18
 #define CHARTAKEITEMCNT			10
 /*MAP*/
 #define _Mir2Map				0
@@ -402,8 +402,8 @@ typedef struct tag_TUSERITEMABILITY
 {
 	char		szMakeIndex[43];
 	WORD		nStdIndex;
-	WORD		nDura;
-	WORD		nDuraMax;
+	WORD		wDura;
+	WORD		wDuraMax;
 	USHORT		usCount;
 	BYTE		btValue[22];
 	char		szBoundGuid[36];
@@ -476,6 +476,30 @@ typedef struct tag_TCLIENTITEMRCD :tag_TUSERITEMABILITY
 {
 	_TSTANDARDITEM		tStdItem;
 } _TCLIENTITEMRCD, *_LPTCLIENTITEMRCD;
+
+typedef struct tag_TCLIENTGENITEMRCD
+{
+	char		szMakeIndex[43];
+	WORD		wDura;
+	WORD		wCount;
+
+	//STD 
+	char		szName[20];			// 
+	char		szPrefixName[20];
+	BYTE		btStdMode;          //
+	BYTE		btShape;            // 
+	BYTE		btWeight;           // 
+	BYTE		btAniCount;         // 
+	BYTE		btSource;           // 
+	BYTE		btNeedIdentify;     // 
+	WORD		Index;
+	WORD		wLooks;             // 
+	WORD		wDuraMax;
+	BYTE		btNeed;             // 0:Level, 1:DC, 2:MC, 3:SC
+	BYTE		btNeedLevel;        // 1..60 level value...
+	UINT		nPrice;
+
+} _TCLIENTGENITEMRCD, *_LPTCLIENTGENITEMRCD;
 
 typedef struct tag_USEITEMRCD:tag_TUSERITEMRCD 
 {

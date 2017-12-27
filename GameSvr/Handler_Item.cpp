@@ -15,20 +15,20 @@ int CItem::GetUpgrade(int nCount, int nRandom)
 	return nResult;
 }
 
-void CStdItem::GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd)
+void CStdItem::GetStandardItem(_LPTCLIENTGENITEMRCD lpClientItemRcd)
 {
-	strcpy(lpClientItemRcd->tStdItem.szName, szName);
+	strcpy(lpClientItemRcd->szName, szName);
 
-	lpClientItemRcd->tStdItem.btStdMode		= (BYTE)wStdMode;
-	lpClientItemRcd->tStdItem.btShape		= (BYTE)wShape;
-	lpClientItemRcd->tStdItem.btWeight		= (BYTE)wWeight;
-	lpClientItemRcd->tStdItem.btAniCount	= 0;
-	lpClientItemRcd->tStdItem.btSource		= 0;
-	lpClientItemRcd->tStdItem.wLooks		= (WORD)dwLooks;
-	lpClientItemRcd->tStdItem.wDuraMax		= (WORD)wDuraMax;
-	lpClientItemRcd->tStdItem.btNeed		= 0;
-	lpClientItemRcd->tStdItem.btNeedLevel	= 0;
-	lpClientItemRcd->tStdItem.nPrice		= (UINT)dwPrice;
+	lpClientItemRcd->btStdMode		= (BYTE)wStdMode;
+	lpClientItemRcd->btShape		= (BYTE)wShape;
+	lpClientItemRcd->btWeight		= (BYTE)wWeight;
+	lpClientItemRcd->btAniCount		= 0;
+	lpClientItemRcd->btSource		= (BYTE)dwRSource;
+	lpClientItemRcd->wLooks			= (WORD)dwLooks;
+	lpClientItemRcd->wDuraMax		= (WORD)wDuraMax;
+	lpClientItemRcd->btNeed			= 0;
+	lpClientItemRcd->btNeedLevel	= 0;
+	lpClientItemRcd->nPrice			= (UINT)dwPrice;
 }
 
 CStdItemSpecial::CStdItemSpecial()

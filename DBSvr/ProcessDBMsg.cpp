@@ -60,11 +60,11 @@ int GetHorseRcd(char *szName, _LPTHORSERCD lpTHorseRcd)
 	return 1;
 }
 
-void GetHumanGenItemRcd(char *szName, CWHList<_LPTGENITEMRCD>	*pxUserGenItemRcdList)
+void GetHumanGenItemRcd(char *szName, CWHList<_LPTGENERALITEMRCD>	*pxUserGenItemRcdList)
 {
 	char szQuery[128];
 
-	sprintf( szQuery, "SELECT FLD_ITEMINDEX FROM TBL_CHARACTER_ITEM WHERE FLD_CHARNAME='%s' AND FLD_TYPE='G'", szName );
+	sprintf( szQuery, "SELECT FLD_MAKEINDEX,FLD_STDTYPE,FLD_MAKEDATE FROM TBL_CHARACTER_ITEM WHERE FLD_CHARNAME='%s' AND FLD_TYPE='G'", szName );
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
 	
@@ -72,11 +72,13 @@ void GetHumanGenItemRcd(char *szName, CWHList<_LPTGENITEMRCD>	*pxUserGenItemRcdL
 	{		
 		while ( pRec->Fetch() )
 		{
-			_LPTGENITEMRCD pItemRcd = new _TGENITEMRCD;
+			_LPTGENERALITEMRCD pItemRcd = new _TGENERALITEMRCD;
 
 			if ( pItemRcd )
 			{
-				strcpy( pItemRcd->szItem, pRec->Get( "FLD_ITEMINDEX" ) );
+				//pItemRcd->szMakeIndex[0] = pRec->Get("FLD_MAKEINDEX");
+				sprintf(pItemRcd->szMakeIndex, "%s%s%s", pRec->Get("FLD_STDTYPE")[0], pRec->Get("FLD_MAKEDATE"),pRec->Get("FLD_MAKEINDEX"));
+				strcpy( pItemRcd->szMakeIndex, pRec->Get( "FLD_MAKEINDEX" ) );
 				pxUserGenItemRcdList->AddNewNode( pItemRcd );
 			}
 		}
@@ -138,8 +140,8 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 					memcpy(&pItem->szMakeIndex[1], pRec->Get("FLD_MAKEDATE"), 6);
 					memcpy(&pItem->szMakeIndex[7], pRec->Get("FLD_MAKEINDEX"), 36);
 					pItem->nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
-					pItem->nDura = atoi(pRec->Get("FLD_DURA"));
-					pItem->nDuraMax = atoi(pRec->Get("FLD_DURAMAX"));
+					pItem->wDura = atoi(pRec->Get("FLD_DURA"));
+					pItem->wDuraMax = atoi(pRec->Get("FLD_DURAMAX"));
 					pxUserGenItemRcdList->AddNewNode(pItemRcd);
 				}
 			}
@@ -176,8 +178,8 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 				memcpy(&pItem->szMakeIndex[7], pRec->Get("FLD_MAKEINDEX"), 36);
 
 				pItem->nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
-				pItem->nDura = atoi(pRec->Get("FLD_DURA"));
-				pItem->nDuraMax = atoi(pRec->Get("FLD_DURAMAX"));
+				pItem->wDura = atoi(pRec->Get("FLD_DURA"));
+				pItem->wDuraMax = atoi(pRec->Get("FLD_DURAMAX"));
 				pItem->btValue[0] = atoi(pRec->Get("FLD_AC"));
 				pItem->btValue[1] = atoi(pRec->Get("FLD_MAC"));
 				pItem->btValue[2] = atoi(pRec->Get("FLD_DC"));
@@ -278,8 +280,8 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 				memcpy(&lptHumanRcd->szTakeItem[i].szMakeIndex[7], pRec2->Get("FLD_MAKEINDEX"), 36);
 
 				lptHumanRcd->szTakeItem[i].nStdIndex = atoi(pRec2->Get("FLD_STDINDEX"));
-				lptHumanRcd->szTakeItem[i].nDura = atoi(pRec2->Get("FLD_DURA"));
-				lptHumanRcd->szTakeItem[i].nDuraMax = atoi(pRec2->Get("FLD_DURAMAX"));
+				lptHumanRcd->szTakeItem[i].wDura = atoi(pRec2->Get("FLD_DURA"));
+				lptHumanRcd->szTakeItem[i].wDuraMax = atoi(pRec2->Get("FLD_DURAMAX"));
 				lptHumanRcd->szTakeItem[i].usCount = atoi(pRec2->Get("FLD_Count"));
 				lptHumanRcd->szTakeItem[i].btValue[0] = atoi(pRec2->Get("FLD_AC"));
 				lptHumanRcd->szTakeItem[i].btValue[1] = atoi(pRec2->Get("FLD_MAC"));
@@ -483,23 +485,24 @@ char *SaveHumanMagicRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, 
 	return pszEncode;
 }
 
-void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int nCount)
+void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int nCount,byte charIndex)
 {
 	char szTmp[1024];
 
 	// Delete Magic Data
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
-	sprintf(szTmp, "DELETE FROM TBL_CHARACTER_GENITEM WHERE FLD_CHARNAME = '%s'", pszCharName);
+	//sprintf(szTmp, "DELETE FROM TBL_CHARACTER_GENITEM WHERE FLD_CHARNAME = '%s'", pszCharName);
+	sprintf(szTmp, "DELETE FROM TBL_CHARACTER_ITEM WHERE FLD_CHARNAME = '%s' AND FLD_STDTYPE='G'", pszCharName);
 	pRec->Execute(szTmp);
 	GetDBManager()->DestroyRecordset( pRec );
 
 	// Update General Item Data
-	sprintf( szTmp, "FLD_CHARNAME='%s'", pszCharName );
+	sprintf( szTmp, "FLD_CHARNAME='%s' AND FLD_STDTYPE='G'", pszCharName );
 
 	CQueryManager query;
 
 	char *pszEncode = pszEncodeRcd;
-	_TGENITEMRCD tItemRcd;
+	_TGENERALITEMRCD tItemRcd;
 
 	for (int i = 0; i < nCount; i++)
 	{
@@ -507,12 +510,15 @@ void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int 
 		{
 			pRec = GetDBManager()->CreateRecordset();
 		
-			ZeroMemory(&tItemRcd, sizeof(_TGENITEMRCD));
+			ZeroMemory(&tItemRcd, sizeof(_TGENERALITEMRCD));
 
-			fnDecode6BitBufA( pszEncode, (char *) &tItemRcd, sizeof( _TGENITEMRCD ) );
+			fnDecode6BitBufA( pszEncode, (char *) &tItemRcd, sizeof(_TGENERALITEMRCD) );
 
-			sprintf(szTmp, "INSERT TBL_CHARACTER_GENITEM (FLD_LOGINID, FLD_CHARNAME, FLD_ITEMINDEX) VALUES "//DONE 2012 /6/29
-							"( '%s', '%s', '%s' )", pszUserID, pszCharName, tItemRcd.szItem);
+			//sprintf(szTmp, "INSERT TBL_CHARACTER_GENITEM (FLD_LOGINID, FLD_CHARNAME, FLD_ITEMINDEX) VALUES "//DONE 2012 /6/29
+			//				"( '%s', '%s', '%s' )", pszUserID, pszCharName, tItemRcd.szItem);
+
+			sprintf(szTmp, "INSERT TBL_CHARACTER_ITEM (FLD_LOGINID, FLD_CHARINDEX,FLD_STDTYPE,FLD_MAKEDATE ,FLD_MAKEINDEX,FLD_STDINDEX,FLD_DURA,FLD_DURAMAX,FLD_Count) VALUES "
+							"( '%s', %d, '%1.1s','%6.6s','%s',%d,%d,%d,%d )", pszUserID,charIndex, &tItemRcd.szMakeIndex[0],&tItemRcd.szMakeIndex[1], &tItemRcd.szMakeIndex[7], tItemRcd.nStdIndex, tItemRcd.nDura, tItemRcd.nDuraMax, 1);
 
 			if ( !pRec->Execute( szTmp ) || pRec->GetRowCount() <= 0 )
 				InsertLogMsg(_T("SaveGenItemRcd Ê§°Ü."));
@@ -718,7 +724,7 @@ UINT WINAPI ProcessDBMsg(LPVOID lpParameter)
 				{
 					SaveHumanRcd(pSendBuff->pServerInfo, &pSendBuff->HumanLoad, (_LPTHUMANRCD)pSendBuff->lpbtAddData, pSendBuff->DefMsg.nRecog);
 					char *pszData = SaveHumanMagicRcd(pSendBuff->HumanLoad.szUserID, pSendBuff->HumanLoad.szCharName, (char *)pSendBuff->lpbtAddData2, pSendBuff->DefMsg.wParam);
-					SaveGenItemRcd(pSendBuff->HumanLoad.szUserID, pSendBuff->HumanLoad.szCharName, pszData, pSendBuff->DefMsg.wTag);
+					SaveGenItemRcd(pSendBuff->HumanLoad.szUserID, pSendBuff->HumanLoad.szCharName, pszData, pSendBuff->DefMsg.wTag, pSendBuff->HumanLoad.btCharIndex);
 					break;
 				}
 				case DB_MAKEITEMRCD:
@@ -731,8 +737,8 @@ UINT WINAPI ProcessDBMsg(LPVOID lpParameter)
 
 					tMakeItemRcd.szStdType	= lptUserItemRcd->szMakeIndex[0];
 					tMakeItemRcd.nStdIndex	= lptUserItemRcd->nStdIndex;
-					tMakeItemRcd.nDura		= lptUserItemRcd->nDura;
-					tMakeItemRcd.nDuraMax	= lptUserItemRcd->nDuraMax;
+					tMakeItemRcd.nDura		= lptUserItemRcd->wDura;
+					tMakeItemRcd.nDuraMax	= lptUserItemRcd->wDuraMax;
 					memcpy(tMakeItemRcd.btValue, lptUserItemRcd->btValue, sizeof(lptUserItemRcd->btValue));
 
 					MakeNewItem(pSendBuff->pServerInfo, NULL, &tMakeItemRcd, pSendBuff->DefMsg.nRecog);

@@ -1891,28 +1891,28 @@ void CCharObject::StruckDamage(int nDamage)
 
 			if (lptDress)
 			{
-				int nDura		= lptDress->nDura;
+				int nDura		= lptDress->wDura;
 				int nOldDura	= ROUND(nDura / 1000);
 				
 				nDura	-= wDam;
 
 				if (nDura <= 0)	// 닳아 없어짐
 				{
-					lptDress->nDura = nDura = 0;
+					lptDress->wDura = nDura = 0;
 
 //               hum.SendDelItem (UseItems[U_DRESS]); //클라이언트에 없어진거 보냄
 					m_pUserInfo->SetEmptyDress();
 
-					AddProcess(this, RM_DURACHANGE, U_DRESS, nDura, lptDress->nDuraMax, 0); 
+					AddProcess(this, RM_DURACHANGE, U_DRESS, nDura, lptDress->wDuraMax, 0); 
 					AddProcess(this, RM_FEATURECHANGED, 0, GetFeatureToLong(), 0, 0);
 					
 					fReCalc = TRUE;
 				}
 				else
-					lptDress->nDura = nDura;
+					lptDress->wDura = nDura;
 
 				if (nOldDura != ROUND(nDura / 1000))
-					AddProcess(this, RM_DURACHANGE, U_DRESS, lptDress->nDura, lptDress->nDuraMax, 0); 
+					AddProcess(this, RM_DURACHANGE, U_DRESS, lptDress->wDura, lptDress->wDuraMax, 0); 
 			}
 
 			_LPTUSERITEMABILITY	lptUseItem;
@@ -1923,28 +1923,28 @@ void CCharObject::StruckDamage(int nDamage)
 
 				if (lptUseItem && (rand() % 8) == 0)
 				{
-					int nDura		= lptUseItem->nDura;
+					int nDura		= lptUseItem->wDura;
 					int nOldDura	= ROUND(nDura / 1000);
 					
 					nDura	-= wDam;
 
 					if (nDura <= 0)	// 닳아 없어짐
 					{
-						lptUseItem->nDura = nDura = 0;
+						lptUseItem->wDura = nDura = 0;
 
 	//               hum.SendDelItem (UseItems[U_DRESS]); //클라이언트에 없어진거 보냄
 						m_pUserInfo->SetEmptyUseItem(i);
 
-						AddProcess(this, RM_DURACHANGE, i, nDura, lptUseItem->nDuraMax, 0); 
+						AddProcess(this, RM_DURACHANGE, i, nDura, lptUseItem->wDuraMax, 0); 
 						AddProcess(this, RM_FEATURECHANGED, 0, GetFeatureToLong(), 0, 0);
 
 						fReCalc = TRUE;
 					}
 					else
-						lptUseItem->nDura = nDura;
+						lptUseItem->wDura = nDura;
 
 					if (nOldDura != ROUND(nDura / 1000))
-						AddProcess(this, RM_DURACHANGE, i, lptUseItem->nDura, lptUseItem->nDuraMax, 0); 
+						AddProcess(this, RM_DURACHANGE, i, lptUseItem->wDura, lptUseItem->wDuraMax, 0); 
 				}
 			}
 		}
@@ -2018,27 +2018,27 @@ void CCharObject::DoDamageWeapon(int nDamage)
 
 		if (lptWeapon)
 		{
-			int nDura		= lptWeapon->nDura;
+			int nDura		= lptWeapon->wDura;
 			int nOldDura	= ROUND(nDura / 1000);
 			
 			nDura	-= nDamage;
 
 			if (nDura <= 0)	// 닳아 없어짐
 			{
-				lptWeapon->nDura = nDura = 0;
+				lptWeapon->wDura = nDura = 0;
 //               hum.SendDelItem (UseItems[U_DRESS]); //클라이언트에 없어진거 보냄
 
 				((CPlayerObject*)this)->RecalcAbilitys();
 
 				m_pUserInfo->SetEmptyWeapon();
 
-				AddProcess(this, RM_DURACHANGE, U_WEAPON, nDura, lptWeapon->nDuraMax, 0); 
+				AddProcess(this, RM_DURACHANGE, U_WEAPON, nDura, lptWeapon->wDuraMax, 0); 
 			}
 			else
-				lptWeapon->nDura = nDura;
+				lptWeapon->wDura = nDura;
 
 			if (nOldDura != ROUND(nDura / 1000))
-				AddProcess(this, RM_DURACHANGE, U_WEAPON, lptWeapon->nDura, lptWeapon->nDuraMax, 0); 
+				AddProcess(this, RM_DURACHANGE, U_WEAPON, lptWeapon->wDura, lptWeapon->wDuraMax, 0); 
 		}
 	}
 }

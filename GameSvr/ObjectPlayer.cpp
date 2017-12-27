@@ -293,13 +293,13 @@ BOOL CPlayerObject::ServerGetEatItem(int nItemIndex, char *pszMakeIndex)
 void CPlayerObject::SendAddItem(_LPTUSERITEMABILITY lpTItemRcd)
 {
 	_TDEFAULTMESSAGE	SendDefMsg;
-	_TCLIENTITEMRCD		tClientItemRcd;
 	char				szEncodeMsg[256];
-
+	int nPos = 0;
 	fnMakeDefMessage(&SendDefMsg, SM_ADDITEM, (int)this, 0, 0, 1);
 
 	if (lpTItemRcd->szMakeIndex[0] != 'G')
 	{
+		_TCLIENTITEMRCD		tClientItemRcd;
 		CStdItemSpecial* lpStdItem;
 
 		GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
@@ -310,19 +310,27 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMABILITY lpTItemRcd)
 			strcpy(tClientItemRcd.szPrefixName, lpTItemRcd->szPrefixName);
 		else
 			ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
+
+		memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX);
+
+		tClientItemRcd.wDura = lpTItemRcd->wDura;
+		tClientItemRcd.wDuraMax = lpTItemRcd->wDuraMax;
+
+		nPos = fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
 	}
 	else
 	{
-		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
-		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
+		_TCLIENTGENITEMRCD tClientGenItemRcd;
+		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetStandardItem(&tClientGenItemRcd);
+		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetUpgradeStdItem(&tClientGenItemRcd, lpTItemRcd);
+
+		memcpy(tClientGenItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX);
+
+		tClientGenItemRcd.wDura = lpTItemRcd->wDura;
+
+		nPos = fnEncode6BitBufA((unsigned char *)&tClientGenItemRcd, szEncodeMsg, sizeof(_TCLIENTGENITEMRCD), sizeof(szEncodeMsg));
 	}
 
-	memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, 12);
-	
-	tClientItemRcd.nDura		= lpTItemRcd->nDura;
-	tClientItemRcd.nDuraMax		= lpTItemRcd->nDuraMax;
-
-	int nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg));
 	szEncodeMsg[nPos] = '\0';
 
 	SendSocket(&SendDefMsg, szEncodeMsg);
@@ -464,8 +472,8 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction
 		_TMAKEITEMRCD	tMakeItemRcd;
 
 		tMakeItemRcd.szStdType	= lpMakeItemRcd->szMakeIndex[0];
-		tMakeItemRcd.nDura		= lpMakeItemRcd->nDura;
-		tMakeItemRcd.nDuraMax	= lpMakeItemRcd->nDuraMax;
+		tMakeItemRcd.nDura		= lpMakeItemRcd->wDura;
+		tMakeItemRcd.nDuraMax	= lpMakeItemRcd->wDuraMax;
 		tMakeItemRcd.nStdIndex	= lpMakeItemRcd->nStdIndex;
 		memcpy(tMakeItemRcd.btValue, lpMakeItemRcd->btValue, sizeof(lpMakeItemRcd->btValue));
 
@@ -513,7 +521,7 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction
 								"FLD_VALUE6=%d, FLD_VALUE7=%d, FLD_VALUE8=%d, FLD_VALUE9=%d, FLD_VALUE10=%d, FLD_VALUE11=%d, FLD_VALUE12=%d, FLD_VALUE13=%d, "
 								"FLD_VALUE14=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
 								"WHERE FLD_STDTYPE='%c' AND FLD_MAKEDATE='%s' AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
-								"0", "WEMADE", lpMakeItemRcd->nDura, lpMakeItemRcd->nDuraMax, 
+								"0", "WEMADE", lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
@@ -528,7 +536,7 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction
 								"FLD_VALUE6=%d, FLD_VALUE7=%d, FLD_VALUE8=%d, FLD_VALUE9=%d, FLD_VALUE10=%d, FLD_VALUE11=%d, FLD_VALUE12=%d, FLD_VALUE13=%d, "
 								"FLD_VALUE14=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
 								"WHERE FLD_STDTYPE='%c' AND FLD_MAKEDATE='%s' AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
-								m_pUserInfo->m_szUserID, m_pUserInfo->m_szCharName, lpMakeItemRcd->nDura, lpMakeItemRcd->nDuraMax, 
+								m_pUserInfo->m_szUserID, m_pUserInfo->m_szCharName, lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
@@ -543,7 +551,7 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction
 								"FLD_VALUE6=%d, FLD_VALUE7=%d, FLD_VALUE8=%d, FLD_VALUE9=%d, FLD_VALUE10=%d, FLD_VALUE11=%d, FLD_VALUE12=%d, FLD_VALUE13=%d, "
 								"FLD_VALUE14=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d, FLD_PREFIXNAME='%s' "
 								"WHERE FLD_STDTYPE='%c' AND FLD_MAKEDATE='%s' AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
-								lpMakeItemRcd->nDura, lpMakeItemRcd->nDuraMax, 
+								lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
@@ -1009,11 +1017,11 @@ void CPlayerObject::SendBagItems()
 	int					nGenCnt = m_pUserInfo->m_lpTGenItemRcd.GetCount();
 	int					nPos	= 0;
 
-	_TCLIENTITEMRCD		tClientItemRcd;
 	_TDEFAULTMESSAGE	DefMsg;
 
 	if (nCnt)
 	{
+		_TCLIENTITEMRCD		tClientItemRcd;
 		PLISTNODE pListNode = m_pUserInfo->m_lpTItemRcd.GetHead();
 		CStdItemSpecial* lpStdItem;
 		while (pListNode)
@@ -1028,8 +1036,8 @@ void CPlayerObject::SendBagItems()
 
 				memcpy(tClientItemRcd.szMakeIndex, lptUserItemRcd->szMakeIndex, _MAKEITEMINDEX);
 				
-				tClientItemRcd.nDura		= lptUserItemRcd->nDura;
-				tClientItemRcd.nDuraMax		= lptUserItemRcd->nDuraMax;
+				tClientItemRcd.wDura		= lptUserItemRcd->wDura;
+				tClientItemRcd.wDuraMax		= lptUserItemRcd->wDuraMax;
 
 				if (strlen(lptUserItemRcd->szPrefixName))
 					strcpy(tClientItemRcd.szPrefixName, lptUserItemRcd->szPrefixName);
@@ -1047,26 +1055,28 @@ void CPlayerObject::SendBagItems()
 
 	if (nGenCnt)
 	{
-		char		szVal[5];
+		//char		szVal[5];
 
-		ZeroMemory(szVal, sizeof(szVal));
+		//ZeroMemory(szVal, sizeof(szVal));
 
 		PLISTNODE pListNode = m_pUserInfo->m_lpTGenItemRcd.GetHead();
-
+		_LPTGENERALITEMRCD	lptGenItemRcd;
+		_TCLIENTGENITEMRCD  tClientGenItemRcd;
 		while (pListNode)
 		{
-			_LPTGENERALITEMRCD	lptGenItemRcd = m_pUserInfo->m_lpTGenItemRcd.GetData(pListNode);
+			lptGenItemRcd = m_pUserInfo->m_lpTGenItemRcd.GetData(pListNode);
 
 			if (lptGenItemRcd)
 			{
-				memcpy(tClientItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, 12);
-		
-				tClientItemRcd.nDura		= lptGenItemRcd->nDura;
-				tClientItemRcd.nDuraMax		= lptGenItemRcd->nDuraMax;
+				memcpy(tClientGenItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, _MAKEITEMINDEX);		
+				
+				tClientGenItemRcd.wDura		= lptGenItemRcd->nDura;
+				tClientGenItemRcd.wDuraMax  = lptGenItemRcd->nDuraMax;
 
-				g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg) - nPos);
+				g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem(&tClientGenItemRcd);
+
+				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientGenItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTGENITEMRCD), sizeof(szEncodeMsg) - nPos);
 
 				szEncodeMsg[nPos++] = '/';
 			}

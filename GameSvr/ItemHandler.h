@@ -44,9 +44,9 @@ class CStdItem : public CItem
 public:
 	CStdItem() {};
 
-	virtual		void GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd);
+	virtual		void GetStandardItem(_LPTCLIENTGENITEMRCD lpClientItemRcd);
 //	virtual		void UpgradeRandomItem(_LPTMAKEITEMRCD lpMakeItemRcd) {};
-	virtual		void GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd) {};
+	virtual		void GetUpgradeStdItem(_LPTCLIENTGENITEMRCD lpClientGenItemRcd, _LPTUSERITEMABILITY lpUserItemRcd) {};
 };
 
 class CStdItemSpecial : public CItem

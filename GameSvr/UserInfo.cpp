@@ -130,20 +130,20 @@ void CUserInfo::MakeGenItem(_LPTGENERALITEMRCD lptGenItemRcd)
 
 		m_lpTGenItemRcd.AddNewNode(lptGenItemRcd);
 
-		_TCLIENTITEMRCD		tClientItemRcd;
+		_TCLIENTGENITEMRCD	tClientGenItemRcd;
 		_TDEFAULTMESSAGE	SendDefMsg;
 		char				szEncodeMsg[256];
 
 		fnMakeDefMessage(&SendDefMsg, SM_ADDITEM, (int)m_pxPlayerObject, 0, 0, 1);
 
 		// Get Standard General Item (STDITEM_ETC)
-		g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
+		g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem(&tClientGenItemRcd);
 
-		memcpy(tClientItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, 12);
-		tClientItemRcd.nDura		= lptGenItemRcd->nDura;
-		tClientItemRcd.nDuraMax		= lptGenItemRcd->nDuraMax;
+		memcpy(tClientGenItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, 12);
+		tClientGenItemRcd.wDura		= lptGenItemRcd->nDura;
+		tClientGenItemRcd.wDuraMax		= lptGenItemRcd->nDuraMax;
 
-		int nIdx = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg));
+		int nIdx = 	fnEncode6BitBufA((unsigned char *)&tClientGenItemRcd, szEncodeMsg, sizeof(_TCLIENTGENITEMRCD), sizeof(szEncodeMsg));
 		szEncodeMsg[nIdx] = '\0';
 
 		m_pxPlayerObject->SendSocket(&SendDefMsg, szEncodeMsg);
