@@ -92,7 +92,7 @@ void InitStdItemEtcInfo()
 				g_pStdItemEtc[i].wWeight	= atoi( pRec->Get( "FLD_WEIGHT" ) );
 				g_pStdItemEtc[i].dwLooks	= atoi( pRec->Get( "FLD_LOOKS" ) );
 				g_pStdItemEtc[i].wDuraMax	= atoi( pRec->Get( "FLD_DURAMAX" ) );//FLD_VAL1
-				g_pStdItemEtc[i].dwRSource	= atoi( pRec->Get( "FLD_SOURCE" ) );//FLD_VAL2 FLD_DURAMAX,FLD_SOURCE
+				g_pStdItemEtc[i].wRSource	= atoi( pRec->Get( "FLD_SOURCE" ) );//FLD_VAL2 FLD_DURAMAX,FLD_SOURCE
 				g_pStdItemEtc[i].dwPrice	= atoi( pRec->Get( "FLD_PRICE" ) );
 			}
 		}
@@ -140,8 +140,8 @@ void InitStdItemSpecial()
 				g_pStdItemSpecial[i].Index			= (LONG)atoi(pRec->Get("FLD_Index"));
 				g_pStdItemSpecial[i].wShape			= (SHORT)atoi( pRec->Get( "FLD_SHAPE" ) );
 				g_pStdItemSpecial[i].wWeight		= (SHORT)atoi( pRec->Get( "FLD_WEIGHT" ) );
-				g_pStdItemSpecial[i].wAniCount		= (SHORT)atoi( pRec->Get( "FLD_ANICOUNT" ) );
-				g_pStdItemSpecial[i].wSource		= (SHORT)atoi( pRec->Get( "FLD_SOURCE" ) );
+				g_pStdItemSpecial[i].btAniCount		= (SHORT)atoi( pRec->Get( "FLD_ANICOUNT" ) );
+				g_pStdItemSpecial[i].wRSource		= (SHORT)atoi( pRec->Get( "FLD_SOURCE" ) );
 				g_pStdItemSpecial[i].dwLooks		= (LONG)atoi( pRec->Get( "FLD_LOOKS" ) );
 				g_pStdItemSpecial[i].wDuraMax		= (WORD)atoi( pRec->Get( "FLD_DURAMAX" ) );
 				g_pStdItemSpecial[i].wAC			= (BYTE)atoi( pRec->Get( "FLD_AC" ) );

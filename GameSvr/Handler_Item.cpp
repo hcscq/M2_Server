@@ -15,20 +15,20 @@ int CItem::GetUpgrade(int nCount, int nRandom)
 	return nResult;
 }
 
-void CStdItem::GetStandardItem(_LPTCLIENTGENITEMRCD lpClientItemRcd)
+void CStdItem::GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd)
 {
 	strcpy(lpClientItemRcd->szName, szName);
 
-	lpClientItemRcd->btStdMode		= (BYTE)wStdMode;
-	lpClientItemRcd->btShape		= (BYTE)wShape;
-	lpClientItemRcd->btWeight		= (BYTE)wWeight;
+	lpClientItemRcd->wStdMode		= wStdMode;
+	lpClientItemRcd->wShape		= (BYTE)wShape;
+	lpClientItemRcd->wWeight		= (BYTE)wWeight;
 	lpClientItemRcd->btAniCount		= 0;
-	lpClientItemRcd->btSource		= (BYTE)dwRSource;
-	lpClientItemRcd->wLooks			= (WORD)dwLooks;
+	lpClientItemRcd->wRSource		= (BYTE)wRSource;
+	lpClientItemRcd->dwLooks			= (WORD)dwLooks;
 	lpClientItemRcd->wDuraMax		= (WORD)wDuraMax;
-	lpClientItemRcd->btNeed			= 0;
-	lpClientItemRcd->btNeedLevel	= 0;
-	lpClientItemRcd->nPrice			= (UINT)dwPrice;
+	//lpClientItemRcd->wNeed			= 0;
+	//lpClientItemRcd->btNeedLevel	= 0;
+	lpClientItemRcd->dwPrice			= (UINT)dwPrice;
 }
 
 CStdItemSpecial::CStdItemSpecial()
@@ -37,32 +37,33 @@ CStdItemSpecial::CStdItemSpecial()
 
 void CStdItemSpecial::GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd)
 {
-	memcpy(lpClientItemRcd->tStdItem.szName, szName, memlen(szName));
+	//_LPTCLIENTITEMRCD lpClientItemRcd = (_LPTCLIENTITEMRCD)lpClientItemRcd;
+	memcpy(lpClientItemRcd->szName, szName, memlen(szName));
 
-	lpClientItemRcd->tStdItem.btStdMode			= (BYTE)wStdMode;
-	lpClientItemRcd->tStdItem.btShape			= (BYTE)wShape;
-	lpClientItemRcd->tStdItem.btWeight			= (BYTE)wWeight;
-	lpClientItemRcd->tStdItem.btAniCount		= (BYTE)wAniCount;
-	lpClientItemRcd->tStdItem.btSource			= (BYTE)wSource;
+	lpClientItemRcd->wStdMode		= wStdMode;
+	lpClientItemRcd->wShape			= wShape;
+	lpClientItemRcd->wWeight		= wWeight;
+	lpClientItemRcd->btAniCount		= btAniCount;
+	lpClientItemRcd->wRSource		= wRSource;
 //	lpClientItemRcd->tStdItem.btNeedIdentify	= (BYTE)g_pStdItemWeapon[nIdx].wNeedIdentify;
-	lpClientItemRcd->tStdItem.wLooks			= (WORD)dwLooks;
-	lpClientItemRcd->tStdItem.wDuraMax			= (WORD)wDuraMax;
-	lpClientItemRcd->tStdItem.btNeed			= (BYTE)wNeed;
-	lpClientItemRcd->tStdItem.btNeedLevel		= (BYTE)wNeedLevel;
-	lpClientItemRcd->tStdItem.nPrice			= (UINT)dwPrice;
-	lpClientItemRcd->tStdItem.HP				= HP;
-	lpClientItemRcd->tStdItem.MP				= MP;
-	lpClientItemRcd->tStdItem.AttackSpeed		= AttackSpeed;
-	lpClientItemRcd->tStdItem.Luck				= Luck;
+	lpClientItemRcd->dwLooks		= dwLooks;
+	lpClientItemRcd->wDuraMax		= wDuraMax;
+	lpClientItemRcd->wNeed			= wNeed;
+	lpClientItemRcd->wNeedLevel		= wNeedLevel;
+	lpClientItemRcd->dwPrice		= dwPrice;
+	lpClientItemRcd->HP				= HP;
+	lpClientItemRcd->MP				= MP;
+	lpClientItemRcd->AttackSpeed	= AttackSpeed;
+	lpClientItemRcd->Luck			= Luck;
 
-	lpClientItemRcd->tStdItem.wAC =MAKEWORD( wAC,wAC2);
-	lpClientItemRcd->tStdItem.wMAC = MAKEWORD(wMAC,wMAC2);
-	lpClientItemRcd->tStdItem.wDC = MAKEWORD(wDC, wDC2);
-	lpClientItemRcd->tStdItem.wMC = MAKEWORD(wMC, wMC2);
-	lpClientItemRcd->tStdItem.wSC = MAKEWORD(wSC, wSC2);
+	lpClientItemRcd->wAC =MAKEWORD( wAC,wAC2);
+	lpClientItemRcd->wMAC = MAKEWORD(wMAC,wMAC2);
+	lpClientItemRcd->wDC = MAKEWORD(wDC, wDC2);
+	lpClientItemRcd->wMC = MAKEWORD(wMC, wMC2);
+	lpClientItemRcd->wSC = MAKEWORD(wSC, wSC2);
 }
 
-void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMABILITY lpUserItemRcd)
+void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMRCD lpUserItemRcd)
 {
 /*	switch (lpUserItemRcd->szMakeIndex[0])
 	{
@@ -101,49 +102,50 @@ void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTU
 		}
 	}
 */	
-	memcpy(lpClientItemRcd, lpUserItemRcd, sizeof(_TUSERITEMABILITY));
+	//_LPTCLIENTITEMRCD lpClientItemRcd = (_LPTCLIENTITEMRCD)lpClientItemRcd;
+	memcpy(lpClientItemRcd, lpUserItemRcd, sizeof(_TUSERITEMRCD));
 	switch (btType)
 	{
 		case 0:
 		{
-			lpClientItemRcd->tStdItem.wDC		= MAKEWORD(wDC, wDC2 + lpUserItemRcd->btValue[0]);
-			lpClientItemRcd->tStdItem.wMC		= MAKEWORD(wMC, wMC2 + lpUserItemRcd->btValue[1]);
-			lpClientItemRcd->tStdItem.wSC		= MAKEWORD(wSC, wSC2 + lpUserItemRcd->btValue[2]); //3:青款, 4:历林
-			lpClientItemRcd->tStdItem.wAC		= MAKEWORD(wAC + lpUserItemRcd->btValue[3], wAC2 + lpUserItemRcd->btValue[5]);  //沥犬
-			lpClientItemRcd->tStdItem.wMAC		= MAKEWORD(wMAC + lpUserItemRcd->btValue[4], wMAC2 + lpUserItemRcd->btValue[6]);  //傍拜加档(-/+)
-			lpClientItemRcd->tStdItem.btSource	= lpUserItemRcd->btValue[7];
+			lpClientItemRcd->wDC		= MAKEWORD(wDC, wDC2 + lpUserItemRcd->btValue[0]);
+			lpClientItemRcd->wMC		= MAKEWORD(wMC, wMC2 + lpUserItemRcd->btValue[1]);
+			lpClientItemRcd->wSC		= MAKEWORD(wSC, wSC2 + lpUserItemRcd->btValue[2]); //3:青款, 4:历林
+			lpClientItemRcd->wAC		= MAKEWORD(wAC + lpUserItemRcd->btValue[3], wAC2 + lpUserItemRcd->btValue[5]);  //沥犬
+			lpClientItemRcd->wMAC		= MAKEWORD(wMAC + lpUserItemRcd->btValue[4], wMAC2 + lpUserItemRcd->btValue[6]);  //傍拜加档(-/+)
+			lpClientItemRcd->wRSource	= lpUserItemRcd->btValue[7];
 		//	if (lpMakeItemRcd->btValue[10])
 		//		lptWeaponItem->NeedIdentify := 0x01;
 			break;
 		}
 		case 1:
 		{
-			lpClientItemRcd->tStdItem.wAC	= MAKEWORD(wAC, wAC2 + lpUserItemRcd->btValue[0]);
-			lpClientItemRcd->tStdItem.wMAC	= MAKEWORD(wMAC, wMAC2 + lpUserItemRcd->btValue[1]);
-			lpClientItemRcd->tStdItem.wDC	= MAKEWORD(wDC, wDC2 + lpUserItemRcd->btValue[2]);
-			lpClientItemRcd->tStdItem.wMC	= MAKEWORD(wMC, wMC2 + lpUserItemRcd->btValue[3]);
-			lpClientItemRcd->tStdItem.wSC	= MAKEWORD(wSC, wSC2 + lpUserItemRcd->btValue[4]);
+			lpClientItemRcd->wAC	= MAKEWORD(wAC, wAC2 + lpUserItemRcd->btValue[0]);
+			lpClientItemRcd->wMAC	= MAKEWORD(wMAC, wMAC2 + lpUserItemRcd->btValue[1]);
+			lpClientItemRcd->wDC	= MAKEWORD(wDC, wDC2 + lpUserItemRcd->btValue[2]);
+			lpClientItemRcd->wMC	= MAKEWORD(wMC, wMC2 + lpUserItemRcd->btValue[3]);
+			lpClientItemRcd->wSC	= MAKEWORD(wSC, wSC2 + lpUserItemRcd->btValue[4]);
 
 			break;
 		}
 		case 2:
 		{
-			lpClientItemRcd->tStdItem.wAC  = MAKEWORD(wAC, wAC2 + lpUserItemRcd->btValue[0]);
-			lpClientItemRcd->tStdItem.wMAC = MAKEWORD(wMAC,wMAC2+ lpUserItemRcd->btValue[1]);
-			lpClientItemRcd->tStdItem.wDC  = MAKEWORD(wDC, wDC2 + lpUserItemRcd->btValue[2]);
-			lpClientItemRcd->tStdItem.wMC  = MAKEWORD(wMC, wMC2 + lpUserItemRcd->btValue[3]);
-			lpClientItemRcd->tStdItem.wSC  = MAKEWORD(wSC, wSC2 + lpUserItemRcd->btValue[4]);
+			lpClientItemRcd->wAC  = MAKEWORD(wAC, wAC2 + lpUserItemRcd->btValue[0]);
+			lpClientItemRcd->wMAC = MAKEWORD(wMAC,wMAC2+ lpUserItemRcd->btValue[1]);
+			lpClientItemRcd->wDC  = MAKEWORD(wDC, wDC2 + lpUserItemRcd->btValue[2]);
+			lpClientItemRcd->wMC  = MAKEWORD(wMC, wMC2 + lpUserItemRcd->btValue[3]);
+			lpClientItemRcd->wSC  = MAKEWORD(wSC, wSC2 + lpUserItemRcd->btValue[4]);
 
 			break;
 		}
 		default:
 		{
-			lpClientItemRcd->tStdItem.wAC		= 0;
-			lpClientItemRcd->tStdItem.wMAC		= 0;
-			lpClientItemRcd->tStdItem.wDC		= 0;
-			lpClientItemRcd->tStdItem.wMC		= 0;
-			lpClientItemRcd->tStdItem.wSC		= 0;
-			lpClientItemRcd->tStdItem.btSource	= 0;
+			lpClientItemRcd->wAC		= 0;
+			lpClientItemRcd->wMAC		= 0;
+			lpClientItemRcd->wDC		= 0;
+			lpClientItemRcd->wMC		= 0;
+			lpClientItemRcd->wSC		= 0;
+			lpClientItemRcd->wRSource	= 0;
 
 			break;
 		}

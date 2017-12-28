@@ -143,9 +143,9 @@ UINT WINAPI ProcessMonster(LPVOID lpParameter)
 			{
 				if ((pMonGenInfo->dwStartTime == 0) || ((dwLastGenTick - pMonGenInfo->dwStartTime) > GetZenTime(pMonGenInfo->dwZenTime)))
 				{
-					if (pMonGenInfo->nCount > (int)pMonGenInfo->xMonsterObjList.GetCount())
+					if (pMonGenInfo->wCount > (int)pMonGenInfo->xMonsterObjList.GetCount())
 					{
-						if (RegenMonster(pMonGenInfo, pMonGenInfo->nCount - pMonGenInfo->xMonsterObjList.GetCount()))
+						if (RegenMonster(pMonGenInfo, pMonGenInfo->wCount - pMonGenInfo->xMonsterObjList.GetCount()))
 							pMonGenInfo->dwStartTime = GetTickCount();
 					}
 				}

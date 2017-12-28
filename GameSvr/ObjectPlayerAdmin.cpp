@@ -5,11 +5,11 @@ CMonRaceInfo*	GetMonRaceInfo(char *pszMonName);
 
 void			GetFrontPosition(CCharObject *pObject, int &nX, int &nY);
 
-BOOL			UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, char *pszUserID, char *pszCharName, int nAction);
+BOOL			UpdateItemToDB(_LPTUSERITEMRCD lpMakeItemRcd, char *pszUserID, char *pszCharName, int nAction);
 
 void CPlayerObject::CmdChangeItemPrefix(char *pszParam1, char *pszParam2)
 {
-	_LPTUSERITEMABILITY lpUserItemRcd = NULL;
+	_LPTUSERITEMRCD lpUserItemRcd = NULL;
 	CStdItemSpecial* lpStdItem;
 
 	for (int i = U_DRESS; i <= U_RINGR; i++)

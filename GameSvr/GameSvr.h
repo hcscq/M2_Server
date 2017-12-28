@@ -94,9 +94,9 @@ public:
 	int								m_nNumOfGenItems;
 	int								m_nNumOfItems;
 
-	CWHList<_LPTGENERALITEMRCD>		m_lpTGenItemRcd;
+	CWHList<_LPTUSERGENITEMRCD>		m_lpTGenItemRcd;
 	CWHList<_LPTHUMANMAGICRCD>		m_lpTMagicRcd;
-	CWHList<_LPTUSERITEMABILITY>		m_lpTItemRcd;
+	CWHList<_LPTUSERITEMRCD>	m_lpTItemRcd;
 
 	_LPTHUMANMAGICRCD				m_lpTMagicErgumSkill;
 	BOOL							m_fLongHitSkill;
@@ -129,11 +129,11 @@ public:
 
 	void							Operate();
 
-	_LPTUSERITEMABILITY					GetItem(char *pszMakeIndex);
-	__inline _LPTUSERITEMABILITY		GetUseItem(int nPosition) { return GetItem(m_THumanRcd.szTakeItem[nPosition].szMakeIndex); }
+	_LPTUSERITEMRCD					GetItem(char *pszMakeIndex);
+	__inline _LPTUSERITEMRCD		GetUseItem(int nPosition) { return GetItem(m_THumanRcd.szTakeItem[nPosition].lptUserItemAbility->szMakeIndex); }
 	
-	_LPTGENERALITEMRCD				GetUseGenItem(char *pszMakeItemID);
-	void							RemoveGenItem(_LPTGENERALITEMRCD lptGenItemRcd);
+	_LPTUSERGENITEMRCD				GetUseGenItem(char *pszMakeItemID);
+	void							RemoveGenItem(_LPTUSERGENITEMRCD lptGenItemRcd);
 
 	int								EncodeMyMagicToServer(char *pszEncodeMsg, int nBuffSize, int& nPos);
 	int								EncodeMyMagic(char *pszEncodeMsg, int nBuffSize, int& nPos);
@@ -144,7 +144,7 @@ public:
 
 	void							AddNewItem(char *pszItemName);
 	
-	void							MakeGenItem(_LPTGENERALITEMRCD lpItemRcd);
+	void							MakeGenItem(_LPTUSERGENITEMRCD lpItemRcd);
 
 	BOOL							IsMyMagic(int nIndex);
 
@@ -168,20 +168,20 @@ public:
 	_LPTHUMANMAGICRCD				GetMagicRcdByID(int nID);
 	_LPTHUMANMAGICRCD				GetMagicRcdByKey(int nKey);
 
-	_LPTGENERALITEMRCD				CanUseBujuk();
+	_LPTUSERGENITEMRCD				CanUseBujuk();
 
 	void							SetGenItemVal1(int nVal);
 
 	void							ProcessUserMessage(char *pszPacket);
 
-	__inline	_LPTUSERITEMABILITY		GetWeapon() { return GetUseItem(U_WEAPON); }
-	__inline	_LPTUSERITEMABILITY		SetWeapon(char *pszMakeIndex) { memmove(&m_THumanRcd.szTakeItem[U_WEAPON], pszMakeIndex, _MAKEITEMINDEX); }
+	__inline	_LPTUSERITEMRCD		GetWeapon() { return GetUseItem(U_WEAPON); }
+	__inline	_LPTUSERITEMRCD		SetWeapon(char *pszMakeIndex) { memmove(&m_THumanRcd.szTakeItem[U_WEAPON], pszMakeIndex, _MAKEITEMINDEX); }
 	__inline	void				SetEmptyWeapon() { ZeroMemory(&m_THumanRcd.szTakeItem[U_WEAPON], _MAKEITEMINDEX);/* m_THumanRcd.szTakeItem[U_WEAPON] = '0';*/ }
 	__inline	void				SetEmptyDress() { ZeroMemory(&m_THumanRcd.szTakeItem[U_DRESS], _MAKEITEMINDEX); /*m_THumanRcd.szTakeItem[U_DRESS] = '0';*/ }
 	__inline	void				SetEmptyUseItem(int i) { ZeroMemory(&m_THumanRcd.szTakeItem[i], _MAKEITEMINDEX); /*m_THumanRcd.szTakeItem[i][0] = '0';*/ }
-	__inline	_LPTUSERITEMABILITY		GetDress() { return GetUseItem(U_DRESS); }
-	__inline	_LPTUSERITEMABILITY		GetAccessory(int nPosition) { return GetUseItem(nPosition); }
-	__inline	_LPTGENERALITEMRCD	GetRightHand() { return GetUseGenItem((char *)&m_THumanRcd.szTakeItem[U_RIGHTHAND]); }
+	__inline	_LPTUSERITEMRCD		GetDress() { return GetUseItem(U_DRESS); }
+	__inline	_LPTUSERITEMRCD		GetAccessory(int nPosition) { return GetUseItem(nPosition); }
+	__inline	_LPTUSERGENITEMRCD	GetRightHand() { return GetUseGenItem((char *)&m_THumanRcd.szTakeItem[U_RIGHTHAND]); }
 
 	__inline	BYTE				GetGenderFeature() { return m_THumanRcd.btGender; }
 	__inline	char				GetHairFeature() { return m_THumanRcd.szHair; }
