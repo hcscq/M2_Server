@@ -567,7 +567,7 @@ begin
    end;
 end;
 */
-BOOL CCharObject::DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL fIsGenItem)
+BOOL CCharObject::DropItemDown(_LPTUSERITEMRCD lpTItemRcd, int nRange, BOOL fIsGenItem)
 {
 	CMapItem* xpMapItem = new CMapItem;
 
@@ -575,9 +575,9 @@ BOOL CCharObject::DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL 
 
 	if (fIsGenItem)
 	{
-		_LPTGENERALITEMRCD lpTGenItemRcd = NULL;
+		_LPTUSERGENITEMRCD lpTGenItemRcd = NULL;
 		
-		lpTGenItemRcd = (_LPTGENERALITEMRCD)lpTItemRcd;
+		lpTGenItemRcd = (_LPTUSERGENITEMRCD)lpTItemRcd;
 
 		xpMapItem->wLooks		= (WORD)g_pStdItemEtc[lpTGenItemRcd->nStdIndex].dwLooks;
 		xpMapItem->btAniCount	= (BYTE)0;
@@ -590,7 +590,7 @@ BOOL CCharObject::DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL 
 		CStdItemSpecial* lpStdItem;
 		GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem);
 		xpMapItem->wLooks		= (WORD)lpStdItem->dwLooks;
-		xpMapItem->btAniCount	= (BYTE)lpStdItem->wAniCount;
+		xpMapItem->btAniCount	= (BYTE)lpStdItem->btAniCount;
 		
 		xpMapItem->pItem		= (LONG)lpTItemRcd;
 		
@@ -1887,7 +1887,7 @@ void CCharObject::StruckDamage(int nDamage)
 
 		if (m_pUserInfo)
 		{
-			_LPTUSERITEMABILITY	lptDress = m_pUserInfo->GetDress();
+			_LPTUSERITEMRCD	lptDress = m_pUserInfo->GetDress();
 
 			if (lptDress)
 			{
@@ -1915,7 +1915,7 @@ void CCharObject::StruckDamage(int nDamage)
 					AddProcess(this, RM_DURACHANGE, U_DRESS, lptDress->wDura, lptDress->wDuraMax, 0); 
 			}
 
-			_LPTUSERITEMABILITY	lptUseItem;
+			_LPTUSERITEMRCD	lptUseItem;
 
 			for (int i = 0; i < 8; i++)
 			{
@@ -2014,7 +2014,7 @@ void CCharObject::DoDamageWeapon(int nDamage)
 {
 	if (m_pUserInfo)
 	{
-		_LPTUSERITEMABILITY	lptWeapon = m_pUserInfo->GetWeapon();
+		_LPTUSERITEMRCD	lptWeapon = m_pUserInfo->GetWeapon();
 
 		if (lptWeapon)
 		{
