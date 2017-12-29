@@ -103,7 +103,7 @@ void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTU
 	}
 */	
 	//_LPTCLIENTITEMRCD lpClientItemRcd = (_LPTCLIENTITEMRCD)lpClientItemRcd;
-	memcpy(lpClientItemRcd, lpUserItemRcd, sizeof(_TUSERITEMRCD));
+	memcpy(&lpClientItemRcd->tUserItemAbility, lpUserItemRcd, sizeof(_TUSERITEMRCD));
 	switch (btType)
 	{
 		case 0:

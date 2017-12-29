@@ -75,7 +75,7 @@ void InitStdItemEtcInfo()
 	g_pStdItemEtc = new CStdItem[g_nStdItemEtc];
 
 	//sprintf( szQuery, "SELECT * FROM TBL_STDITEM_ETC ORDER BY FLD_INDEX");
-	sprintf(szQuery, "SELECT FLD_STDMODE,FLD_SHAPE,FLD_WEIGHT,FLD_LOOKS,FLD_DURAMAX,FLD_SOURCE,FLD_PRICE FROM TBL_STDITEM ORDER BY FLD_INDEX");
+	sprintf(szQuery, "SELECT FLD_NAME,FLD_STDMODE,FLD_SHAPE,FLD_WEIGHT,FLD_LOOKS,FLD_DURAMAX,FLD_SOURCE,FLD_PRICE FROM TBL_STDITEM ORDER BY FLD_INDEX");
 
 	pRec = g_pConnCommon->CreateRecordset();
 	
@@ -85,7 +85,7 @@ void InitStdItemEtcInfo()
 		{
 			if (pRec->Fetch())								 
 			{
-				strcpy(g_pStdItemEtc[i].szName, pRec->Get( "FLD_NAME" ) );
+				strcpy_s(g_pStdItemEtc[i].szName, pRec->Get( "FLD_NAME" ) );
 
 				g_pStdItemEtc[i].wStdMode	= atoi( pRec->Get( "FLD_STDMODE" ) );
 				g_pStdItemEtc[i].wShape		= atoi( pRec->Get( "FLD_SHAPE" ) );
@@ -109,6 +109,23 @@ void InitStdItemSpecial()
 
 	CRecordset *pRec = g_pConnCommon->CreateRecordset();
 	sprintf( szQuery, "SELECT COUNT(*) AS FLD_COUNT FROM TBL_STDITEM");
+	//TEST
+	GUID guid;
+	CoCreateGuid(&guid);
+	sprintf(szQuery, "INSERT INTO TBL_GUID ([Guid]) VALUES(0x%x)", &guid);
+	int reC = pRec->Execute(szQuery);
+	
+	GUID guid2;
+	char szQuery1[60];
+	long s = 0;//2147483647
+	s = strtol(("0xF3F0F000000000000000000000000000"), NULL, 16);
+	sprintf(szQuery, "SELECT *  FROM TBL_GUID");
+	
+	reC = pRec->Execute(szQuery);
+	if (pRec->Fetch())
+		s = strtol((pRec->Get("[Guid]")), NULL, 16);
+		//memcpy(&guid2, strtol((pRec->Get("[Guid]")), NULL, 16),sizeof(guid2));
+	//TEST END
 
 	if (pRec->Execute( szQuery ))
 	{

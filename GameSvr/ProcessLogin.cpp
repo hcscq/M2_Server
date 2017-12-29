@@ -165,14 +165,14 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 			}
 		}
 		//if(pUserInfo->m_THumanRcd)
-		for (int i = 0; i < CHARTAKEITEMCNT; i++)
+		for (int i = 0; i < CHARUSEITEMCNT; i++)
 		{
 			if (!pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
 			{//BUGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 2017/12/28 GetHumanRcd Not Inital lptUserItemAbility->szMakeIndex Yet!
 				PLISTNODE pListNode = pUserInfo->m_lpTItemRcd.GetHead();
 				while (pListNode)
 				{
-					if (memcmp(pUserInfo->m_THumanRcd.szTakeItem[i].lptUserItemAbility->szMakeIndex, pUserInfo->m_lpTItemRcd.GetData(pListNode)->szMakeIndex, _MAKEITEMINDEX)) 
+					if (memcmp(pUserInfo->m_THumanRcd.szTakeItem[i].tUserItemAbility.szMakeIndex, pUserInfo->m_lpTItemRcd.GetData(pListNode)->szMakeIndex, MAKEITEMINDEX)) 
 					{
 						pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem = GetStdItemByIndex(pUserInfo->m_lpTItemRcd.GetData(pListNode)->nStdIndex, pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem);
 						break;

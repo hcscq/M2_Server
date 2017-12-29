@@ -116,28 +116,30 @@ void GetHumanMagicRcd(char *szName, CWHList<_LPTHUMANMAGICRCD>	*pxUserMagicRcdLi
 	GetDBManager()->DestroyRecordset( pRec );
 }
 
-void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcdList, CWHList<_LPTUSERGENITEMRCD>	*pxUserGenItemRcdList)
+void GetHumanItemRcd(const _LPTHUMANRCD lptHumanRcd, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcdList, CWHList<_LPTUSERGENITEMRCD>	*pxUserGenItemRcdList)
 {
 	char szQuery[128];
 
-	sprintf(szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE FLD_OWNER='%s' ", szGuid);
+	sprintf(szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE FLD_OWNER='%s' ", lptHumanRcd->szCharGuid);
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
 	_LPTUSERGENITEMRCD pItemRcd;
 	_LPTUSERITEMRCD	   pItem;
+	BYTE			   btStdType;
 
 	if (pRec->Execute(szQuery))
 	{
 		while (pRec->Fetch())
 		{
-			if (pRec->Get("FLD_TYPE")[0]=='G')
+			btStdType = atoi(pRec->Get("FLD_STDTYPE"));
+			if (btStdType =='G')
 			{
 				pItemRcd = new _TUSERGENITEMRCD;
-
+				//memset(pItemRcd, 0, sizeof(_TUSERGENITEMRCD));
 				if (pItemRcd)
 				{
-					pItemRcd->btType = atoi(pRec->Get("FLD_STDTYPE"));
-					memcpy(pItemRcd->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), 36);
+					pItemRcd->btType = btStdType;
+					memcpy(pItemRcd->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), MAKEITEMINDEX);
 					pItemRcd->nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
 					pItemRcd->wDura = atoi(pRec->Get("FLD_DURA"));
 					pItemRcd->wDuraMax = atoi(pRec->Get("FLD_DURAMAX"));
@@ -147,6 +149,7 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 			else
 			{
 				pItem = new _TUSERITEMRCD;
+				//memset(pItem, 0, sizeof(_TUSERITEMRCD));
 				/*
 				AC, MAC, DC, MC, SC, Accuracy,
 				Agility, HP, MP, Strong, MagicResist, PoisonResist,
@@ -172,10 +175,9 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 
 				public Awake Awake = new Awake();
 				*/
-				pItem->btType = atoi(pRec->Get("FLD_STDTYPE"));
+				pItem->btType = btStdType;
 
-				memcpy(pItem->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), 36);
-				pItem->szMakeIndex[36] = 0;
+				memcpy(pItem->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), MAKEITEMINDEX);
 
 				pItem->nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
 				pItem->wDura = atoi(pRec->Get("FLD_DURA"));
@@ -204,15 +206,23 @@ void GetHumanItemRcd(const char *szGuid, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcd
 				pItem->btValue[20] = atoi(pRec->Get("FLD_RefineAdded"));
 				/*FLD_DuraChanged|FLD_Identified|FLD_Cursed|FLD_WeddingRing*/
 				pItem->btValue[21] = atoi(pRec->Get("FLD_Switchs"));
-				memcpy(pItem->szBoundGuid, pRec->Get("FLD_SoulBoundGuid"), 36);
+				memcpy(pItem->szBoundGuid, pRec->Get("FLD_SoulBoundGuid"), MAKEITEMINDEX);
 
 				pItem->wCount = atoi(pRec->Get("FLD_COUNT"));
 
 				ZeroMemory(pItem->szPrefixName, sizeof(pItem->szPrefixName));
-				memcpy(pItem->szPrefixName, pRec->Get("FLD_PREFIXNAME"), 20);
+				memcpy(pItem->szPrefixName, pRec->Get("FLD_PREFIXNAME"), sizeof(pItem->szPrefixName));
 
 				pItem->sbtValue[0] = atoi(pRec->Get("FLD_AttackSpeed"));
 				pItem->sbtValue[1] = atoi(pRec->Get("FLD_Luck"));
+
+				for (int i = 0; i < CHARUSEITEMCNT; i++)
+				{
+					if (!memcmp(lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex, pItem->szMakeIndex, MAKEITEMINDEX)) {
+						memcpy(&lptHumanRcd->szTakeItem[i].tUserItemAbility, pItem, sizeof(_TUSEITEM));
+						delete pItem;
+					}
+				}
 
 				pxUserItemRcdList->AddNewNode(pItem);
 			}
@@ -262,6 +272,21 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 		lptHumanRcd->szHair		= atoi( pRec->Get( "FLD_HAIR" ) );
 
 		lptHumanRcd->fIsAdmin = (BYTE)*pRec->Get("FLD_ISADMIN");
+		
+		memcpy(&lptHumanRcd->szTakeItem[U_DRESS].tUserItemAbility.szMakeIndex, pRec->Get("FLD_DRESS_ID"),sizeof(_TUSEITEM));
+		memcpy(&lptHumanRcd->szTakeItem[U_WEAPON].tUserItemAbility.szMakeIndex, pRec->Get("FLD_WEAPON_ID"), sizeof(_TUSEITEM));
+		memcpy(&lptHumanRcd->szTakeItem[U_RIGHTHAND].tUserItemAbility.szMakeIndex, pRec->Get("FLD_RIGHTHAND_ID"), sizeof(_TUSEITEM));
+		memcpy(&lptHumanRcd->szTakeItem[U_NECKLACE].tUserItemAbility.szMakeIndex, pRec->Get("FLD_NECKLACE_ID"), sizeof(_TUSEITEM));
+		memcpy(&lptHumanRcd->szTakeItem[U_HELMET].tUserItemAbility.szMakeIndex, pRec->Get("FLD_HELMET_ID"), sizeof(_TUSEITEM));
+		memcpy(&lptHumanRcd->szTakeItem[U_ARMRINGL].tUserItemAbility.szMakeIndex, pRec->Get("FLD_ARMRINGL_ID"), sizeof(_TUSEITEM));
+		memcpy(&lptHumanRcd->szTakeItem[U_ARMRINGR].tUserItemAbility.szMakeIndex, pRec->Get("FLD_ARMRINGR_ID"), sizeof(_TUSEITEM));
+		memcpy(&lptHumanRcd->szTakeItem[U_RINGL].tUserItemAbility.szMakeIndex, pRec->Get("FLD_RINGL_ID"), sizeof(_TUSEITEM));
+		memcpy(&lptHumanRcd->szTakeItem[U_RINGR].tUserItemAbility.szMakeIndex, pRec->Get("FLD_RINGR_ID"), sizeof(_TUSEITEM));
+		for (int i = 0; i < CHARUSEITEMCNT; i++) 
+		{
+			if (strlen(lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex) < MAKEITEMINDEX)
+				lptHumanRcd->szTakeItem[i].btIsEmpty = TRUE;
+		}
 	}
 	else
 	{
@@ -295,7 +320,7 @@ void GetLoadHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, int nR
 	memset(&tHumanRcd, 0, sizeof(_THUMANRCD));
 	if (GetHumanRcd(lpLoadHuman->szCharName, &tHumanRcd, lpLoadHuman))		// Fetch Character Data 
 	{
-		GetHumanItemRcd(lpLoadHuman->szCharGuid, &xUserItemRcdList, &xUserGenItemRcdList);		// Fetch Item Data---2017/12/25 Load General Item Data At The Same Time.
+		GetHumanItemRcd(&tHumanRcd, &xUserItemRcdList, &xUserGenItemRcdList);		// Fetch Item Data---2017/12/25 Load General Item Data At The Same Time.
 		GetHumanMagicRcd(lpLoadHuman->szCharName, &xUserMagicRcdList);		// Fetch Magic Data
 		//GetHumanGenItemRcd(lpLoadHuman->szCharName, &xUserGenItemRcdList);	// Fetch General Item Data. Done¡ü
 		
@@ -464,7 +489,7 @@ void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int 
 			//				"( '%s', '%s', '%s' )", pszUserID, pszCharName, tItemRcd.szItem);
 
 			sprintf(szTmp, "INSERT TBL_CHARACTER_ITEM (FLD_LOGINID, FLD_CHARINDEX,FLD_STDTYPE,FLD_MAKEDATE ,FLD_MAKEINDEX,FLD_STDINDEX,FLD_DURA,FLD_DURAMAX,FLD_Count) VALUES "
-							"( '%s', %d, '%1.1s','%6.6s','%s',%d,%d,%d,%d )", pszUserID,charIndex, tItemRcd.btType,"", tItemRcd.szMakeIndex, tItemRcd.nStdIndex, tItemRcd.wDura, tItemRcd.wDuraMax, 1);
+							"( '%s', %d, '%1.1s','%6.6s','%s',%d,%d,%d,%d )", pszUserID,charIndex, tItemRcd.btType, g_szYesterDay, tItemRcd.szMakeIndex, tItemRcd.nStdIndex, tItemRcd.wDura, tItemRcd.wDuraMax, 1);
 
 			if ( !pRec->Execute( szTmp ) || pRec->GetRowCount() <= 0 )
 				InsertLogMsg(_T("SaveGenItemRcd Ê§°Ü."));
@@ -485,7 +510,7 @@ BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMAN
 	for (int i = 0; i < 10; i++) {
 		/*0:STDType,1-6:MakeDate*/
 		if (!lptHumanRcd->szTakeItem[i].btIsEmpty)
-			sprintf(szEquip[i], "'%s'", &lptHumanRcd->szTakeItem[i].lptUserItemAbility->szMakeIndex);
+			sprintf(szEquip[i], "'%s'", &lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex);
 		else
 			memcpy(szEquip[i], "NULL", sizeof("NULL"));
 	}
@@ -517,7 +542,7 @@ BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMAN
 
 BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEITEMRCD lpMakeItemRcd, int nRecog)
 {
-	static char  g_szYesterDay[24];
+	
 	//static UINT  g_nItemIndexCnt = 0;
 
 	CRecordset *pRec;
@@ -550,7 +575,7 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 	char szUserID[32];
 	char szCharName[32];
 	byte btCharIndex;
-	char szGuid[37];
+	char szGuid[DEFGUIDLEN];
 	if (lpHumanLoad)
 	{
 		strcpy(szUserID, lpHumanLoad->szUserID);
@@ -607,7 +632,7 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 						lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
 						lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], lpMakeItemRcd->btValue[14], lpMakeItemRcd->btValue[15],
 						lpMakeItemRcd->btValue[16], lpMakeItemRcd->btValue[17], lpMakeItemRcd->btValue[18], lpMakeItemRcd->btValue[19], 
-						lpMakeItemRcd->btValue[20], lpMakeItemRcd->btValue[21],"", szGuid, 1,szGuid);
+						lpMakeItemRcd->btValue[20], lpMakeItemRcd->btValue[21],"", szGuid, 1,szGuid);//_ITEM_ACTION_PICKUP  1
 	
 	pRec = GetDBManager()->CreateRecordset();
 	if ( !pRec->Execute( szQuery ) || pRec->GetRowCount() <= 0 )

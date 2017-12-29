@@ -130,7 +130,7 @@ public:
 	void							Operate();
 
 	_LPTUSERITEMRCD					GetItem(char *pszMakeIndex);
-	__inline _LPTUSERITEMRCD		GetUseItem(int nPosition) { return GetItem(m_THumanRcd.szTakeItem[nPosition].lptUserItemAbility->szMakeIndex); }
+	__inline _LPTUSERITEMRCD		GetUseItem(int nPosition) { return GetItem(m_THumanRcd.szTakeItem[nPosition].tUserItemAbility.szMakeIndex); }
 	
 	_LPTUSERGENITEMRCD				GetUseGenItem(char *pszMakeItemID);
 	void							RemoveGenItem(_LPTUSERGENITEMRCD lptGenItemRcd);
@@ -175,10 +175,10 @@ public:
 	void							ProcessUserMessage(char *pszPacket);
 
 	__inline	_LPTUSERITEMRCD		GetWeapon() { return GetUseItem(U_WEAPON); }
-	__inline	_LPTUSERITEMRCD		SetWeapon(char *pszMakeIndex) { memmove(&m_THumanRcd.szTakeItem[U_WEAPON], pszMakeIndex, _MAKEITEMINDEX); }
-	__inline	void				SetEmptyWeapon() { ZeroMemory(&m_THumanRcd.szTakeItem[U_WEAPON], _MAKEITEMINDEX);/* m_THumanRcd.szTakeItem[U_WEAPON] = '0';*/ }
-	__inline	void				SetEmptyDress() { ZeroMemory(&m_THumanRcd.szTakeItem[U_DRESS], _MAKEITEMINDEX); /*m_THumanRcd.szTakeItem[U_DRESS] = '0';*/ }
-	__inline	void				SetEmptyUseItem(int i) { ZeroMemory(&m_THumanRcd.szTakeItem[i], _MAKEITEMINDEX); /*m_THumanRcd.szTakeItem[i][0] = '0';*/ }
+	__inline	_LPTUSERITEMRCD		SetWeapon(char *pszMakeIndex) { memmove(&m_THumanRcd.szTakeItem[U_WEAPON], pszMakeIndex, MAKEITEMINDEX); }
+	__inline	void				SetEmptyWeapon() { ZeroMemory(&m_THumanRcd.szTakeItem[U_WEAPON], MAKEITEMINDEX);/* m_THumanRcd.szTakeItem[U_WEAPON] = '0';*/ }
+	__inline	void				SetEmptyDress() { ZeroMemory(&m_THumanRcd.szTakeItem[U_DRESS], MAKEITEMINDEX); /*m_THumanRcd.szTakeItem[U_DRESS] = '0';*/ }
+	__inline	void				SetEmptyUseItem(int i) { ZeroMemory(&m_THumanRcd.szTakeItem[i], MAKEITEMINDEX); /*m_THumanRcd.szTakeItem[i][0] = '0';*/ }
 	__inline	_LPTUSERITEMRCD		GetDress() { return GetUseItem(U_DRESS); }
 	__inline	_LPTUSERITEMRCD		GetAccessory(int nPosition) { return GetUseItem(nPosition); }
 	__inline	_LPTUSERGENITEMRCD	GetRightHand() { return GetUseGenItem((char *)&m_THumanRcd.szTakeItem[U_RIGHTHAND]); }

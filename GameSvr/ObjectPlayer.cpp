@@ -311,7 +311,7 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 		else
 			ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
 
-		memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX);
+		memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
 
 		tClientItemRcd.wDura = lpTItemRcd->wDura;
 		tClientItemRcd.wDuraMax = lpTItemRcd->wDuraMax;
@@ -324,7 +324,7 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetStandardItem((_LPTCLIENTITEMRCD)&tClientGenItemRcd);
 		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetUpgradeStdItem((_LPTCLIENTITEMRCD)&tClientGenItemRcd, lpTItemRcd);
 
-		memcpy(tClientGenItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX);
+		memcpy(tClientGenItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
 
 		tClientGenItemRcd.wDura = lpTItemRcd->wDura;
 
@@ -884,7 +884,7 @@ void CPlayerObject::RecalcAbilitys()
 
 	for (int i = U_DRESS; i <= U_RINGR; i++)
 	{
-		if (lpUserItemRcd = m_pUserInfo->GetAccessory(i))
+		if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty&&(lpUserItemRcd = m_pUserInfo->GetAccessory(i)))
 		{
 			GetStdItemByIndex(lpUserItemRcd->nStdIndex, lpStdItem);
 			lpStdItem->ApplyItemParameters(&m_AddAbility);
@@ -1034,7 +1034,7 @@ void CPlayerObject::SendBagItems()
 				lpStdItem->GetStandardItem(&tClientItemRcd);
 				lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lptUserItemRcd);
 
-				memcpy(tClientItemRcd.szMakeIndex, lptUserItemRcd->szMakeIndex, _MAKEITEMINDEX);
+				memcpy(tClientItemRcd.szMakeIndex, lptUserItemRcd->szMakeIndex, MAKEITEMINDEX);
 				
 				tClientItemRcd.wDura		= lptUserItemRcd->wDura;
 				tClientItemRcd.wDuraMax		= lptUserItemRcd->wDuraMax;
@@ -1068,7 +1068,7 @@ void CPlayerObject::SendBagItems()
 
 			if (lptGenItemRcd)
 			{
-				memcpy(tClientGenItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, _MAKEITEMINDEX);		
+				memcpy(tClientGenItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, MAKEITEMINDEX);		
 				
 				tClientGenItemRcd.wDura		= lptGenItemRcd->wDura;
 				tClientGenItemRcd.wDuraMax  = lptGenItemRcd->wDuraMax;
@@ -1180,6 +1180,13 @@ void CPlayerObject::Initialize()
 		m_pMap->AddNewObject(m_nCurrX, m_nCurrY, OS_MOVINGOBJECT, this);
 
 		AddRefMsg(RM_TURN, m_nDirection, m_nCurrX, m_nCurrY, 0, NULL);
+
+		for (int i = 0; i < CHARUSEITEMCNT; i++)
+		{
+			if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
+				GetStdItemByIndex(m_pUserInfo->m_THumanRcd.szTakeItem[i].tUserItemAbility.nStdIndex,
+					m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem);
+		}
 
 		m_Ability.Level		= m_pUserInfo->m_THumanRcd.szLevel;
 		m_Ability.Exp		= m_pUserInfo->m_THumanRcd.nExp;
@@ -1403,9 +1410,9 @@ void CPlayerObject::ServerGetTakeOnGenItem(WORD wWhere, char *pszItemIndex)
 		{
 			lpTGenItemRcd = m_pUserInfo->m_lpTGenItemRcd.GetData(pListNode);
 		
-			if (memcmp(pszItemIndex, lpTGenItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
+			if (memcmp(pszItemIndex, lpTGenItemRcd->szMakeIndex, MAKEITEMINDEX) == 0)
 			{
-				memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].lptUserItemAbility->szMakeIndex, lpTGenItemRcd->szMakeIndex, _MAKEITEMINDEX);
+				memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, lpTGenItemRcd->szMakeIndex, MAKEITEMINDEX);
 
 				RecalcAbilitys();
 
@@ -1440,7 +1447,7 @@ void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, char *pszItemIndex)
 	{
 		if (CheckTakeOnItem(wWhere, lpTItemRcd))
 		{
-			memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].lptUserItemAbility->szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX);
+			memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
 
 			switch (wWhere)
 			{
@@ -1490,10 +1497,10 @@ void CPlayerObject::ServerGetTakeOffItem(WORD wWhere, char *pszItemIndex)
 //		{
 //			lpTItemRcd = m_pUserInfo->m_lpTItemRcd.GetData(pListNode);
 		
-	if (memcmp(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].lptUserItemAbility->szMakeIndex, pszItemIndex, _MAKEITEMINDEX) == 0)
+	if (memcmp(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, pszItemIndex, MAKEITEMINDEX) == 0)
 	{
-		ZeroMemory(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].lptUserItemAbility->szMakeIndex, _MAKEITEMINDEX);
-		memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].lptUserItemAbility->szMakeIndex, "0", 2);
+		ZeroMemory(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, MAKEITEMINDEX);
+		memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, "0", 2);
 
 		switch (wWhere)
 		{
@@ -3024,7 +3031,7 @@ void CPlayerObject::Operate()
 						memcpy(szUncodeMsg, m_pUserInfo->m_THumanRcd.szCharGuid,nPos);
 						_TCLIENTITEMRCD tClientItem;
 						memset(&tClientItem,0,sizeof(_TCLIENTITEMRCD));
-						for (int i=0;i<CHARTAKEITEMCNT;i++) 
+						for (int i=0;i<CHARUSEITEMCNT;i++) 
 						{
 							szUncodeMsg[nPos++] = m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty;
 							if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
@@ -3038,7 +3045,6 @@ void CPlayerObject::Operate()
 						}
 						//nPos += sizeof(m_pUserInfo->m_THumanRcd.szTakeItem);
 						nPos = fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
-
 						
 						//nPos = fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, sizeof(m_pUserInfo->m_THumanRcd.szCharGuid), sizeof(szEncodeMsg));
 						//nPos += fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szTakeItem, &szEncodeMsg[nPos], sizeof(m_pUserInfo->m_THumanRcd.szTakeItem), sizeof(szEncodeMsg));

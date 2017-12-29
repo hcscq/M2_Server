@@ -4,12 +4,13 @@
 
 #define DEFBLOCKSIZE			22
 #define DEFGUIDLEN				36
-#define HUMANRCDBLOCKSIZE		1959//256
+#define HUMANRCDBLOCKSIZE		1879//256
 #define HUMLOADRDCVLOCKSIZE		123
 #define ITEMRCDBLOCKSIZE		180//70			// _TUSEITEM
 #define MAGICRCDBLOCKSIZE		10
 #define GENITEMRCDBLOCKSIZE		74//18
-#define CHARTAKEITEMCNT			10
+#define CHARUSEITEMCNT			10
+#define MAKEITEMINDEX			36//12
 /*MAP*/
 #define _Mir2Map				0
 #define _Mir3Map				1
@@ -383,7 +384,7 @@ typedef struct tag_TLOADMUHAN
 	char		szCharName[20];
 	char		szUserAddr[15];
 	byte		btCharIndex;
-	char		szCharGuid[36];
+	char		szCharGuid[DEFGUIDLEN];
 	int			nCertification;
 } _TLOADHUMAN, *_LPTLOADHUMAN;
 
@@ -402,8 +403,8 @@ typedef struct tag_TLOADMUHAN
 
 typedef struct tag_USERGENITEMRCD
 {
+	char		szMakeIndex[MAKEITEMINDEX];// EASY TO SKIP MAKEINDEX
 	BYTE		btType;
-	char		szMakeIndex[37];
 	WORD		nStdIndex;
 	WORD		wDura;
 	WORD		wDuraMax;
@@ -413,7 +414,7 @@ typedef struct tag_TUSERITEMRCD:tag_USERGENITEMRCD
 {
 	WORD		wCount;
 	BYTE		btValue[22];
-	char		szBoundGuid[36];
+	char		szBoundGuid[DEFGUIDLEN];
 	char		sbtValue[2];
 	char		szPrefixName[20];
 } _TUSERITEMRCD, *_LPTUSERITEMRCD;
@@ -431,7 +432,7 @@ typedef struct tag_TMAKEITEMRCD
 typedef struct tag_TUSEITEM
 {
 	BYTE				btIsEmpty;
-	_LPTUSERITEMRCD		lptUserItemAbility;
+	_TUSERITEMRCD		tUserItemAbility;
 	CStdItemSpecial		*lptStdItem;
 } _TUSEITEM, *_LPTUSEITEM;
 #pragma endregion
@@ -461,7 +462,7 @@ typedef struct tag_TCLIENTGENITEMRCD
 	DWORD		dwPrice;
 
 	//append
-	char		szMakeIndex[37];
+	char		szMakeIndex[MAKEITEMINDEX];
 	WORD		wDura;
 	WORD		wCount;
 
@@ -516,12 +517,12 @@ typedef struct tag_THUMANRCD
 {
 	char		szUserID[16];
 	char		szCharName[20];
-	char		szCharGuid[36];
+	char		szCharGuid[MAKEITEMINDEX];
 
 	BYTE		btIndex;
 	BYTE		btJob;
 	BYTE		btGender;
-	_TUSEITEM	szTakeItem[10];
+	_TUSEITEM	szTakeItem[CHARUSEITEMCNT];
 	BYTE		szLevel;
 	BYTE		szHair;
 	BYTE		nDirection;

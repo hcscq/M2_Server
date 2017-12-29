@@ -1,5 +1,5 @@
 
-#define _MAKEITEMINDEX	36//12
+
 
 class CMonItem
 {
