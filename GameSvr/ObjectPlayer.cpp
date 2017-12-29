@@ -1044,7 +1044,7 @@ void CPlayerObject::SendBagItems()
 				else
 					ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TUSEITEM), sizeof(szEncodeMsg) - nPos);
+				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg) - nPos);
 
 				szEncodeMsg[nPos++] = '/';
 			}

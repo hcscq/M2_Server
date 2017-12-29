@@ -110,20 +110,29 @@ void InitStdItemSpecial()
 	CRecordset *pRec = g_pConnCommon->CreateRecordset();
 	sprintf( szQuery, "SELECT COUNT(*) AS FLD_COUNT FROM TBL_STDITEM");
 	//TEST
-	GUID guid;
-	CoCreateGuid(&guid);
-	sprintf(szQuery, "INSERT INTO TBL_GUID ([Guid]) VALUES(0x%x)", &guid);
-	int reC = pRec->Execute(szQuery);
+
+
+	//GUID guid;
+	//char szQuery2[102];
+	////CoCreateGuid(&guid);
+	//UINT64 K= _atoi64("A50B8BC0-F0BC-4411-8E9C-3B784000F46E");
+	//memcpy(&guid, &K, sizeof(guid));
+	//memcpy(&K, &guid, sizeof(guid));//"PRIu64"
+	//
+	//sprintf(szQuery, "INSERT INTO TBL_GUID ([Guid]) VALUES(0x%x)", &guid);
+	//int reC = pRec->Execute(szQuery);
+	//
+	//GUID guid2;
+	//char szQuery1[60];
+	//memcpy(&guid2, &K, sizeof(guid));
+	//long s = 0;//2147483647
+	//s = strtol(("0xF3F0F000000000000000000000000000"), NULL, 16);
+	//sprintf(szQuery, "SELECT *  FROM TBL_GUID");
+	//
+	//reC = pRec->Execute(szQuery);
+	//if (pRec->Fetch())
+	//	s = strtol((pRec->Get("[Guid]")), NULL, 16);
 	
-	GUID guid2;
-	char szQuery1[60];
-	long s = 0;//2147483647
-	s = strtol(("0xF3F0F000000000000000000000000000"), NULL, 16);
-	sprintf(szQuery, "SELECT *  FROM TBL_GUID");
-	
-	reC = pRec->Execute(szQuery);
-	if (pRec->Fetch())
-		s = strtol((pRec->Get("[Guid]")), NULL, 16);
 		//memcpy(&guid2, strtol((pRec->Get("[Guid]")), NULL, 16),sizeof(guid2));
 	//TEST END
 
@@ -139,7 +148,6 @@ void InitStdItemSpecial()
 
 	g_pStdItemSpecial = new CStdItemSpecial[g_nStdItemSpecial];
 
-	//memset(g_pStdItemSpecial,0, g_nStdItemSpecial*sizeof(CStdItemSpecial));
 	sprintf( szQuery, "SELECT * FROM TBL_STDITEM ORDER BY FLD_INDEX");
 
 	pRec = g_pConnCommon->CreateRecordset();
