@@ -206,12 +206,12 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 									lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 								}
 
-								memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, 12);
+								memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
 								
 								tClientItemRcd.wDura		= lpTItemRcd->wDura;
 								tClientItemRcd.wDuraMax		= lpTItemRcd->wDuraMax;
 
-								nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TUSEITEM), sizeof(szEncodeMsg));
+								nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
 								szEncodeMsg[nPos] = '\0';
 
 								pUserInfo->m_pxPlayerObject->SendSocket(&SendDefMsg, szEncodeMsg);

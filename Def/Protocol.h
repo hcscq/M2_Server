@@ -408,11 +408,11 @@ typedef struct tag_USERGENITEMRCD
 	WORD		nStdIndex;
 	WORD		wDura;
 	WORD		wDuraMax;
+	WORD		wCount;
 } _TUSERGENITEMRCD, *_LPTUSERGENITEMRCD;
 
 typedef struct tag_TUSERITEMRCD:tag_USERGENITEMRCD
 {
-	WORD		wCount;
 	BYTE		btValue[22];
 	char		szBoundGuid[DEFGUIDLEN];
 	char		sbtValue[2];
@@ -469,6 +469,14 @@ typedef struct tag_TCLIENTGENITEMRCD
 
 } _TCLIENTGENITEMRCD, *_LPTCLIENTGENITEMRCD;
 
+typedef struct tag_TCUSERITEMRCD 
+{
+	BYTE		btValue[22];
+	char		szBoundGuid[DEFGUIDLEN];
+	char		sbtValue[2];
+	char		szPrefixName[20];
+} _TCUSERITEMRCD, *_LPTCUSERITEMRCD;
+
 typedef struct tag_TCLIENTITEMRCD :tag_TCLIENTGENITEMRCD//tag_TUSERITEMRCD
 {
 	WORD		HP;
@@ -503,15 +511,11 @@ typedef struct tag_TCLIENTITEMRCD :tag_TCLIENTGENITEMRCD//tag_TUSERITEMRCD
 
 	DWORD		dwStock;
 	DWORD		dwFeature;
-	char		szPrefixName[20];
-	_TUSERITEMRCD		tUserItemAbility;
+	//char		szPrefixName[20];
+	_TCUSERITEMRCD		tCUserItemAbility;
 } _TCLIENTITEMRCD, *_LPTCLIENTITEMRCD;
 
 #pragma endregion
-//typedef struct tag_USEITEMRCD:tag_TUSEITEM 
-//{
-//	BYTE		  btIsEmpty;
-//}_TUSEITEMRCD,*_LPTUSEITEMRCD;
 
 typedef struct tag_THUMANRCD
 {

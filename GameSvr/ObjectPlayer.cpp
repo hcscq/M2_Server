@@ -306,10 +306,10 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 		lpStdItem->GetStandardItem(&tClientItemRcd);
 		lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 
-		if (strlen(lpTItemRcd->szPrefixName))
-			strcpy(tClientItemRcd.szPrefixName, lpTItemRcd->szPrefixName);
-		else
-			ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
+		//if (strlen(lpTItemRcd->szPrefixName))
+		//	strcpy(tClientItemRcd.szPrefixName, lpTItemRcd->szPrefixName);
+		//else
+		//	ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
 
 		memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
 
@@ -1039,10 +1039,10 @@ void CPlayerObject::SendBagItems()
 				tClientItemRcd.wDura		= lptUserItemRcd->wDura;
 				tClientItemRcd.wDuraMax		= lptUserItemRcd->wDuraMax;
 
-				if (strlen(lptUserItemRcd->szPrefixName))
-					strcpy(tClientItemRcd.szPrefixName, lptUserItemRcd->szPrefixName);
-				else
-					ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
+				//if (strlen(lptUserItemRcd->szPrefixName))
+				//	strcpy(tClientItemRcd.szPrefixName, lptUserItemRcd->szPrefixName);
+				//else
+				//	ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
 
 				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg) - nPos);
 
@@ -3030,24 +3030,24 @@ void CPlayerObject::Operate()
 						nPos = DEFGUIDLEN;
 						memcpy(szUncodeMsg, m_pUserInfo->m_THumanRcd.szCharGuid,nPos);
 						_TCLIENTITEMRCD tClientItem;
+						_LPTUSEITEM		lptUseItem;
 						memset(&tClientItem,0,sizeof(_TCLIENTITEMRCD));
+						
 						for (int i=0;i<CHARUSEITEMCNT;i++) 
 						{
-							szUncodeMsg[nPos++] = m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty;
-							if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
-							{
-								m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetStandardItem(&tClientItem);
-								memcpy(&tClientItem, &m_pUserInfo->m_THumanRcd.szTakeItem[i],sizeof(tag_TUSERITEMRCD));
-								//m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetUpgradeStdItem(&tClientItem, &m_pUserInfo->m_THumanRcd.szTakeItem[i]);
+							lptUseItem = &m_pUserInfo->m_THumanRcd.szTakeItem[i];
+							szUncodeMsg[nPos++] = lptUseItem->btIsEmpty;
+							if (!lptUseItem->btIsEmpty)
+							{							
+								lptUseItem->lptStdItem->GetStandardItem(&tClientItem);
+								lptUseItem->lptStdItem->GetUpgradeStdItem(&tClientItem, &lptUseItem->tUserItemAbility);
+
 								memcpy(&szUncodeMsg[nPos], &tClientItem, sizeof(_TCLIENTITEMRCD));
 								nPos += sizeof(_TCLIENTITEMRCD);
 							}
 						}
-						//nPos += sizeof(m_pUserInfo->m_THumanRcd.szTakeItem);
 						nPos = fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
 						
-						//nPos = fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, sizeof(m_pUserInfo->m_THumanRcd.szCharGuid), sizeof(szEncodeMsg));
-						//nPos += fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szTakeItem, &szEncodeMsg[nPos], sizeof(m_pUserInfo->m_THumanRcd.szTakeItem), sizeof(szEncodeMsg));
 						szEncodeMsg[nPos] = '\0';
 						SendSocket(&DefMsg, szEncodeMsg);
 						//delete tClientItem;

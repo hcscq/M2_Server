@@ -90,7 +90,7 @@ public:
 
 	DWORD		dwStock;
 	DWORD		dwFeature;
-	char		szPrefixName[20];
+	//char		szPrefixName[20];
 public:
 	CStdItemSpecial();
 
