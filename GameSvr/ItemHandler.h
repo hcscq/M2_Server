@@ -31,7 +31,7 @@ public:
 	DWORD		wRSource;		// Val2
 
 	DWORD		dwPrice;
-
+	DWORD		dwStock;
 public:
 	int			GetUpgrade(int nCount, int nRandom);
 
@@ -88,7 +88,6 @@ public:
 	WORD		wNeed;
 	WORD		wNeedLevel;
 
-	DWORD		dwStock;
 	DWORD		dwFeature;
 	//char		szPrefixName[20];
 public:

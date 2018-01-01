@@ -313,8 +313,8 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 
 		memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
 
-		tClientItemRcd.wDura = lpTItemRcd->wDura;
-		tClientItemRcd.wDuraMax = lpTItemRcd->wDuraMax;
+		tClientItemRcd.wCurDura = lpTItemRcd->wDura;
+		tClientItemRcd.wCurDuraMax = lpTItemRcd->wDuraMax;
 
 		nPos = fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
 	}
@@ -326,7 +326,7 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 
 		memcpy(tClientGenItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
 
-		tClientGenItemRcd.wDura = lpTItemRcd->wDura;
+		tClientGenItemRcd.wCurDura = lpTItemRcd->wDura;
 
 		nPos = fnEncode6BitBufA((unsigned char *)&tClientGenItemRcd, szEncodeMsg, sizeof(_TCLIENTGENITEMRCD), sizeof(szEncodeMsg));
 	}
@@ -1032,14 +1032,16 @@ void CPlayerObject::SendBagItems()
 
 			if (lptUserItemRcd)
 			{
+				memset(&tClientItemRcd, 0, sizeof(_TCLIENTITEMRCD));
 				lpStdItem=GetStdItemByIndex(lptUserItemRcd->nStdIndex);
 				lpStdItem->GetStandardItem(&tClientItemRcd);
 				lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lptUserItemRcd);
 
 				memcpy(tClientItemRcd.szMakeIndex, lptUserItemRcd->szMakeIndex, MAKEITEMINDEX);
 				
-				tClientItemRcd.wDura		= lptUserItemRcd->wDura;
-				tClientItemRcd.wDuraMax		= lptUserItemRcd->wDuraMax;
+				tClientItemRcd.wCurDura			= lptUserItemRcd->wDura;
+				tClientItemRcd.wCurDuraMax		= lptUserItemRcd->wDuraMax;
+				tClientItemRcd.wCount			= lptUserItemRcd->wCount;
 
 				memcpy(&szUncodeMsg[nPos], &tClientItemRcd, sizeof(_TCLIENTITEMRCD));
 				nPos += sizeof(_TCLIENTITEMRCD);
@@ -1069,8 +1071,8 @@ void CPlayerObject::SendBagItems()
 			{
 				memcpy(tClientGenItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, MAKEITEMINDEX);		
 				
-				tClientGenItemRcd.wDura		= lptGenItemRcd->wDura;
-				tClientGenItemRcd.wDuraMax  = lptGenItemRcd->wDuraMax;
+				tClientGenItemRcd.wCurDura		= lptGenItemRcd->wDura;
+				tClientGenItemRcd.wCurDuraMax  = lptGenItemRcd->wDuraMax;
 
 				g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem((_LPTCLIENTITEMRCD)&tClientGenItemRcd);
 
@@ -1089,7 +1091,6 @@ void CPlayerObject::SendBagItems()
 	fnMakeDefMessage(&DefMsg, SM_BAGITEMS, (int)this, 0, 0, nCnt + nGenCnt, nPos);
 	szEncodeMsg[nPos] = '\0';
 	SendSocket(&DefMsg, szEncodeMsg);
-	int test = fnDecode6BitBufA((char *)szEncodeMsg, szUncodeMsg, sizeof(szEncodeMsg));
 }
 
 void CPlayerObject::RecalcLevelAbilitys()

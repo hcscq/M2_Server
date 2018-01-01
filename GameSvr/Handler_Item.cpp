@@ -39,7 +39,8 @@ void CStdItemSpecial::GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd)
 {
 	//_LPTCLIENTITEMRCD lpClientItemRcd = (_LPTCLIENTITEMRCD)lpClientItemRcd;
 	memcpy(lpClientItemRcd->szName, szName, memlen(szName));
-
+	lpClientItemRcd->Index			= Index;
+	lpClientItemRcd->dwStock		= dwStock;
 	lpClientItemRcd->btType			= btType;
 	lpClientItemRcd->wStdMode		= wStdMode;
 	lpClientItemRcd->wShape			= wShape;
@@ -57,11 +58,16 @@ void CStdItemSpecial::GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd)
 	lpClientItemRcd->AttackSpeed	= AttackSpeed;
 	lpClientItemRcd->Luck			= Luck;
 
-	lpClientItemRcd->wAC =MAKEWORD( wAC,wAC2);
-	lpClientItemRcd->wMAC = MAKEWORD(wMAC,wMAC2);
-	lpClientItemRcd->wDC = MAKEWORD(wDC, wDC2);
-	lpClientItemRcd->wMC = MAKEWORD(wMC, wMC2);
-	lpClientItemRcd->wSC = MAKEWORD(wSC, wSC2);
+	lpClientItemRcd->wAC			= wAC;
+	lpClientItemRcd->wAC2			= wAC2;
+	lpClientItemRcd->wMAC			= wMAC;
+	lpClientItemRcd->wMAC2			= wMAC2;
+	lpClientItemRcd->wDC			= wDC;
+	lpClientItemRcd->wDC2			= wDC2;
+	lpClientItemRcd->wMC			= wMC;
+	lpClientItemRcd->wMC2			= wMC2;
+	lpClientItemRcd->wSC			= wSC;
+	lpClientItemRcd->wSC2			= wSC2;
 }
 
 void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTUSERITEMRCD lpUserItemRcd)

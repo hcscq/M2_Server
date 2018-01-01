@@ -196,8 +196,8 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 
 								memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
 								
-								tClientItemRcd.wDura		= lpTItemRcd->wDura;
-								tClientItemRcd.wDuraMax		= lpTItemRcd->wDuraMax;
+								tClientItemRcd.wCurDura			= lpTItemRcd->wDura;
+								tClientItemRcd.wCurDuraMax		= lpTItemRcd->wDuraMax;
 
 								nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
 								szEncodeMsg[nPos] = '\0';
@@ -234,8 +234,8 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 
 								memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, 12);
 								
-								tClientItemRcd.wDura		= lpTItemRcd->wDura;
-								tClientItemRcd.wDuraMax		= lpTItemRcd->wDuraMax;
+								tClientItemRcd.wCurDura		= lpTItemRcd->wDura;
+								tClientItemRcd.wCurDuraMax		= lpTItemRcd->wDuraMax;
 
 								nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TUSEITEM), sizeof(szEncodeMsg));
 								szEncodeMsg[nPos] = '\0';

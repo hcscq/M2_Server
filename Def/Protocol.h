@@ -448,7 +448,8 @@ typedef struct tag_TCLIENTGENITEMRCD
 {
 	//append
 	char		szMakeIndex[MAKEITEMINDEX];
-	WORD		wDura;
+	WORD		wCurDura;
+	WORD		wCurDuraMax;
 	WORD		wCount;
 
 	//STD 
@@ -465,6 +466,7 @@ typedef struct tag_TCLIENTGENITEMRCD
 	DWORD		wRSource;		// Val2
 
 	DWORD		dwPrice;
+	DWORD		dwStock;		//MaxStock
 
 } _TCLIENTGENITEMRCD, *_LPTCLIENTGENITEMRCD;
 
@@ -508,7 +510,6 @@ typedef struct tag_TCLIENTITEMRCD :tag_TCLIENTGENITEMRCD//tag_TUSERITEMRCD
 	WORD		wNeed;
 	WORD		wNeedLevel;
 
-	DWORD		dwStock;
 	DWORD		dwFeature;
 	//char		szPrefixName[20];
 	_TCUSERITEMRCD		tCUserItemAbility;

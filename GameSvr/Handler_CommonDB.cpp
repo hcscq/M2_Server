@@ -162,7 +162,7 @@ void InitStdItemSpecial()
 				strcpy(g_pStdItemSpecial[i].szName, pRec->Get( "FLD_NAME" ) );
 
 				g_pStdItemSpecial[i].wStdMode		= (SHORT)atoi( pRec->Get( "FLD_STDMODE" ) );
-				g_pStdItemSpecial[i].btType			= (BYTE)atoi( pRec->Get( "FLD_TYPE" ) );
+				g_pStdItemSpecial[i].btType			= ( pRec->Get( "FLD_TYPE" )[0] );
 				g_pStdItemSpecial[i].Index			= (LONG)atoi(pRec->Get("FLD_Index"));
 				g_pStdItemSpecial[i].wShape			= (SHORT)atoi( pRec->Get( "FLD_SHAPE" ) );
 				g_pStdItemSpecial[i].wWeight		= (SHORT)atoi( pRec->Get( "FLD_WEIGHT" ) );

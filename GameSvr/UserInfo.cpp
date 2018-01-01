@@ -140,8 +140,8 @@ void CUserInfo::MakeGenItem(_LPTUSERGENITEMRCD lptGenItemRcd)
 		g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem((_LPTCLIENTITEMRCD)&tClientGenItemRcd);
 
 		memcpy(tClientGenItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, 12);
-		tClientGenItemRcd.wDura		= lptGenItemRcd->wDura;
-		tClientGenItemRcd.wDuraMax		= lptGenItemRcd->wDuraMax;
+		tClientGenItemRcd.wCurDura			= lptGenItemRcd->wDura;
+		tClientGenItemRcd.wCurDuraMax		= lptGenItemRcd->wDuraMax;
 
 		int nIdx = 	fnEncode6BitBufA((unsigned char *)&tClientGenItemRcd, szEncodeMsg, sizeof(_TCLIENTGENITEMRCD), sizeof(szEncodeMsg));
 		szEncodeMsg[nIdx] = '\0';
