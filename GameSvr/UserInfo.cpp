@@ -155,13 +155,13 @@ int	CUserInfo::GetDressFeature()
 	if (m_lpTItemRcd.GetCount()&& !m_THumanRcd.szTakeItem[U_DRESS].btIsEmpty)
 	{
 		PLISTNODE pListNode = m_lpTItemRcd.GetHead();
-		CStdItemSpecial* lpStdItem;
+		//CStdItemSpecial* lpStdItem;
 		while (pListNode)
 		{
 			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 			/*BECAUSE ADD ISEMPTY*/
 			if (memcmp(m_THumanRcd.szTakeItem[U_DRESS].tUserItemAbility.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX) == 0)
-				return GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem)->wShape;					
+				return GetStdItemByIndex(lpTItemRcd->nStdIndex)->wShape;					
 			pListNode = m_lpTItemRcd.GetNext(pListNode);
 		}
 	}
@@ -174,13 +174,13 @@ int	CUserInfo::GetWeaponFeature()
 	if (m_lpTItemRcd.GetCount() && !m_THumanRcd.szTakeItem[U_WEAPON].btIsEmpty)
 	{
 		PLISTNODE pListNode = m_lpTItemRcd.GetHead();
-		CStdItemSpecial* lpStdItem;
+		//CStdItemSpecial* lpStdItem;
 		while (pListNode)
 		{
 			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 		/*BECAUSE ADD ISEMPTY*/
 			if (memcmp(m_THumanRcd.szTakeItem[U_WEAPON].tUserItemAbility.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX) == 0)
-				return GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem)->wShape;//g_pStdItemSpecial[lpTItemRcd->nStdIndex].wShape;
+				return GetStdItemByIndex(lpTItemRcd->nStdIndex)->wShape;//g_pStdItemSpecial[lpTItemRcd->nStdIndex].wShape;
 
 			pListNode = m_lpTItemRcd.GetNext(pListNode);
 		}
@@ -501,7 +501,7 @@ int CUserInfo::CalcBagWeight()
 			lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 
 			if (lpTItemRcd) {
-				GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+				lpStdItem=GetStdItemByIndex(lpTItemRcd->nStdIndex);
 				if (lpStdItem != NULL)
 					nWeight += lpStdItem->wWeight;
 			}
@@ -542,7 +542,7 @@ int CUserInfo::CalcWearWeightEx(int nIndex)
 			lptItemRcd = GetUseItem(i);
 
 			if (lptItemRcd)
-				nWeight += GetStdItemByIndex(lptItemRcd->nStdIndex,lpStdItem)->wWeight;
+				nWeight += GetStdItemByIndex(lptItemRcd->nStdIndex)->wWeight;
 		}
 	}
 

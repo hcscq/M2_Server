@@ -588,7 +588,7 @@ BOOL CCharObject::DropItemDown(_LPTUSERITEMRCD lpTItemRcd, int nRange, BOOL fIsG
 	else
 	{
 		CStdItemSpecial* lpStdItem;
-		GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem);
+		lpStdItem=GetStdItemByIndex(lpTItemRcd->nStdIndex);
 		xpMapItem->wLooks		= (WORD)lpStdItem->dwLooks;
 		xpMapItem->btAniCount	= (BYTE)lpStdItem->btAniCount;
 		
@@ -3273,7 +3273,7 @@ void CCharObject::SendSocket(_LPTDEFAULTMESSAGE lpDefMsg, char *pszPacket)
 		if (pszPacket)
 		{
 			int nLength = memlen(pszPacket)-1;
-
+			lpDefMsg->nLen = nLength + DEFBLOCKSIZE;
 			if (nLength >= 8096) 
 			{
 				InsertLogMsg(_TEXT("SendSocket:Packet is too long."));

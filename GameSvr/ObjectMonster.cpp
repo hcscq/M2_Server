@@ -534,7 +534,7 @@ void CMonsterObject::MonGetRandomItems()
 								
 
 								CStdItemSpecial* lpStdItem;
-								GetStdItemByIndex(pMonItem->m_wItemIndex, lpStdItem);//lpStdItem->MakeIndex generated when pick up
+								lpStdItem=GetStdItemByIndex(pMonItem->m_wItemIndex);//lpStdItem->MakeIndex generated when pick up
 
 								lpTItemRcd->btType		= lpStdItem->btType;
 								lpTItemRcd->wDura		= lpStdItem->wDuraMax;

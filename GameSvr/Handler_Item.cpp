@@ -40,6 +40,7 @@ void CStdItemSpecial::GetStandardItem(_LPTCLIENTITEMRCD lpClientItemRcd)
 	//_LPTCLIENTITEMRCD lpClientItemRcd = (_LPTCLIENTITEMRCD)lpClientItemRcd;
 	memcpy(lpClientItemRcd->szName, szName, memlen(szName));
 
+	lpClientItemRcd->btType			= btType;
 	lpClientItemRcd->wStdMode		= wStdMode;
 	lpClientItemRcd->wShape			= wShape;
 	lpClientItemRcd->wWeight		= wWeight;
@@ -103,7 +104,7 @@ void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTU
 	}
 */	
 	//_LPTCLIENTITEMRCD lpClientItemRcd = (_LPTCLIENTITEMRCD)lpClientItemRcd;
-	memcpy(&lpClientItemRcd->tCUserItemAbility, lpUserItemRcd + sizeof(_LPTUSERGENITEMRCD), sizeof(_TCUSERITEMRCD));
+	memcpy(&lpClientItemRcd->tCUserItemAbility, lpUserItemRcd + sizeof(_TUSERGENITEMRCD), sizeof(_TCUSERITEMRCD));
 	switch (btType)
 	{
 		case 0:

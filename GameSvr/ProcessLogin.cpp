@@ -174,7 +174,7 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 				{
 					if (memcmp(pUserInfo->m_THumanRcd.szTakeItem[i].tUserItemAbility.szMakeIndex, pUserInfo->m_lpTItemRcd.GetData(pListNode)->szMakeIndex, MAKEITEMINDEX)) 
 					{
-						pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem = GetStdItemByIndex(pUserInfo->m_lpTItemRcd.GetData(pListNode)->nStdIndex, pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem);
+						pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem = GetStdItemByIndex(pUserInfo->m_lpTItemRcd.GetData(pListNode)->nStdIndex);
 						break;
 					}
 				}

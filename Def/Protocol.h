@@ -6,7 +6,7 @@
 #define DEFGUIDLEN				36
 #define HUMANRCDBLOCKSIZE		1879//256
 #define HUMLOADRDCVLOCKSIZE		123
-#define ITEMRCDBLOCKSIZE		180//70			// _TUSEITEM
+#define ITEMRCDBLOCKSIZE		167//180//70			// _TUSEITEM
 #define MAGICRCDBLOCKSIZE		10
 #define GENITEMRCDBLOCKSIZE		74//18
 #define CHARUSEITEMCNT			10
@@ -446,6 +446,11 @@ typedef struct tag_TUSEITEM
 
 typedef struct tag_TCLIENTGENITEMRCD
 {
+	//append
+	char		szMakeIndex[MAKEITEMINDEX];
+	WORD		wDura;
+	WORD		wCount;
+
 	//STD 
 	BYTE		btType;
 	BYTE		btAniCount;
@@ -460,12 +465,6 @@ typedef struct tag_TCLIENTGENITEMRCD
 	DWORD		wRSource;		// Val2
 
 	DWORD		dwPrice;
-
-	//append
-	char		szMakeIndex[MAKEITEMINDEX];
-	WORD		wDura;
-	WORD		wCount;
-
 
 } _TCLIENTGENITEMRCD, *_LPTCLIENTGENITEMRCD;
 

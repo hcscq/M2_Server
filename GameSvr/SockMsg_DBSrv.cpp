@@ -96,8 +96,7 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 							{
 								pReadUserInfo->m_pUserInfo->m_nNumOfGenItems = HIBYTE(DefMsg.wParam);
 
-								//_TGENITEMRCD	GenItemRcd;
-								//char			szVal[5];						
+					
 								_LPTUSERGENITEMRCD lptGenItemRcd;
 								for (int i = 0; i < HIBYTE(DefMsg.wParam); i++)
 								{
@@ -106,17 +105,6 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 									if (lptGenItemRcd)
 									{
 										fnDecode6BitBufA(pszData, (char *)lptGenItemRcd, sizeof(_TUSERGENITEMRCD));
-										
-										//memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
-
-										//ZeroMemory(szVal, sizeof(szVal));
-
-										//memcpy(szVal, &lptGenItemRcd->szMakeIndex[1], 3);
-										//lptGenItemRcd->nStdIndex	= AnsiStrToVal(szVal);
-										//memcpy(szVal, &lptGenItemRcd->szMakeIndex[4], 4);
-										//lptGenItemRcd->wDura		= AnsiStrToVal(szVal);
-										//memcpy(szVal, &lptGenItemRcd->szMakeIndex[8], 4);
-										//lptGenItemRcd->wDuraMax		= AnsiStrToVal(szVal);
 
 										pReadUserInfo->m_pUserInfo->m_lpTGenItemRcd.AddNewNode(lptGenItemRcd);
 								
@@ -201,7 +189,7 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 								{
 									CStdItemSpecial* lpStdItem;
 
-									GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+									lpStdItem=GetStdItemByIndex(lpTItemRcd->nStdIndex);
 									lpStdItem->GetStandardItem(&tClientItemRcd);
 									lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 								}
@@ -239,7 +227,7 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 								{
 									CStdItemSpecial* lpStdItem;
 
-									GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+									lpStdItem=GetStdItemByIndex(lpTItemRcd->nStdIndex);
 									lpStdItem->GetStandardItem(&tClientItemRcd);
 									lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 								}

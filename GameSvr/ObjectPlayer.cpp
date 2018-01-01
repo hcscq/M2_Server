@@ -302,7 +302,7 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 		_TCLIENTITEMRCD		tClientItemRcd;
 		CStdItemSpecial* lpStdItem;
 
-		GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+		lpStdItem=GetStdItemByIndex(lpTItemRcd->nStdIndex);
 		lpStdItem->GetStandardItem(&tClientItemRcd);
 		lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 
@@ -886,7 +886,7 @@ void CPlayerObject::RecalcAbilitys()
 	{
 		if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty&&(lpUserItemRcd = m_pUserInfo->GetAccessory(i)))
 		{
-			GetStdItemByIndex(lpUserItemRcd->nStdIndex, lpStdItem);
+			lpStdItem=GetStdItemByIndex(lpUserItemRcd->nStdIndex);
 			lpStdItem->ApplyItemParameters(&m_AddAbility);
 
 			if ( i == U_RIGHTHAND || i == U_WEAPON )
@@ -1013,24 +1013,26 @@ void CPlayerObject::SendMyMagics()
 void CPlayerObject::SendBagItems()
 {
 	char				szEncodeMsg[8096];
+	char				szUncodeMsg[8096];
 	int					nCnt	= m_pUserInfo->m_lpTItemRcd.GetCount();
 	int					nGenCnt = m_pUserInfo->m_lpTGenItemRcd.GetCount();
 	int					nPos	= 0;
 
 	_TDEFAULTMESSAGE	DefMsg;
-
+	//nPos = DEFGUIDLEN;
+	//memcpy(szUncodeMsg, m_pUserInfo->m_THumanRcd.szCharGuid, nPos);
 	if (nCnt)
 	{
 		_TCLIENTITEMRCD		tClientItemRcd;
 		PLISTNODE pListNode = m_pUserInfo->m_lpTItemRcd.GetHead();
-		CStdItemSpecial* lpStdItem;
+		CStdItemSpecial* lpStdItem=0;
 		while (pListNode)
 		{
 			_LPTUSERITEMRCD	lptUserItemRcd = m_pUserInfo->m_lpTItemRcd.GetData(pListNode);
 
 			if (lptUserItemRcd)
 			{
-				GetStdItemByIndex(lptUserItemRcd->nStdIndex, lpStdItem);
+				lpStdItem=GetStdItemByIndex(lptUserItemRcd->nStdIndex);
 				lpStdItem->GetStandardItem(&tClientItemRcd);
 				lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lptUserItemRcd);
 
@@ -1039,14 +1041,11 @@ void CPlayerObject::SendBagItems()
 				tClientItemRcd.wDura		= lptUserItemRcd->wDura;
 				tClientItemRcd.wDuraMax		= lptUserItemRcd->wDuraMax;
 
-				//if (strlen(lptUserItemRcd->szPrefixName))
-				//	strcpy(tClientItemRcd.szPrefixName, lptUserItemRcd->szPrefixName);
-				//else
-				//	ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
+				memcpy(&szUncodeMsg[nPos], &tClientItemRcd, sizeof(_TCLIENTITEMRCD));
+				nPos += sizeof(_TCLIENTITEMRCD);
+				//nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg) - nPos);
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg) - nPos);
-
-				szEncodeMsg[nPos++] = '/';
+				//szEncodeMsg[nPos++] = '/';
 			}
 
 			pListNode = m_pUserInfo->m_lpTItemRcd.GetNext(pListNode);
@@ -1073,23 +1072,24 @@ void CPlayerObject::SendBagItems()
 				tClientGenItemRcd.wDura		= lptGenItemRcd->wDura;
 				tClientGenItemRcd.wDuraMax  = lptGenItemRcd->wDuraMax;
 
-
 				g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem((_LPTCLIENTITEMRCD)&tClientGenItemRcd);
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientGenItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTGENITEMRCD), sizeof(szEncodeMsg) - nPos);
+				memcpy(&szUncodeMsg[nPos], &tClientGenItemRcd, sizeof(_TCLIENTGENITEMRCD));
+				nPos += sizeof(_TCLIENTGENITEMRCD);
 
-				szEncodeMsg[nPos++] = '/';
+				//nPos +=	fnEncode6BitBufA((unsigned char *)&tClientGenItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTGENITEMRCD), sizeof(szEncodeMsg) - nPos);
+
+				//szEncodeMsg[nPos++] = '/';
 			}
 
 			pListNode = m_pUserInfo->m_lpTGenItemRcd.GetNext(pListNode);
 		}
 	}
-
+	nPos=fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
+	fnMakeDefMessage(&DefMsg, SM_BAGITEMS, (int)this, 0, 0, nCnt + nGenCnt, nPos);
 	szEncodeMsg[nPos] = '\0';
-
-	fnMakeDefMessage(&DefMsg, SM_BAGITEMS, (int)this, 0, 0, nCnt + nGenCnt);
-
 	SendSocket(&DefMsg, szEncodeMsg);
+	int test = fnDecode6BitBufA((char *)szEncodeMsg, szUncodeMsg, sizeof(szEncodeMsg));
 }
 
 void CPlayerObject::RecalcLevelAbilitys()
@@ -1184,8 +1184,7 @@ void CPlayerObject::Initialize()
 		for (int i = 0; i < CHARUSEITEMCNT; i++)
 		{
 			if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
-				GetStdItemByIndex(m_pUserInfo->m_THumanRcd.szTakeItem[i].tUserItemAbility.nStdIndex,
-					m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem);
+				m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem=GetStdItemByIndex(m_pUserInfo->m_THumanRcd.szTakeItem[i].tUserItemAbility.nStdIndex);
 		}
 
 		m_Ability.Level		= m_pUserInfo->m_THumanRcd.szLevel;
@@ -1314,7 +1313,7 @@ BOOL CPlayerObject::CheckTakeOnItem(WORD wWhere, _LPTUSERITEMRCD lpTItemRcd)
 	TCHAR	wszMsg[64];
 	char	szMsg[64];
 	CStdItemSpecial* lpStdItem;
-	GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+	lpStdItem=GetStdItemByIndex(lpTItemRcd->nStdIndex);
 	int		nNeed		= lpStdItem->wNeed;
 	int		nNeedLevel	= lpStdItem->wNeedLevel;;
 	int		nWeight		= lpStdItem->wWeight;
