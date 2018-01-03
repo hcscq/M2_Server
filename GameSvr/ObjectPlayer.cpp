@@ -2511,34 +2511,29 @@ void CPlayerObject::Operate()
 					}
 					case CM_DROPITEM:
 					{
-						char	szDecodeData[16];
+						char	szDecodeData[38];
 						BOOL	fFlag = FALSE;
 
 						if (lpProcessMsg->pszData)
 						{
-							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, 12);
+							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, 38);
 							szDecodeData[nPos] = '\0';
 
 							if (szDecodeData[0] == 'G')
 							{
-								if (m_pUserInfo->UserDropGenItem(lpProcessMsg->wParam, szDecodeData))
+								if (m_pUserInfo->UserDropGenItem(lpProcessMsg->wParam, &szDecodeData[1]))
 									fFlag = TRUE;
 							}
 							else
 							{
-								if (m_pUserInfo->UserDropItem(lpProcessMsg->wParam, szDecodeData))
+								if (m_pUserInfo->UserDropItem(lpProcessMsg->wParam, &szDecodeData[1]))
 									fFlag = TRUE;
 							}
-
-							if (fFlag)
-								fnMakeDefMessage(&DefMsg, SM_DROPITEM_SUCCESS, 0, lpProcessMsg->wParam, 0, 0);
-							else
-								fnMakeDefMessage(&DefMsg, SM_DROPITEM_FAIL, 0, lpProcessMsg->wParam, 0, 0);
 						}
-						else
-							fnMakeDefMessage(&DefMsg, SM_DROPITEM_FAIL, 0, lpProcessMsg->wParam, 0, 0);
 
-						nPos =	fnEncode6BitBufA((unsigned char *)szDecodeData, szEncodeMsg, 12, sizeof(szEncodeMsg));
+						fnMakeDefMessage(&DefMsg, SM_DROPITEM, fFlag, lpProcessMsg->wParam, 0, 0);
+
+						nPos =	fnEncode6BitBufA((unsigned char *)&szDecodeData[1], szEncodeMsg, MAKEITEMINDEX, sizeof(szEncodeMsg));
 						szEncodeMsg[nPos] = '\0';
 
 						SendSocket(&DefMsg, szEncodeMsg);

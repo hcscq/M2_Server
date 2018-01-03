@@ -174,8 +174,8 @@
 #define SM_ADDMAGIC             210
 #define SM_SENDMYMAGIC			211
 
-#define SM_DROPITEM_SUCCESS     600
-#define SM_DROPITEM_FAIL        601
+#define SM_DROPITEM				600
+//#define SM_DROPITEM_FAIL        601
 
 #define SM_ITEMSHOW             610
 #define SM_ITEMHIDE             611
