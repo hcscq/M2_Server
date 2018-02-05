@@ -16,7 +16,7 @@ void CPlayerCloneObject::Create(CPlayerObject* pPlayerObject)
 
 	m_pMap->AddNewObject(m_nCurrX, m_nCurrY, OS_MOVINGOBJECT, this);
 
-	AddRefMsg(RM_TURN, m_nDirection, m_nCurrX, m_nCurrY, 0, m_szName);
+	AddRefMsg(RM_HUMSHOW, m_nDirection, m_nCurrX, m_nCurrY, 0, m_szName);
 }
 
 void CPlayerCloneObject::Operate()

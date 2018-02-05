@@ -1180,7 +1180,7 @@ void CPlayerObject::Initialize()
 
 		m_pMap->AddNewObject(m_nCurrX, m_nCurrY, OS_MOVINGOBJECT, this);
 
-		AddRefMsg(RM_TURN, m_nDirection, m_nCurrX, m_nCurrY, 0, NULL);
+		AddRefMsg(RM_HUMSHOW, m_nDirection, m_nCurrX, m_nCurrY, 0, NULL);
 
 		for (int i = 0; i < CHARUSEITEMCNT; i++)
 		{
@@ -2637,6 +2637,41 @@ void CPlayerObject::Operate()
 					{
 						break;
 					}
+					case RM_HUMSHOW:
+						if (lpProcessMsg->pCharObject != this)
+						{
+							fnMakeDefMessage(&DefMsg, SM_HUMSHOW, (int)lpProcessMsg->pCharObject,
+								(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, MAKEWORD(lpProcessMsg->wParam, lpProcessMsg->pCharObject->m_btLight));
+
+							CharDesc.Feature = lpProcessMsg->pCharObject->GetFeatureToLong();
+							CharDesc.Status = lpProcessMsg->pCharObject->m_nCharStatus;
+							/**/
+							char szUncodeMsg[sizeof(szEncodeMsg)];
+							nPos = sizeof(CharDesc);
+							memcpy(szUncodeMsg, &CharDesc, nPos);
+							if (lpProcessMsg->pCharObject->m_wObjectType & _OBJECT_HUMAN) {
+								memset(&szUncodeMsg[nPos++], 1, 1);
+								memcpy(&szUncodeMsg[nPos], (unsigned char *)&((CPlayerObject *)lpProcessMsg->pCharObject)->m_tFeatureEx, sizeof(_TOBJECTFEATUREEX));
+								nPos += sizeof(_TOBJECTFEATUREEX);
+							}
+							else
+								memset(&szUncodeMsg[nPos++], 0, 1);
+							if (lpProcessMsg->pszData)
+							{
+								int nLen = memlen(lpProcessMsg->pszData);
+								memset(&szUncodeMsg[nPos++], 1, 1);
+								memcpy(&szUncodeMsg[nPos], lpProcessMsg->pszData, nLen);
+								nPos += nLen;
+							}
+							else
+								memset(&szUncodeMsg[nPos++], 0, 1);
+							nPos = fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
+
+							szEncodeMsg[nPos] = '\0';
+
+							SendSocket(&DefMsg, szEncodeMsg);
+						}
+						break;
 					case RM_TURN:
 					{
 						if (lpProcessMsg->pCharObject != this)
@@ -2894,9 +2929,9 @@ void CPlayerObject::Operate()
 
 						break;
 					}
-					case RM_DISAPPEAR:
+					case RM_HUMDISAPPEAR:
 					{
-						fnMakeDefMessage(&DefMsg, SM_DISAPPEAR, (int)lpProcessMsg->pCharObject, 0, 0, 0);
+						fnMakeDefMessage(&DefMsg, SM_HUMDISAPPEAR, (int)lpProcessMsg->pCharObject, 0, 0, 0);
 						SendSocket(&DefMsg, NULL);
 						break;
 					}
@@ -3122,7 +3157,7 @@ void CPlayerObject::Operate()
 						break;
 					}
 					case RM_ITEMSHOW:
-					{
+					{//AddRefMsg(RM_ITEMSHOW, xpMapItem->wLooks, (int)xpMapItem, nX, nY, xpMapItem->szName);
 						fnMakeDefMessage(&DefMsg, SM_ITEMSHOW, lpProcessMsg->lParam1, 
 											(WORD)lpProcessMsg->lParam2, (WORD)lpProcessMsg->lParam3, lpProcessMsg->wParam);
 

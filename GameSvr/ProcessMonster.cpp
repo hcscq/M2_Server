@@ -69,7 +69,7 @@ CMonsterObject* AddCreature(CMirMap* pMap, int nX, int nY, int nMonRace, BOOL fS
 		pMap->AddNewObject(nX, nY, OS_MOVINGOBJECT, pMonsterObject);
 
 		if (!pMonsterObject->m_fHideMode)
-			pMonsterObject->AddRefMsg(RM_TURN, pMonsterObject->m_nDirection, nX, nY, 0, pMonsterObject->m_szName);
+			pMonsterObject->AddRefMsg(RM_HUMSHOW, pMonsterObject->m_nDirection, nX, nY, 0, pMonsterObject->m_szName);
 
 		return pMonsterObject;
 	}

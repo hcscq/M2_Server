@@ -21,7 +21,7 @@ void CScripterObject::Create(int nX, int nY, CMirMap* pMap)
 	
 	pMap->AddNewObject(nX, nY, OS_MOVINGOBJECT, this);
 
-	AddRefMsg(RM_TURN, m_nDirection, nX, nY, 0, m_szName);
+	AddRefMsg(RM_HUMSHOW, m_nDirection, nX, nY, 0, m_szName);
 }
 
 void CScripterObject::Operate()

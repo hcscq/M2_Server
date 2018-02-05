@@ -570,6 +570,7 @@ end;
 BOOL CCharObject::DropItemDown(_LPTUSERITEMRCD lpTItemRcd, int nRange, BOOL fIsGenItem)
 {
 	CMapItem* xpMapItem = new CMapItem;
+	//char	  szEncodeData[80];
 
 	xpMapItem->nCount = 1;
 
@@ -608,7 +609,8 @@ BOOL CCharObject::DropItemDown(_LPTUSERITEMRCD lpTItemRcd, int nRange, BOOL fIsG
 
 	m_pMap->GetDropPosition(m_nCurrX, m_nCurrY, nRange, nX, nY);
 	m_pMap->AddNewObject(nX, nY, OS_ITEMOBJECT, (VOID *)xpMapItem);
-
+	//memcpy(szEncodeData, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
+	//strcpy(&szEncodeData[MAKEITEMINDEX], xpMapItem->szName);
 	AddRefMsg(RM_ITEMSHOW, xpMapItem->wLooks, (int)xpMapItem, nX, nY, xpMapItem->szName);
 
 	return TRUE;
@@ -1469,7 +1471,7 @@ void CCharObject::SearchViewRange()
 				if (pVisibleObject->nVisibleFlag == 0)
 				{
 					if (!pVisibleObject->pObject->m_fHideMode)
-						AddProcess(pVisibleObject->pObject, RM_DISAPPEAR, 0, 0, 0, 0, NULL);
+						AddProcess(pVisibleObject->pObject, RM_HUMDISAPPEAR, 0, 0, 0, 0, NULL);
 
 					delete pVisibleObject;
 					pVisibleObject = NULL;
@@ -1492,7 +1494,7 @@ void CCharObject::SearchViewRange()
 																		pVisibleObject->pObject->m_nCurrX, pVisibleObject->pObject->m_nCurrY, 0, NULL);
 								}
 								else
-									AddProcess(pVisibleObject->pObject, RM_TURN, pVisibleObject->pObject->m_nDirection, 
+									AddProcess(pVisibleObject->pObject, RM_HUMSHOW, pVisibleObject->pObject->m_nDirection, 
 																		pVisibleObject->pObject->m_nCurrX, pVisibleObject->pObject->m_nCurrY, 
 																		0, pVisibleObject->pObject->m_szName);
 							}
@@ -1574,7 +1576,7 @@ void CCharObject::Disappear()
 	if (m_pMap)
 	{
 		m_pMap->RemoveObject(m_nCurrX, m_nCurrY, OS_MOVINGOBJECT, this);
-		AddRefMsg(RM_DISAPPEAR, 0, 0, 0, 0, NULL);
+		AddRefMsg(RM_HUMDISAPPEAR, 0, 0, 0, 0, NULL);
 	}
 }
 

@@ -144,7 +144,8 @@
 #define SM_FLYAXE               22
 #define SM_LIGHTING             23
 #define SM_WIDEHIT              24
-#define SM_DISAPPEAR            30
+#define SM_HUMDISAPPEAR         29//30->29
+#define SM_HUMSHOW				30//ADDED 2018.02.05
 #define SM_STRUCK				31
 #define SM_DEATH                32
 #define SM_SKELETON             33
@@ -228,7 +229,8 @@
 #define RM_RUSH					10015
 #define RM_STRUCK				10020
 #define RM_DEATH                10021
-#define RM_DISAPPEAR			10022
+#define RM_HUMDISAPPEAR			10022
+#define RM_HUMSHOW				10023//2018.02.05 SHOW HUM OBJECT
 #define RM_MAGSTRUCK            10025
 #define RM_STRUCK_MAG           10027
 #define RM_MAGSTRUCK_MINE       10028
