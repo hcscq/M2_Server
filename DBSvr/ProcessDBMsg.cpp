@@ -78,7 +78,7 @@ void GetHumanGenItemRcd(char *szName, CWHList<_LPTUSERGENITEMRCD>	*pxUserGenItem
 			{
 				//pItemRcd->szMakeIndex[0] = pRec->Get("FLD_MAKEINDEX");
 				pItemRcd->btType = atoi(pRec->Get("FLD_STDTYPE"));
-				strcpy( pItemRcd->szMakeIndex, pRec->Get( "FLD_MAKEINDEX" ) );
+				GetGuidTagFromString(pRec->Get("FLD_MAKEINDEX"), &pItemRcd->szMakeIndex);
 				pxUserGenItemRcdList->AddNewNode( pItemRcd );
 			}
 		}
@@ -119,8 +119,8 @@ void GetHumanMagicRcd(char *szName, CWHList<_LPTHUMANMAGICRCD>	*pxUserMagicRcdLi
 void GetHumanItemRcd(const _LPTHUMANRCD lptHumanRcd, CWHList<_LPTUSERITEMRCD>	*pxUserItemRcdList, CWHList<_LPTUSERGENITEMRCD>	*pxUserGenItemRcdList)
 {
 	char szQuery[128];
-
-	sprintf(szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE FLD_OWNER='%s' ", lptHumanRcd->szCharGuid);
+	char szGuid[37];
+	sprintf(szQuery, "SELECT * FROM TBL_CHARACTER_ITEM WHERE FLD_OWNER='%s' ",GetGuidSZ(szGuid,&lptHumanRcd->szCharGuid));
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
 	_LPTUSERGENITEMRCD pItemRcd;
@@ -139,7 +139,8 @@ void GetHumanItemRcd(const _LPTHUMANRCD lptHumanRcd, CWHList<_LPTUSERITEMRCD>	*p
 				if (pItemRcd)
 				{
 					pItemRcd->btType = btStdType;
-					memcpy(pItemRcd->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), MAKEITEMINDEX);
+					GetGuidTagFromString(pRec->Get("FLD_MAKEINDEX"), &pItemRcd->szMakeIndex);
+					//memcpy(pItemRcd->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), MAKEITEMINDEX);
 					pItemRcd->nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
 					pItemRcd->wDura = atoi(pRec->Get("FLD_DURA"));
 					pItemRcd->wDuraMax = atoi(pRec->Get("FLD_DURAMAX"));
@@ -177,7 +178,8 @@ void GetHumanItemRcd(const _LPTHUMANRCD lptHumanRcd, CWHList<_LPTUSERITEMRCD>	*p
 				*/
 				pItem->btType = btStdType;
 
-				memcpy(pItem->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), MAKEITEMINDEX);
+				GetGuidTagFromString(pRec->Get("FLD_MAKEINDEX"), &pItem->szMakeIndex);
+				//memcpy(pItem->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), MAKEITEMINDEX);
 
 				pItem->nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
 				pItem->wDura = atoi(pRec->Get("FLD_DURA"));
@@ -206,7 +208,8 @@ void GetHumanItemRcd(const _LPTHUMANRCD lptHumanRcd, CWHList<_LPTUSERITEMRCD>	*p
 				pItem->btValue[20] = atoi(pRec->Get("FLD_RefineAdded"));
 				/*FLD_DuraChanged|FLD_Identified|FLD_Cursed|FLD_WeddingRing*/
 				pItem->btValue[21] = atoi(pRec->Get("FLD_Switchs"));
-				memcpy(pItem->szBoundGuid, pRec->Get("FLD_SoulBoundGuid"), MAKEITEMINDEX);
+				GetGuidTagFromString(pRec->Get("FLD_SoulBoundGuid"), &pItem->szBoundGuid);
+				//memcpy(pItem->szBoundGuid, pRec->Get("FLD_SoulBoundGuid"), MAKEITEMINDEX);
 
 				pItem->wCount = atoi(pRec->Get("FLD_COUNT"));
 
@@ -218,7 +221,7 @@ void GetHumanItemRcd(const _LPTHUMANRCD lptHumanRcd, CWHList<_LPTUSERITEMRCD>	*p
 
 				for (int i = 0; i < CHARUSEITEMCNT; i++)
 				{
-					if (!memcmp(lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex, pItem->szMakeIndex, MAKEITEMINDEX)) {
+					if (!memcmp(&lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex, &pItem->szMakeIndex,sizeof(GUID))) {
 						memcpy(&lptHumanRcd->szTakeItem[i].tUserItemAbility, pItem, sizeof(_TUSEITEM));
 						delete pItem;
 					}
@@ -244,16 +247,18 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 
 	if ( pRec->Execute( szQuery ) && pRec->Fetch() )
 	{	
-		memcpy(lpLoadHuman->szCharGuid, pRec->Get("FLD_GUID"),sizeof(lpLoadHuman->szCharGuid));
+		GetGuidTagFromString(pRec->Get("FLD_GUID"), &lpLoadHuman->szCharGuid);
+		//memcpy(lpLoadHuman->szCharGuid, pRec->Get("FLD_GUID"),sizeof(lpLoadHuman->szCharGuid));
 		strcpy(lpLoadHuman->szCharName, pRec->Get("FLD_CHARNAME"));
 
-		strcpy(lptHumanRcd->szCharGuid,lpLoadHuman->szCharGuid);
+		memcpy(&lptHumanRcd->szCharGuid,&lpLoadHuman->szCharGuid,sizeof(GUID));
 		strcpy(lptHumanRcd->szUserID, pRec->Get( "FLD_LOGINID" ) );
 		ChangeSpaceToNull(lptHumanRcd->szUserID);
 		strcpy(lptHumanRcd->szCharName, pRec->Get( "FLD_CHARNAME" ) );
 		ChangeSpaceToNull(lptHumanRcd->szCharName);
 
-		memcpy(lptHumanRcd->szCharGuid, pRec->Get("FLD_GUID"), sizeof(lpLoadHuman->szCharGuid));
+		GetGuidTagFromString( pRec->Get("FLD_GUID"), &lptHumanRcd->szCharGuid);
+		//memcpy(lptHumanRcd->szCharGuid, pRec->Get("FLD_GUID"), sizeof(lpLoadHuman->szCharGuid));
 		lptHumanRcd->btIndex	= (BYTE)atoi(pRec->Get("FLD_INDEX"));
 		lptHumanRcd->btJob		= (BYTE)atoi( pRec->Get( "FLD_JOB" ) );
 		lptHumanRcd->btGender	= (BYTE)atoi( pRec->Get( "FLD_GENDER" ) );
@@ -273,20 +278,22 @@ BOOL GetHumanRcd(char	*szName, _LPTHUMANRCD lptHumanRcd, _LPTLOADHUMAN lpLoadHum
 
 		lptHumanRcd->fIsAdmin = (BYTE)*pRec->Get("FLD_ISADMIN");
 		
-		memcpy(&lptHumanRcd->szTakeItem[U_DRESS].tUserItemAbility.szMakeIndex, pRec->Get("FLD_DRESS_ID"),sizeof(_TUSEITEM));
-		memcpy(&lptHumanRcd->szTakeItem[U_WEAPON].tUserItemAbility.szMakeIndex, pRec->Get("FLD_WEAPON_ID"), sizeof(_TUSEITEM));
-		memcpy(&lptHumanRcd->szTakeItem[U_RIGHTHAND].tUserItemAbility.szMakeIndex, pRec->Get("FLD_RIGHTHAND_ID"), sizeof(_TUSEITEM));
-		memcpy(&lptHumanRcd->szTakeItem[U_NECKLACE].tUserItemAbility.szMakeIndex, pRec->Get("FLD_NECKLACE_ID"), sizeof(_TUSEITEM));
-		memcpy(&lptHumanRcd->szTakeItem[U_HELMET].tUserItemAbility.szMakeIndex, pRec->Get("FLD_HELMET_ID"), sizeof(_TUSEITEM));
-		memcpy(&lptHumanRcd->szTakeItem[U_ARMRINGL].tUserItemAbility.szMakeIndex, pRec->Get("FLD_ARMRINGL_ID"), sizeof(_TUSEITEM));
-		memcpy(&lptHumanRcd->szTakeItem[U_ARMRINGR].tUserItemAbility.szMakeIndex, pRec->Get("FLD_ARMRINGR_ID"), sizeof(_TUSEITEM));
-		memcpy(&lptHumanRcd->szTakeItem[U_RINGL].tUserItemAbility.szMakeIndex, pRec->Get("FLD_RINGL_ID"), sizeof(_TUSEITEM));
-		memcpy(&lptHumanRcd->szTakeItem[U_RINGR].tUserItemAbility.szMakeIndex, pRec->Get("FLD_RINGR_ID"), sizeof(_TUSEITEM));
+
+		GetGuidTagFromString( pRec->Get("FLD_DRESS_ID"),&lptHumanRcd->szTakeItem[U_DRESS].tUserItemAbility.szMakeIndex);
+		GetGuidTagFromString( pRec->Get("FLD_WEAPON_ID"),&lptHumanRcd->szTakeItem[U_WEAPON].tUserItemAbility.szMakeIndex);
+		GetGuidTagFromString( pRec->Get("FLD_RIGHTHAND_ID"),&lptHumanRcd->szTakeItem[U_RIGHTHAND].tUserItemAbility.szMakeIndex);
+		GetGuidTagFromString( pRec->Get("FLD_NECKLACE_ID"),&lptHumanRcd->szTakeItem[U_NECKLACE].tUserItemAbility.szMakeIndex);
+		GetGuidTagFromString( pRec->Get("FLD_HELMET_ID"),&lptHumanRcd->szTakeItem[U_HELMET].tUserItemAbility.szMakeIndex);
+		GetGuidTagFromString( pRec->Get("FLD_ARMRINGL_ID"),&lptHumanRcd->szTakeItem[U_ARMRINGL].tUserItemAbility.szMakeIndex);
+		GetGuidTagFromString( pRec->Get("FLD_ARMRINGR_ID"),&lptHumanRcd->szTakeItem[U_ARMRINGR].tUserItemAbility.szMakeIndex);
+		GetGuidTagFromString( pRec->Get("FLD_RINGL_ID"),&lptHumanRcd->szTakeItem[U_RINGL].tUserItemAbility.szMakeIndex);
+		GetGuidTagFromString( pRec->Get("FLD_RINGR_ID"),&lptHumanRcd->szTakeItem[U_RINGR].tUserItemAbility.szMakeIndex);
+		
 		for (int i = 0; i < CHARUSEITEMCNT; i++) 
-		{
-			if (strlen(lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex) < MAKEITEMINDEX)
-				lptHumanRcd->szTakeItem[i].btIsEmpty = TRUE;
-		}
+			//if (IsEmptyGuid(&lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex))
+			lptHumanRcd->szTakeItem[i].btIsEmpty = IsEmptyGuid(&lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex);
+
+
 	}
 	else
 	{
@@ -317,6 +324,7 @@ void GetLoadHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, int nR
 	int							nHorse = 0;
 	
 	char						szEncodeMsg2[8096];//May Not Enough.
+	//must memset 0
 	memset(&tHumanRcd, 0, sizeof(_THUMANRCD));
 	if (GetHumanRcd(lpLoadHuman->szCharName, &tHumanRcd, lpLoadHuman))		// Fetch Character Data 
 	{
@@ -474,7 +482,7 @@ void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int 
 
 	char *pszEncode = pszEncodeRcd;
 	_TUSERGENITEMRCD tItemRcd;
-
+	char szMakeIndex[37];
 	for (int i = 0; i < nCount; i++)
 	{
 		while ( memlen( pszEncode ) >= GENITEMRCDBLOCKSIZE )
@@ -489,7 +497,7 @@ void SaveGenItemRcd(char *pszUserID, char *pszCharName, char *pszEncodeRcd, int 
 			//				"( '%s', '%s', '%s' )", pszUserID, pszCharName, tItemRcd.szItem);
 
 			sprintf(szTmp, "INSERT TBL_CHARACTER_ITEM (FLD_LOGINID, FLD_CHARINDEX,FLD_STDTYPE,FLD_MAKEDATE ,FLD_MAKEINDEX,FLD_STDINDEX,FLD_DURA,FLD_DURAMAX,FLD_Count) VALUES "
-							"( '%s', %d, '%1.1s','%6.6s','%s',%d,%d,%d,%d )", pszUserID,charIndex, tItemRcd.btType, g_szYesterDay, tItemRcd.szMakeIndex, tItemRcd.nStdIndex, tItemRcd.wDura, tItemRcd.wDuraMax, 1);
+							"( '%s', %d, '%1.1s','%6.6s','%s',%d,%d,%d,%d )", pszUserID,charIndex, tItemRcd.btType, g_szYesterDay, GetGuidSZ(szMakeIndex,&tItemRcd.szMakeIndex), tItemRcd.nStdIndex, tItemRcd.wDura, tItemRcd.wDuraMax, 1);
 
 			if ( !pRec->Execute( szTmp ) || pRec->GetRowCount() <= 0 )
 				InsertLogMsg(_T("SaveGenItemRcd Ê§°Ü."));
@@ -506,11 +514,13 @@ BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMAN
 	char szSQL[1024];
 
 	char szEquip[10][40];
+	memset(szEquip,0,sizeof(szEquip));
 
 	for (int i = 0; i < 10; i++) {
 		/*0:STDType,1-6:MakeDate*/
 		if (!lptHumanRcd->szTakeItem[i].btIsEmpty)
-			sprintf(szEquip[i], "'%s'", &lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex);
+			GetGuidSZ(szEquip[i], &lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex);
+			//sprintf(szEquip[i], "'%s'", &lptHumanRcd->szTakeItem[i].tUserItemAbility.szMakeIndex);
 		else
 			memcpy(szEquip[i], "NULL", sizeof("NULL"));
 	}
@@ -581,7 +591,8 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 		strcpy(szUserID, lpHumanLoad->szUserID);
 		strcpy(szCharName, lpHumanLoad->szCharName);
 		btCharIndex = lpHumanLoad->btCharIndex;
-		strcpy(szGuid,lpHumanLoad->szCharGuid);
+		GetGuidSZ(szGuid, &lpHumanLoad->szCharGuid);
+		//strcpy(szGuid,lpHumanLoad->szCharGuid);
 		//wcscpy(szCharName, lpHumanLoad->szCharName);
 	}
 	else
@@ -656,8 +667,10 @@ BOOL MakeNewItem(CServerInfo* pServerInfo, _LPTLOADHUMAN lpHumanLoad, _LPTMAKEIT
 		
 		UserItemRcd.btType = lpMakeItemRcd->szStdType;
 		
-		memcpy( &UserItemRcd.szMakeIndex[1], g_szYesterDay, 6 );
-		sprintf( &UserItemRcd.szMakeIndex[7], "%s", szMakeIndex );
+		GetGuidTagFromString(szMakeIndex, &UserItemRcd.szMakeIndex);
+		
+		//memcpy( &UserItemRcd.szMakeIndex[1], g_szYesterDay, 6 );
+		//sprintf( &UserItemRcd.szMakeIndex[7], "%s", szMakeIndex );
 		
 		memcpy(&UserItemRcd.nStdIndex, &lpMakeItemRcd->nStdIndex, sizeof(_TUSERITEMRCD) - sizeof(UserItemRcd.szMakeIndex));
 		

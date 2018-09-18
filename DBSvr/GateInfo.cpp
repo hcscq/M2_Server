@@ -307,7 +307,8 @@ void CGateInfo::MakeNewCharacter(SOCKET s, _LPTCREATECHR lpTCreateChr)
 		strcpy( human.szUserID, lpTCreateChr->szID );
 		strcpy( human.szCharName, lpTCreateChr->szName );
 		human.btCharIndex = lpTCreateChr->btIndex;
-		strcpy(human.szCharGuid,szCharGuid);
+		GetGuidTagFromString(szCharGuid,&human.szCharGuid);
+		//strcpy(human.szCharGuid,szCharGuid);
 		//wcscpy(human.szCharName, szName);
 		// 평복 추가 (0: 남, 1: 여)
 		makeItem.szStdType	= 'B';

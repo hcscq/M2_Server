@@ -194,7 +194,7 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 									lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 								}
 
-								memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
+								memcpy(&tClientItemRcd.szMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID));
 								
 								tClientItemRcd.wCurDura			= lpTItemRcd->wDura;
 								tClientItemRcd.wCurDuraMax		= lpTItemRcd->wDuraMax;
@@ -232,7 +232,7 @@ void ProcReceiveBuffer(char *pszPacket, int nRecv)
 									lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 								}
 
-								memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, 12);
+								memcpy(&tClientItemRcd.szMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID));
 								
 								tClientItemRcd.wCurDura		= lpTItemRcd->wDura;
 								tClientItemRcd.wCurDuraMax		= lpTItemRcd->wDuraMax;

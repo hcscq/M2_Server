@@ -302,24 +302,25 @@ UINT WINAPI		ClientWorkerThread(LPVOID lpParameter)
 	while (TRUE)
 	{
 		dwIndex = WSAWaitForMultipleEvents(1, &g_ClientIoEvent, FALSE, WSA_INFINITE, FALSE);//WSA_INFINITE 最长等待时间为3s
-		if(dwIndex==WSA_WAIT_TIMEOUT){
+		if (dwIndex == WSA_WAIT_TIMEOUT && !g_fTerminated) {
 			InsertLogMsg(IDS_CONNECT_GAMESERVER_TIMEOUT);
-			KillTimer(g_hMainWnd,_ID_TIMER_KEEPALIVE);	
+			KillTimer(g_hMainWnd, _ID_TIMER_KEEPALIVE);
 			closesocket(g_csock);
 			g_csock = INVALID_SOCKET;
-			SetTimer(g_hMainWnd,_ID_TIMER_CONNECTSERVER , 2000, (TIMERPROC)OnTimerProc);
+			SetTimer(g_hMainWnd, _ID_TIMER_CONNECTSERVER, 2000, (TIMERPROC)OnTimerProc);
 			break;
 		}
 		WSAResetEvent(g_ClientIoEvent);
 
 		WSAGetOverlappedResult(g_csock, &ClientOverlapped.Overlapped, &dwBytesTransferred, FALSE, &dwFlags);
 
-		if (dwBytesTransferred == 0)//IDS_DISCONNECT_GAMESERVER
+		if (dwBytesTransferred == 0 && !g_fTerminated)//IDS_DISCONNECT_GAMESERVER
 		{
 			InsertLogMsg(IDS_DISCONNECT_GAMESERVER);
 			KillTimer(g_hMainWnd, _ID_TIMER_KEEPALIVE);
 			closesocket(g_csock);
 			g_csock = INVALID_SOCKET;
+
 			SetTimer(g_hMainWnd, _ID_TIMER_CONNECTSERVER, 2000, (TIMERPROC)OnTimerProc);
 			break;
 		}

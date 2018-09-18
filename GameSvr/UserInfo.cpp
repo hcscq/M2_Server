@@ -125,8 +125,8 @@ void CUserInfo::MakeGenItem(_LPTUSERGENITEMRCD lptGenItemRcd)
 	if (m_pxPlayerObject)
 	{
 		// Make Item on Server
-		GetDate(&lptGenItemRcd->szMakeIndex[1]);
-		GetGuidSZ(&lptGenItemRcd->szMakeIndex[7]);
+		//GetDate(&lptGenItemRcd->szMakeIndex[1]);
+		GetGuid(&lptGenItemRcd->szMakeIndex);
 
 		m_lpTGenItemRcd.AddNewNode(lptGenItemRcd);
 
@@ -139,7 +139,7 @@ void CUserInfo::MakeGenItem(_LPTUSERGENITEMRCD lptGenItemRcd)
 		// Get Standard General Item (STDITEM_ETC)
 		g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem((_LPTCLIENTITEMRCD)&tClientGenItemRcd);
 
-		memcpy(tClientGenItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, 12);
+		memcpy(&tClientGenItemRcd.szMakeIndex, &lptGenItemRcd->szMakeIndex, sizeof(GUID));
 		tClientGenItemRcd.wCurDura			= lptGenItemRcd->wDura;
 		tClientGenItemRcd.wCurDuraMax		= lptGenItemRcd->wDuraMax;
 
@@ -160,7 +160,7 @@ int	CUserInfo::GetDressFeature()
 		{
 			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 			/*BECAUSE ADD ISEMPTY*/
-			if (memcmp(m_THumanRcd.szTakeItem[U_DRESS].tUserItemAbility.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX) == 0)
+			if (memcmp(&m_THumanRcd.szTakeItem[U_DRESS].tUserItemAbility.szMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID)) == 0)
 				return GetStdItemByIndex(lpTItemRcd->nStdIndex)->wShape;					
 			pListNode = m_lpTItemRcd.GetNext(pListNode);
 		}
@@ -179,7 +179,7 @@ int	CUserInfo::GetWeaponFeature()
 		{
 			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 		/*BECAUSE ADD ISEMPTY*/
-			if (memcmp(m_THumanRcd.szTakeItem[U_WEAPON].tUserItemAbility.szMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX) == 0)
+			if (memcmp(&m_THumanRcd.szTakeItem[U_WEAPON].tUserItemAbility.szMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID)) == 0)
 				return GetStdItemByIndex(lpTItemRcd->nStdIndex)->wShape;//g_pStdItemSpecial[lpTItemRcd->nStdIndex].wShape;
 
 			pListNode = m_lpTItemRcd.GetNext(pListNode);
@@ -189,7 +189,7 @@ int	CUserInfo::GetWeaponFeature()
 	return 0;
 }
 
-_LPTUSERITEMRCD	CUserInfo::GetItem(char *pszMakeIndex)
+_LPTUSERITEMRCD	CUserInfo::GetItem(const GUID *pszMakeIndex)
 {
 	if (m_lpTItemRcd.GetCount())
 	{
@@ -199,7 +199,7 @@ _LPTUSERITEMRCD	CUserInfo::GetItem(char *pszMakeIndex)
 		{
 			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 		/*offset 7=STDTYPE|MAKE DATE + item guid*/
-			if (memcmp(pszMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX) == 0)
+			if (memcmp(pszMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID)) == 0)
 				return lpTItemRcd;
 
 			pListNode = m_lpTItemRcd.GetNext(pListNode);
@@ -209,7 +209,7 @@ _LPTUSERITEMRCD	CUserInfo::GetItem(char *pszMakeIndex)
 	return NULL;
 }
 
-_LPTUSERGENITEMRCD CUserInfo::GetUseGenItem(char *pszMakeItemID)
+_LPTUSERGENITEMRCD CUserInfo::GetUseGenItem(const GUID *pszMakeItemID)
 {
 	if (m_lpTGenItemRcd.GetCount())
 	{
@@ -219,7 +219,7 @@ _LPTUSERGENITEMRCD CUserInfo::GetUseGenItem(char *pszMakeItemID)
 		{
 			_LPTUSERGENITEMRCD lpTItemRcd = m_lpTGenItemRcd.GetData(pListNode);
 		
-			if (memcmp(pszMakeItemID, lpTItemRcd->szMakeIndex, MAKEITEMINDEX) == 0)
+			if (memcmp(pszMakeItemID, &lpTItemRcd->szMakeIndex, sizeof(GUID)) == 0)
 				return lpTItemRcd;
 
 			pListNode = m_lpTGenItemRcd.GetNext(pListNode);
@@ -549,7 +549,7 @@ int CUserInfo::CalcWearWeightEx(int nIndex)
 	return nWeight;
 }
 
-BOOL CUserInfo::UserDropItem(int nItemIndex, char *pszMakeIndex)
+BOOL CUserInfo::UserDropItem(int nItemIndex, const GUID *pszMakeIndex)
 {
 	if (!m_pxPlayerObject) return FALSE;
 
@@ -561,7 +561,7 @@ BOOL CUserInfo::UserDropItem(int nItemIndex, char *pszMakeIndex)
 		{
 			_LPTUSERITEMRCD lpTItemRcd = m_lpTItemRcd.GetData(pListNode);
 		
-			if (memcmp(pszMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX) == 0)
+			if (memcmp(pszMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID)) == 0)
 			{
 				if (m_pxPlayerObject->DropItemDown(lpTItemRcd, 2, FALSE))
 				{
@@ -583,7 +583,7 @@ BOOL CUserInfo::UserDropItem(int nItemIndex, char *pszMakeIndex)
 	return FALSE;
 }
 
-BOOL CUserInfo::UserDropGenItem(int nItemIndex, char *pszMakeIndex)
+BOOL CUserInfo::UserDropGenItem(int nItemIndex, const GUID *pszMakeIndex)
 {
 	if (!m_pxPlayerObject) return FALSE;
 
@@ -595,7 +595,7 @@ BOOL CUserInfo::UserDropGenItem(int nItemIndex, char *pszMakeIndex)
 		{
 			_LPTUSERGENITEMRCD lpTItemRcd = m_lpTGenItemRcd.GetData(pListNode);
 		
-			if (memcmp(pszMakeIndex, lpTItemRcd->szMakeIndex, MAKEITEMINDEX) == 0)
+			if (memcmp(pszMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID)) == 0)
 			{
 				if (m_pxPlayerObject->DropItemDown((_LPTUSERITEMRCD)lpTItemRcd, 2, TRUE))
 				{
@@ -679,13 +679,13 @@ _LPTHUMANMAGICRCD CUserInfo::GetMagicRcdByID(int nID)
 
 _LPTUSERGENITEMRCD CUserInfo::CanUseBujuk()
 {
-	_LPTUSERGENITEMRCD lptItem = GetUseGenItem(m_THumanRcd.szTakeItem[U_ARMRINGL].tUserItemAbility.szMakeIndex);
+	_LPTUSERGENITEMRCD lptItem = GetUseGenItem(&m_THumanRcd.szTakeItem[U_ARMRINGL].tUserItemAbility.szMakeIndex);
 
 	if (lptItem)
 	{
 		if (lptItem->btType == 'G')
 		{
-			int nIndex = GetGenItemStdIdx(lptItem->szMakeIndex);
+			int nIndex = lptItem->nStdIndex;//GetGenItemStdIdx(lptItem->szMakeIndex);
 
 			if (g_pStdItemEtc[nIndex].wStdMode == 25 || g_pStdItemEtc[nIndex].wStdMode == 5)
 				return lptItem;

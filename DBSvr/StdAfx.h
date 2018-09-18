@@ -30,6 +30,8 @@
 #include <process.h>
 
 #include "resource.h"
+#include <atlbase.h>
+#include <atlconv.h>
 class CItem;
 class CStdItem;
 class CStdItemSpecial;

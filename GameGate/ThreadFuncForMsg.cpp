@@ -101,7 +101,13 @@ DWORD WINAPI ThreadFuncForMsg(LPVOID lpParameter)
 
 											pData = &szEncodeSay[0];
 										}
-
+										int test = memlen(pData);
+										if (DefMsg.wIdent == 1000) 
+										{
+											int m=test;
+											GUID *guid = (GUID *)pData;
+											m = test;
+										}
 										MsgHdr.nLength = sizeof(_TDEFAULTMESSAGE) + nBodyLen;
 
 										SendSocketMsgS (&MsgHdr, sizeof(_TDEFAULTMESSAGE), (char *)&DefMsg, nBodyLen, pData);

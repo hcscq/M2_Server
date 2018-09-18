@@ -129,10 +129,10 @@ public:
 
 	void							Operate();
 
-	_LPTUSERITEMRCD					GetItem(char *pszMakeIndex);
-	__inline _LPTUSERITEMRCD		GetUseItem(int nPosition) { return GetItem(m_THumanRcd.szTakeItem[nPosition].tUserItemAbility.szMakeIndex); }
+	_LPTUSERITEMRCD					GetItem(const GUID *pszMakeIndex);
+	__inline _LPTUSERITEMRCD		GetUseItem(int nPosition) { return GetItem(&m_THumanRcd.szTakeItem[nPosition].tUserItemAbility.szMakeIndex); }
 	
-	_LPTUSERGENITEMRCD				GetUseGenItem(char *pszMakeItemID);
+	_LPTUSERGENITEMRCD				GetUseGenItem(const GUID *pszMakeItemID);
 	void							RemoveGenItem(_LPTUSERGENITEMRCD lptGenItemRcd);
 
 	int								EncodeMyMagicToServer(char *pszEncodeMsg, int nBuffSize, int& nPos);
@@ -159,8 +159,8 @@ public:
 	int								GetGenItemVal1(char *pszMakeIndex);
 	int								GetGenItemVal2(char *pszMakeIndex);
 
-	BOOL							UserDropItem(int nItemIndex, char *pszMakeIndex);
-	BOOL							UserDropGenItem(int nItemIndex, char *pszMakeIndex);
+	BOOL							UserDropItem(int nItemIndex, const GUID *pszMakeIndex);
+	BOOL							UserDropGenItem(int nItemIndex, const GUID *pszMakeIndex);
 
 	BOOL							IncGold(int nGold);
 	BOOL							DecGold(int nGold);
@@ -181,7 +181,7 @@ public:
 	__inline	void				SetEmptyUseItem(int i) { ZeroMemory(&m_THumanRcd.szTakeItem[i], MAKEITEMINDEX); /*m_THumanRcd.szTakeItem[i][0] = '0';*/ }
 	__inline	_LPTUSERITEMRCD		GetDress() { return GetUseItem(U_DRESS); }
 	__inline	_LPTUSERITEMRCD		GetAccessory(int nPosition) { return GetUseItem(nPosition); }
-	__inline	_LPTUSERGENITEMRCD	GetRightHand() { return GetUseGenItem((char *)&m_THumanRcd.szTakeItem[U_RIGHTHAND]); }
+	__inline	_LPTUSERGENITEMRCD	GetRightHand() { return GetUseGenItem(&m_THumanRcd.szTakeItem[U_RIGHTHAND].tUserItemAbility.szMakeIndex); }
 
 	__inline	BYTE				GetGenderFeature() { return m_THumanRcd.btGender; }
 	__inline	char				GetHairFeature() { return m_THumanRcd.szHair; }

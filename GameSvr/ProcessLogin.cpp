@@ -172,7 +172,7 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 				PLISTNODE pListNode = pUserInfo->m_lpTItemRcd.GetHead();
 				while (pListNode)
 				{
-					if (memcmp(pUserInfo->m_THumanRcd.szTakeItem[i].tUserItemAbility.szMakeIndex, pUserInfo->m_lpTItemRcd.GetData(pListNode)->szMakeIndex, MAKEITEMINDEX)) 
+					if (memcmp(&pUserInfo->m_THumanRcd.szTakeItem[i].tUserItemAbility.szMakeIndex, &pUserInfo->m_lpTItemRcd.GetData(pListNode)->szMakeIndex, sizeof(GUID))) 
 					{
 						pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem = GetStdItemByIndex(pUserInfo->m_lpTItemRcd.GetData(pListNode)->nStdIndex);
 						break;

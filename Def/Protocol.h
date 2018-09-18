@@ -4,11 +4,11 @@
 
 #define DEFBLOCKSIZE			22
 #define DEFGUIDLEN				36
-#define HUMANRCDBLOCKSIZE		1879//256
-#define HUMLOADRDCVLOCKSIZE		123
-#define ITEMRCDBLOCKSIZE		167//180//70			// _TUSEITEM
-#define MAGICRCDBLOCKSIZE		10
-#define GENITEMRCDBLOCKSIZE		74//18
+#define HUMANRCDBLOCKSIZE		1319//1879//256
+#define HUMLOADRDCVLOCKSIZE		96//123
+#define ITEMRCDBLOCKSIZE		114//167//180//70			// _TUSEITEM
+#define MAGICRCDBLOCKSIZE		7//10
+#define GENITEMRCDBLOCKSIZE		34//74//18
 #define CHARUSEITEMCNT			10
 #define MAKEITEMINDEX			36//12
 /*MAP*/
@@ -386,7 +386,7 @@ typedef struct tag_TLOADMUHAN
 	char		szCharName[20];
 	char		szUserAddr[15];
 	byte		btCharIndex;
-	char		szCharGuid[DEFGUIDLEN];
+	GUID		szCharGuid;//[DEFGUIDLEN];
 	int			nCertification;
 } _TLOADHUMAN, *_LPTLOADHUMAN;
 
@@ -405,7 +405,7 @@ typedef struct tag_TLOADMUHAN
 
 typedef struct tag_USERGENITEMRCD
 {
-	char		szMakeIndex[MAKEITEMINDEX];// EASY TO SKIP MAKEINDEX
+	GUID		szMakeIndex;// [MAKEITEMINDEX];// EASY TO SKIP MAKEINDEX
 	BYTE		btType;
 	WORD		nStdIndex;
 	WORD		wDura;
@@ -416,7 +416,7 @@ typedef struct tag_USERGENITEMRCD
 typedef struct tag_TUSERITEMRCD:tag_USERGENITEMRCD
 {
 	BYTE		btValue[22];
-	char		szBoundGuid[DEFGUIDLEN];
+	GUID		szBoundGuid;// [DEFGUIDLEN];
 	char		sbtValue[2];
 	char		szPrefixName[20];
 } _TUSERITEMRCD, *_LPTUSERITEMRCD;
@@ -449,7 +449,7 @@ typedef struct tag_TUSEITEM
 typedef struct tag_TCLIENTGENITEMRCD
 {
 	//append
-	char		szMakeIndex[MAKEITEMINDEX];
+	GUID		szMakeIndex; //[MAKEITEMINDEX];
 	WORD		wCurDura;
 	WORD		wCurDuraMax;
 	WORD		wCount;
@@ -475,7 +475,7 @@ typedef struct tag_TCLIENTGENITEMRCD
 typedef struct tag_TCUSERITEMRCD 
 {
 	BYTE		btValue[22];
-	char		szBoundGuid[DEFGUIDLEN];
+	GUID		szBoundGuid;//[DEFGUIDLEN];
 	char		sbtValue[2];
 	char		szPrefixName[20];
 } _TCUSERITEMRCD, *_LPTCUSERITEMRCD;
@@ -523,7 +523,7 @@ typedef struct tag_THUMANRCD
 {
 	char		szUserID[16];
 	char		szCharName[20];
-	char		szCharGuid[MAKEITEMINDEX];
+	GUID		szCharGuid;// [MAKEITEMINDEX];
 
 	BYTE		btIndex;
 	BYTE		btJob;
