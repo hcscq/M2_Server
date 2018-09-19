@@ -48,7 +48,7 @@ int GetHorseRcd(char *szName, _LPTHORSERCD lpTHorseRcd)
 	if ( pRec->Execute( szQuery ) && pRec->Fetch() )
 	{
 		strcpy( lpTHorseRcd->szHorseIndex, pRec->Get( "FLD_HORSEINDEX" ) );
-		lpTHorseRcd->btHorseType = atoi( pRec->Get( "FLD_HORSETYPE" ) );
+		lpTHorseRcd->btHorseType = ( pRec->Get( "FLD_HORSETYPE" )[0] );
 	}
 	else
 	{
@@ -77,7 +77,7 @@ void GetHumanGenItemRcd(char *szName, CWHList<_LPTUSERGENITEMRCD>	*pxUserGenItem
 			if ( pItemRcd )
 			{
 				//pItemRcd->szMakeIndex[0] = pRec->Get("FLD_MAKEINDEX");
-				pItemRcd->btType = atoi(pRec->Get("FLD_STDTYPE"));
+				pItemRcd->btType = (pRec->Get("FLD_STDTYPE")[0]);
 				GetGuidTagFromString(pRec->Get("FLD_MAKEINDEX"), &pItemRcd->szMakeIndex);
 				pxUserGenItemRcdList->AddNewNode( pItemRcd );
 			}
@@ -131,7 +131,7 @@ void GetHumanItemRcd(const _LPTHUMANRCD lptHumanRcd, CWHList<_LPTUSERITEMRCD>	*p
 	{
 		while (pRec->Fetch())
 		{
-			btStdType = atoi(pRec->Get("FLD_STDTYPE"));
+			btStdType = (pRec->Get("FLD_STDTYPE")[0]);
 			if (btStdType =='G')
 			{
 				pItemRcd = new _TUSERGENITEMRCD;
