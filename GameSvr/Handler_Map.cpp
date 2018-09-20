@@ -136,13 +136,12 @@ BOOL CMirMap::IsValidObject(int nX, int nY, int nCheckRange, CCharObject* pCharO
 
 BOOL CMirMap::LoadMapData(char *pszName, const int mapType)
 {
-	HANDLE			hFile;
-	LPCELLINFO		pstCellInfo;
-	LPMir2MapTile	lpMir2CellInfo;
+	HANDLE			hFile=NULL;
+	LPCELLINFO		pstCellInfo=NULL;
+	LPMir2MapTile	lpMir2CellInfo=NULL;
 	TCHAR			szMapName[15];
 	TCHAR			szMapFileName[256];
 	TCHAR			szPath[128];
-
 	jRegGetKey(_GAME_SERVER_REGISTRY, _TEXT("MapFileLoc"), (LPBYTE)szPath);
 
 	MultiByteToWideChar(CP_ACP, 0, pszName, -1, szMapName, sizeof(szMapName) / sizeof(TCHAR));
@@ -199,7 +198,7 @@ BOOL CMirMap::LoadMapData(char *pszName, const int mapType)
 				delete[] pstCellInfo;
 				pstCellInfo = NULL;
 
-				InsertLogMsgParam(IDS_LOADMAPFILE_GOOD, szMapFileName, LOGPARAM_STR);
+				InsertLogMsgParam(IDS_LOADMAPFILE_GOOD, szMapName, LOGPARAM_STR);
 
 				g_xMirMapList.AddNewNode(this);
 
@@ -269,7 +268,7 @@ BOOL CMirMap::LoadMapData(char *pszName, const int mapType)
 			delete[] lpMir2CellInfo;
 			lpMir2CellInfo = NULL;
 
-			InsertLogMsgParam(IDS_LOADMAPFILE_GOOD, szMapFileName, LOGPARAM_STR);
+			InsertLogMsgParam(IDS_LOADMAPFILE_GOOD, szMapName, LOGPARAM_STR);
 
 			g_xMirMapList.AddNewNode(this);
 
@@ -278,7 +277,7 @@ BOOL CMirMap::LoadMapData(char *pszName, const int mapType)
 		}
 	}
 
-	InsertLogMsgParam(IDS_LOADMAPFILE_FAIL, szMapFileName, LOGPARAM_STR);
+	InsertLogMsgParam(IDS_LOADMAPFILE_FAIL, szMapName, LOGPARAM_STR);
 
 	return FALSE;
 }

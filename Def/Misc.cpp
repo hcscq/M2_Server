@@ -119,9 +119,27 @@ void GetDate(char *pszBuf)
 	
 	sprintf(pszBuf, "%02d%02d%02d", ttm.tm_year - 100, ttm.tm_mon + 1, ttm.tm_mday);
 }
+bool IsEmptyGuid(const GUID *guid) 
+{
+	const char emptyGuid[] = { "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0" };
+	if (memcmp(guid, emptyGuid, sizeof(GUID))) return false;
+	return true;
+}
+
+GUID *GetGuid(GUID * guid) 
+{
+	if (guid) 
+	{
+		CoInitialize(NULL);
+		CoCreateGuid(guid);
+		CoUninitialize();
+	}
+	return guid;
+}
 char *GetGuidSZ(char *szDest)
 {
 	GUID guid;
+	CoInitialize(NULL);
 	CoCreateGuid(&guid);
 	sprintf_s(szDest, 37, "%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
 		guid.Data1, guid.Data2, guid.Data3,
@@ -129,7 +147,49 @@ char *GetGuidSZ(char *szDest)
 		guid.Data4[2], guid.Data4[3],
 		guid.Data4[4], guid.Data4[5],
 		guid.Data4[6], guid.Data4[7]);
+	CoUninitialize();
 	return szDest;
+}
+char *GetGuidSZ(char *szDest,const GUID *guid)
+{
+	sprintf_s(szDest, 37, "%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+		guid->Data1, guid->Data2, guid->Data3,
+		guid->Data4[0], guid->Data4[1],
+		guid->Data4[2], guid->Data4[3],
+		guid->Data4[4], guid->Data4[5],
+		guid->Data4[6], guid->Data4[7]);
+	return szDest;
+}
+GUID * GetGuidTagFromString(const char *szSrc,GUID *guid)
+{
+	short len = memlen(szSrc)-1;
+	if (len <= 0 || len > 37)
+	{
+		memset(guid,0,sizeof(GUID));
+		return guid;
+	}
+	//wchar_t S[] = L"SDS";
+	//wchar_t*	m_wchar = new wchar_t[MultiByteToWideChar(CP_ACP, 0, szSrc, strlen(szSrc), NULL, 0) + 1];
+	//MultiByteToWideChar(CP_ACP, 0, szSrc, strlen(szSrc), m_wchar, len);
+	//m_wchar[len] = '\0';
+	//CLSIDFromString(m_wchar, guid);
+	//delete m_wchar;
+	sscanf_s(
+		szSrc,
+		"%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+		&(guid->Data1),
+		&(guid->Data2),
+		&(guid->Data3),
+		&(guid->Data4[0]),
+		&(guid->Data4[1]),
+		&(guid->Data4[2]),
+		&(guid->Data4[3]),
+		&(guid->Data4[4]),
+		&(guid->Data4[5]),
+		&(guid->Data4[6]),
+		&(guid->Data4[7])
+	);
+	return guid;
 }
 int GetTime()
 {

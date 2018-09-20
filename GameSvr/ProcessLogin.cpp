@@ -101,27 +101,27 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 		{
 			pUserInfo->m_nNumOfGenItems = pReadyUserInfo->m_nNumOfGenItem;
 
-			_TGENITEMRCD	GenItemRcd;
-			char			szVal[5];						
-
+			//_TGENITEMRCD	GenItemRcd;
+			//char			szVal[5];						
+			_LPTUSERGENITEMRCD lptGenItemRcd;
 			for (int i = 0; i < pReadyUserInfo->m_nNumOfGenItem; i++)
 			{
-				_LPTGENERALITEMRCD lptGenItemRcd = new _TGENERALITEMRCD;
+				lptGenItemRcd = new _TUSERGENITEMRCD;
 
 				if (lptGenItemRcd)
 				{
-					fnDecode6BitBufA(pszData, (char *)&GenItemRcd, sizeof(_TGENITEMRCD));
+					fnDecode6BitBufA(pszData, (char *)lptGenItemRcd, sizeof(_TUSERGENITEMRCD));
 					
-					memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
+					//memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
 
-					ZeroMemory(szVal, sizeof(szVal));
+					//ZeroMemory(szVal, sizeof(szVal));
 
-					memcpy(szVal, &lptGenItemRcd->szMakeIndex[1], 3);
-					lptGenItemRcd->nStdIndex	= AnsiStrToVal(szVal);
-					memcpy(szVal, &lptGenItemRcd->szMakeIndex[4], 4);
-					lptGenItemRcd->nDura		= AnsiStrToVal(szVal);
-					memcpy(szVal, &lptGenItemRcd->szMakeIndex[8], 4);
-					lptGenItemRcd->nDuraMax		= AnsiStrToVal(szVal);
+					//memcpy(szVal, &lptGenItemRcd->szMakeIndex[1], 3);
+					//lptGenItemRcd->nStdIndex	= AnsiStrToVal(szVal);
+					//memcpy(szVal, &lptGenItemRcd->szMakeIndex[4], 4);
+					//lptGenItemRcd->wDura		= AnsiStrToVal(szVal);
+					//memcpy(szVal, &lptGenItemRcd->szMakeIndex[8], 4);
+					//lptGenItemRcd->wDuraMax		= AnsiStrToVal(szVal);
 
 					pUserInfo->m_lpTGenItemRcd.AddNewNode(lptGenItemRcd);
 			
@@ -153,11 +153,11 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 
 			for (int i = 0; i < pReadyUserInfo->m_nNumOfItem; i++)
 			{
-				_LPTUSERITEMABILITY lpTItemRcd = new _TUSERITEMABILITY;
+				_LPTUSERITEMRCD lpTItemRcd = new _TUSERITEMRCD;
 
 				if (lpTItemRcd)
 				{
-					fnDecode6BitBufA(pszData, (char *)lpTItemRcd, sizeof(_TUSERITEMABILITY));
+					fnDecode6BitBufA(pszData, (char *)lpTItemRcd, sizeof(_TUSERITEMRCD));
 					pUserInfo->m_lpTItemRcd.AddNewNode(lpTItemRcd);
 
 					pszData += ITEMRCDBLOCKSIZE;
@@ -165,13 +165,16 @@ BOOL LoadPlayer(CReadyUserInfo2* pReadyUserInfo, CUserInfo* pUserInfo)
 			}
 		}
 		//if(pUserInfo->m_THumanRcd)
-		for (int i = 0; i < CHARTAKEITEMCNT; i++)
+		for (int i = 0; i < CHARUSEITEMCNT; i++)
 		{
 			if (!pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
-			{
-				for (int j = 0; j < g_nStdItemSpecial; j++) {
-					if (g_pStdItemSpecial[j].Index == pUserInfo->m_THumanRcd.szTakeItem[i].nStdIndex) {
-						pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem = &g_pStdItemSpecial[j];
+			{//BUGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 2017/12/28 GetHumanRcd Not Inital lptUserItemAbility->szMakeIndex Yet!
+				PLISTNODE pListNode = pUserInfo->m_lpTItemRcd.GetHead();
+				while (pListNode)
+				{
+					if (memcmp(&pUserInfo->m_THumanRcd.szTakeItem[i].tUserItemAbility.szMakeIndex, &pUserInfo->m_lpTItemRcd.GetData(pListNode)->szMakeIndex, sizeof(GUID))) 
+					{
+						pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem = GetStdItemByIndex(pUserInfo->m_lpTItemRcd.GetData(pListNode)->nStdIndex);
 						break;
 					}
 				}

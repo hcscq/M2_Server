@@ -141,11 +141,11 @@ void CPlayerObject::GetCharName(char *pszCharName)
 	strcpy(pszCharName, m_szName); 
 }
 
-BOOL CPlayerObject::ReadBook(char *pszMakeIndex)
+BOOL CPlayerObject::ReadBook(const GUID *pszMakeIndex)
 {
 	if (!m_pUserInfo) return FALSE;
 
-	int nMagicID = m_pUserInfo->GetMagicID(pszMakeIndex);
+	int nMagicID = 0;//m_pUserInfo->GetMagicID(pszMakeIndex);//unfinished 2018-09-10
 
 	if (m_pUserInfo->IsMyMagic(nMagicID)) return FALSE;
 
@@ -197,34 +197,34 @@ BOOL CPlayerObject::ReadBook(char *pszMakeIndex)
 	return FALSE;
 }
 
-BOOL CPlayerObject::EatItem(char *pszMakeIndex)
+BOOL CPlayerObject::EatItem(const GUID *pszMakeIndex)
 {
-	int nStdIndex = m_pUserInfo->GetGenItemStdIdx(pszMakeIndex);
+	int nStdIndex = m_pUserInfo->GetItem(pszMakeIndex)->nStdIndex;
 
 	if (g_pStdItemEtc[nStdIndex].wStdMode != 0) return FALSE;
 
 	if (g_pStdItemEtc[nStdIndex].wShape == 1)
-		IncHealthSpell(g_pStdItemEtc[nStdIndex].wDuraMax/*+hp*/, g_pStdItemEtc[nStdIndex].dwRSource/*+mp*/);
+		IncHealthSpell(g_pStdItemEtc[nStdIndex].wDuraMax/*+hp*/, g_pStdItemEtc[nStdIndex].wRSource/*+mp*/);
 	else
 	{
 		if ((m_IncHealth + g_pStdItemEtc[nStdIndex].wDuraMax < 500) && (g_pStdItemEtc[nStdIndex].wDuraMax > 0))
 			m_IncHealth += (WORD)g_pStdItemEtc[nStdIndex].wDuraMax;
 		
-		if ((m_IncSpell + g_pStdItemEtc[nStdIndex].dwRSource < 500) && (g_pStdItemEtc[nStdIndex].dwRSource > 0))
-			m_IncSpell += (WORD)g_pStdItemEtc[nStdIndex].dwRSource;
+		if ((m_IncSpell + g_pStdItemEtc[nStdIndex].wRSource < 500) && (g_pStdItemEtc[nStdIndex].wRSource > 0))
+			m_IncSpell += (WORD)g_pStdItemEtc[nStdIndex].wRSource;
 	}
 
 	return TRUE;
 }
 
-BOOL CPlayerObject::ServerGetEatItem(int nItemIndex, char *pszMakeIndex)
+BOOL CPlayerObject::ServerGetEatItem(int nItemIndex, const GUID *pszMakeIndex)
 {
 	if (!m_pUserInfo) return FALSE;
 
 	_TDEFAULTMESSAGE	DefMsg;
 	BOOL				fFlag = FALSE;
 
-	_LPTGENERALITEMRCD lptGenItem = m_pUserInfo->GetUseGenItem(pszMakeIndex);
+	_LPTUSERGENITEMRCD lptGenItem = m_pUserInfo->GetUseGenItem(pszMakeIndex);
 
 	if (lptGenItem)
 	{
@@ -290,39 +290,47 @@ BOOL CPlayerObject::ServerGetEatItem(int nItemIndex, char *pszMakeIndex)
 	return fFlag;
 }
 
-void CPlayerObject::SendAddItem(_LPTUSERITEMABILITY lpTItemRcd)
+void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 {
 	_TDEFAULTMESSAGE	SendDefMsg;
-	_TCLIENTITEMRCD		tClientItemRcd;
 	char				szEncodeMsg[256];
-
+	int nPos = 0;
 	fnMakeDefMessage(&SendDefMsg, SM_ADDITEM, (int)this, 0, 0, 1);
 
-	if (lpTItemRcd->szMakeIndex[0] != 'G')
+	if (lpTItemRcd->btType != 'G')
 	{
+		_TCLIENTITEMRCD		tClientItemRcd;
 		CStdItemSpecial* lpStdItem;
 
-		GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+		lpStdItem=GetStdItemByIndex(lpTItemRcd->nStdIndex);
 		lpStdItem->GetStandardItem(&tClientItemRcd);
 		lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
 
-		if (strlen(lpTItemRcd->szPrefixName))
-			strcpy(tClientItemRcd.szPrefixName, lpTItemRcd->szPrefixName);
-		else
-			ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
+		//if (strlen(lpTItemRcd->szPrefixName))
+		//	strcpy(tClientItemRcd.szPrefixName, lpTItemRcd->szPrefixName);
+		//else
+		//	ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
+
+		memcpy(&tClientItemRcd.szMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID));
+
+		tClientItemRcd.wCurDura = lpTItemRcd->wDura;
+		tClientItemRcd.wCurDuraMax = lpTItemRcd->wDuraMax;
+
+		nPos = fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
 	}
 	else
 	{
-		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
-		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetUpgradeStdItem(&tClientItemRcd, lpTItemRcd);
+		_TCLIENTGENITEMRCD tClientGenItemRcd;
+		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetStandardItem((_LPTCLIENTITEMRCD)&tClientGenItemRcd);
+		g_pStdItemEtc[lpTItemRcd->nStdIndex].GetUpgradeStdItem((_LPTCLIENTITEMRCD)&tClientGenItemRcd, lpTItemRcd);
+
+		memcpy(&tClientGenItemRcd.szMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID));
+
+		tClientGenItemRcd.wCurDura = lpTItemRcd->wDura;
+
+		nPos = fnEncode6BitBufA((unsigned char *)&tClientGenItemRcd, szEncodeMsg, sizeof(_TCLIENTGENITEMRCD), sizeof(szEncodeMsg));
 	}
 
-	memcpy(tClientItemRcd.szMakeIndex, lpTItemRcd->szMakeIndex, 12);
-	
-	tClientItemRcd.nDura		= lpTItemRcd->nDura;
-	tClientItemRcd.nDuraMax		= lpTItemRcd->nDuraMax;
-
-	int nPos = 	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg));
 	szEncodeMsg[nPos] = '\0';
 
 	SendSocket(&SendDefMsg, szEncodeMsg);
@@ -359,7 +367,7 @@ BOOL CPlayerObject::PickUp()
 			{
 				if (m_pMap->RemoveObject(m_nCurrX, m_nCurrY, OS_ITEMOBJECT, (VOID *)pMapItem))
 				{
-					_LPTUSERITEMABILITY lptItemRcd = (_LPTUSERITEMABILITY)pMapItem->pItem;
+					_LPTUSERITEMRCD lptItemRcd = (_LPTUSERITEMRCD)pMapItem->pItem;
 
 					if (int nUpdate = UpdateItemToDB(lptItemRcd, _ITEM_ACTION_PICKUP))
 					{
@@ -446,26 +454,27 @@ begin
 end;
 */
 
-int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction)
+int CPlayerObject::UpdateItemToDB(_LPTUSERITEMRCD lpMakeItemRcd, int nAction)
 {
 	char	szQuery[1024];
 
-	char	szMakeDay[7];
-	char	szMakeIndex[6];
+	//char	szMakeDay[7];
+	char	szMakeIndex[37];
 
-	ZeroMemory(szMakeDay, sizeof(szMakeDay));
+	//ZeroMemory(szMakeDay, sizeof(szMakeDay));
 	ZeroMemory(szMakeIndex, sizeof(szMakeIndex));
 
-	memcpy(szMakeDay, &lpMakeItemRcd->szMakeIndex[1], 6);
-	memcpy(szMakeIndex, &lpMakeItemRcd->szMakeIndex[7], 5);
+	//memcpy(szMakeDay, &lpMakeItemRcd->szMakeIndex[1], 6);
+	GetGuidSZ(szMakeIndex, &lpMakeItemRcd->szMakeIndex);
+	//memcpy(szMakeIndex, &lpMakeItemRcd->szMakeIndex[7], 5);
 
-	if (atoi(szMakeDay) == 0 && atoi(szMakeIndex) == 0)
+	if (IsEmptyGuid(&lpMakeItemRcd->szMakeIndex))//(atoi(szMakeDay) == 0 && atoi(szMakeIndex) == 0) //means  empty
 	{
 		_TMAKEITEMRCD	tMakeItemRcd;
 
-		tMakeItemRcd.szStdType	= lpMakeItemRcd->szMakeIndex[0];
-		tMakeItemRcd.nDura		= lpMakeItemRcd->nDura;
-		tMakeItemRcd.nDuraMax	= lpMakeItemRcd->nDuraMax;
+		tMakeItemRcd.szStdType	= lpMakeItemRcd->btType;
+		tMakeItemRcd.nDura		= lpMakeItemRcd->wDura;
+		tMakeItemRcd.nDuraMax	= lpMakeItemRcd->wDuraMax;
 		tMakeItemRcd.nStdIndex	= lpMakeItemRcd->nStdIndex;
 		memcpy(tMakeItemRcd.btValue, lpMakeItemRcd->btValue, sizeof(lpMakeItemRcd->btValue));
 
@@ -499,7 +508,7 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction
 								"FLD_VALUE14, FLD_LASTOWNER, FLD_LASTACTION) "
 								"VALUES( '%s', '%s', '%c', '%s', '%05d', %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %s, %d )", 
 								pszUserID, pszCharName, lpMakeItemRcd->szMakeIndex[0], g_szYesterDay, g_nItemIndexCnt,
-								lpMakeItemRcd->nStdIndex, lpMakeItemRcd->nDura,	lpMakeItemRcd->nDuraMax, 
+								lpMakeItemRcd->nStdIndex, lpMakeItemRcd->wDura,	lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
@@ -512,13 +521,13 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction
 								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_VALUE1=%d, FLD_VALUE2=%d, FLD_VALUE3=%d, FLD_VALUE4=%d, FLD_VALUE5=%d, "
 								"FLD_VALUE6=%d, FLD_VALUE7=%d, FLD_VALUE8=%d, FLD_VALUE9=%d, FLD_VALUE10=%d, FLD_VALUE11=%d, FLD_VALUE12=%d, FLD_VALUE13=%d, "
 								"FLD_VALUE14=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
-								"WHERE FLD_STDTYPE='%c' AND FLD_MAKEDATE='%s' AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
-								"0", "WEMADE", lpMakeItemRcd->nDura, lpMakeItemRcd->nDuraMax, 
+								"WHERE FLD_STDTYPE='%c'  AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
+								"0", "WEMADE", lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
 								lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], m_pUserInfo->m_szCharName, _ITEM_ACTION_THROW,
-								lpMakeItemRcd->szMakeIndex[0], szMakeDay, szMakeIndex, lpMakeItemRcd->nStdIndex);
+								lpMakeItemRcd->btType, szMakeIndex, lpMakeItemRcd->nStdIndex);
 			break;
 		}
 		case _ITEM_ACTION_PICKUP:
@@ -527,13 +536,13 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction
 								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_VALUE1=%d, FLD_VALUE2=%d, FLD_VALUE3=%d, FLD_VALUE4=%d, FLD_VALUE5=%d, "
 								"FLD_VALUE6=%d, FLD_VALUE7=%d, FLD_VALUE8=%d, FLD_VALUE9=%d, FLD_VALUE10=%d, FLD_VALUE11=%d, FLD_VALUE12=%d, FLD_VALUE13=%d, "
 								"FLD_VALUE14=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
-								"WHERE FLD_STDTYPE='%c' AND FLD_MAKEDATE='%s' AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
-								m_pUserInfo->m_szUserID, m_pUserInfo->m_szCharName, lpMakeItemRcd->nDura, lpMakeItemRcd->nDuraMax, 
+								"WHERE FLD_STDTYPE='%c'  AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
+								m_pUserInfo->m_szUserID, m_pUserInfo->m_szCharName, lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
 								lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], "WEMADE", _ITEM_ACTION_PICKUP,
-								lpMakeItemRcd->szMakeIndex[0], szMakeDay, szMakeIndex, lpMakeItemRcd->nStdIndex);
+								lpMakeItemRcd->btType, szMakeIndex, lpMakeItemRcd->nStdIndex);
 			break;
 		}
 		case _ITEM_ACTION_UPDATE:
@@ -542,13 +551,13 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction
 								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_VALUE1=%d, FLD_VALUE2=%d, FLD_VALUE3=%d, FLD_VALUE4=%d, FLD_VALUE5=%d, "
 								"FLD_VALUE6=%d, FLD_VALUE7=%d, FLD_VALUE8=%d, FLD_VALUE9=%d, FLD_VALUE10=%d, FLD_VALUE11=%d, FLD_VALUE12=%d, FLD_VALUE13=%d, "
 								"FLD_VALUE14=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d, FLD_PREFIXNAME='%s' "
-								"WHERE FLD_STDTYPE='%c' AND FLD_MAKEDATE='%s' AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
-								lpMakeItemRcd->nDura, lpMakeItemRcd->nDuraMax, 
+								"WHERE FLD_STDTYPE='%c'  AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
+								lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
 								lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], m_pUserInfo->m_szCharName, _ITEM_ACTION_UPDATE, lpMakeItemRcd->szPrefixName,
-								lpMakeItemRcd->szMakeIndex[0], szMakeDay, szMakeIndex, lpMakeItemRcd->nStdIndex);
+								lpMakeItemRcd->btType,  szMakeIndex, lpMakeItemRcd->nStdIndex);
 			break;
 		}
 
@@ -871,14 +880,14 @@ void CPlayerObject::RecalcAbilitys()
 	m_WAbility.HandWeight	= 0;
 	m_WAbility.WearWeight	= 0;
 
-	_LPTUSERITEMABILITY lpUserItemRcd = NULL;
+	_LPTUSERITEMRCD lpUserItemRcd = NULL;
 	CStdItemSpecial* lpStdItem;
 
 	for (int i = U_DRESS; i <= U_RINGR; i++)
 	{
-		if (lpUserItemRcd = m_pUserInfo->GetAccessory(i))
+		if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty&&(lpUserItemRcd = m_pUserInfo->GetAccessory(i)))
 		{
-			GetStdItemByIndex(lpUserItemRcd->nStdIndex, lpStdItem);
+			lpStdItem=GetStdItemByIndex(lpUserItemRcd->nStdIndex);
 			lpStdItem->ApplyItemParameters(&m_AddAbility);
 
 			if ( i == U_RIGHTHAND || i == U_WEAPON )
@@ -887,7 +896,7 @@ void CPlayerObject::RecalcAbilitys()
 				m_WAbility.WearWeight += lpStdItem->wWeight;
 
 			if ( i == U_WEAPON )
-				m_AddAbility.WeaponStrong = (BYTE)lpStdItem->dwRSource; // 무기의 강도. 강도가 높으면 잘 안 뽀개짐
+				m_AddAbility.WeaponStrong = (BYTE)lpStdItem->wRSource; // 무기의 강도. 강도가 높으면 잘 안 뽀개짐
 		}
 	}
 
@@ -921,11 +930,11 @@ void CPlayerObject::RecalcAbilitys()
 	// BEGIN:Light (Candle)
 	BYTE btOldLight = m_btLight;
 
-	_LPTGENERALITEMRCD lpTItemRcd = m_pUserInfo->GetRightHand();
+	_LPTUSERGENITEMRCD lpTItemRcd = m_pUserInfo->GetRightHand();
 
 	if (lpTItemRcd)
 	{
-		if (lpTItemRcd->nDura > 0)
+		if (lpTItemRcd->wDura > 0)
 			m_btLight = 8;
 		else
 			m_btLight = 2;
@@ -1005,40 +1014,41 @@ void CPlayerObject::SendMyMagics()
 void CPlayerObject::SendBagItems()
 {
 	char				szEncodeMsg[8096];
+	char				szUncodeMsg[8096];
 	int					nCnt	= m_pUserInfo->m_lpTItemRcd.GetCount();
 	int					nGenCnt = m_pUserInfo->m_lpTGenItemRcd.GetCount();
 	int					nPos	= 0;
 
-	_TCLIENTITEMRCD		tClientItemRcd;
 	_TDEFAULTMESSAGE	DefMsg;
-
+	//nPos = DEFGUIDLEN;
+	//memcpy(szUncodeMsg, m_pUserInfo->m_THumanRcd.szCharGuid, nPos);
 	if (nCnt)
 	{
+		_TCLIENTITEMRCD		tClientItemRcd;
 		PLISTNODE pListNode = m_pUserInfo->m_lpTItemRcd.GetHead();
-		CStdItemSpecial* lpStdItem;
+		CStdItemSpecial* lpStdItem=0;
 		while (pListNode)
 		{
-			_LPTUSERITEMABILITY	lptUserItemRcd = m_pUserInfo->m_lpTItemRcd.GetData(pListNode);
+			_LPTUSERITEMRCD	lptUserItemRcd = m_pUserInfo->m_lpTItemRcd.GetData(pListNode);
 
 			if (lptUserItemRcd)
 			{
-				GetStdItemByIndex(lptUserItemRcd->nStdIndex, lpStdItem);
+				memset(&tClientItemRcd, 0, sizeof(_TCLIENTITEMRCD));
+				lpStdItem=GetStdItemByIndex(lptUserItemRcd->nStdIndex);
 				lpStdItem->GetStandardItem(&tClientItemRcd);
 				lpStdItem->GetUpgradeStdItem(&tClientItemRcd, lptUserItemRcd);
 
-				memcpy(tClientItemRcd.szMakeIndex, lptUserItemRcd->szMakeIndex, 12);
+				memcpy(&tClientItemRcd.szMakeIndex, &lptUserItemRcd->szMakeIndex, sizeof(GUID));
 				
-				tClientItemRcd.nDura		= lptUserItemRcd->nDura;
-				tClientItemRcd.nDuraMax		= lptUserItemRcd->nDuraMax;
+				tClientItemRcd.wCurDura			= lptUserItemRcd->wDura;
+				tClientItemRcd.wCurDuraMax		= lptUserItemRcd->wDuraMax;
+				tClientItemRcd.wCount			= lptUserItemRcd->wCount;
 
-				if (strlen(lptUserItemRcd->szPrefixName))
-					strcpy(tClientItemRcd.szPrefixName, lptUserItemRcd->szPrefixName);
-				else
-					ZeroMemory(tClientItemRcd.szPrefixName, sizeof(tClientItemRcd.szPrefixName));
+				memcpy(&szUncodeMsg[nPos], &tClientItemRcd, sizeof(_TCLIENTITEMRCD));
+				nPos += sizeof(_TCLIENTITEMRCD);
+				//nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg) - nPos);
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg) - nPos);
-
-				szEncodeMsg[nPos++] = '/';
+				//szEncodeMsg[nPos++] = '/';
 			}
 
 			pListNode = m_pUserInfo->m_lpTItemRcd.GetNext(pListNode);
@@ -1047,38 +1057,40 @@ void CPlayerObject::SendBagItems()
 
 	if (nGenCnt)
 	{
-		char		szVal[5];
+		//char		szVal[5];
 
-		ZeroMemory(szVal, sizeof(szVal));
+		//ZeroMemory(szVal, sizeof(szVal));
 
 		PLISTNODE pListNode = m_pUserInfo->m_lpTGenItemRcd.GetHead();
-
+		_LPTUSERGENITEMRCD	lptGenItemRcd;
+		_TCLIENTGENITEMRCD  tClientGenItemRcd;
 		while (pListNode)
 		{
-			_LPTGENERALITEMRCD	lptGenItemRcd = m_pUserInfo->m_lpTGenItemRcd.GetData(pListNode);
+			lptGenItemRcd = m_pUserInfo->m_lpTGenItemRcd.GetData(pListNode);
 
 			if (lptGenItemRcd)
 			{
-				memcpy(tClientItemRcd.szMakeIndex, lptGenItemRcd->szMakeIndex, 12);
-		
-				tClientItemRcd.nDura		= lptGenItemRcd->nDura;
-				tClientItemRcd.nDuraMax		= lptGenItemRcd->nDuraMax;
+				memcpy(&tClientGenItemRcd.szMakeIndex, &lptGenItemRcd->szMakeIndex, sizeof(GUID));		
+				
+				tClientGenItemRcd.wCurDura		= lptGenItemRcd->wDura;
+				tClientGenItemRcd.wCurDuraMax  = lptGenItemRcd->wDuraMax;
 
-				g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem(&tClientItemRcd);
+				g_pStdItemEtc[lptGenItemRcd->nStdIndex].GetStandardItem((_LPTCLIENTITEMRCD)&tClientGenItemRcd);
 
-				nPos +=	fnEncode6BitBufA((unsigned char *)&tClientItemRcd, &szEncodeMsg[nPos], sizeof(_TUSERITEMRCD), sizeof(szEncodeMsg) - nPos);
+				memcpy(&szUncodeMsg[nPos], &tClientGenItemRcd, sizeof(_TCLIENTGENITEMRCD));
+				nPos += sizeof(_TCLIENTGENITEMRCD);
 
-				szEncodeMsg[nPos++] = '/';
+				//nPos +=	fnEncode6BitBufA((unsigned char *)&tClientGenItemRcd, &szEncodeMsg[nPos], sizeof(_TCLIENTGENITEMRCD), sizeof(szEncodeMsg) - nPos);
+
+				//szEncodeMsg[nPos++] = '/';
 			}
 
 			pListNode = m_pUserInfo->m_lpTGenItemRcd.GetNext(pListNode);
 		}
 	}
-
+	nPos=fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
+	fnMakeDefMessage(&DefMsg, SM_BAGITEMS, (int)this, 0, 0, nCnt + nGenCnt, nPos);
 	szEncodeMsg[nPos] = '\0';
-
-	fnMakeDefMessage(&DefMsg, SM_BAGITEMS, (int)this, 0, 0, nCnt + nGenCnt);
-
 	SendSocket(&DefMsg, szEncodeMsg);
 }
 
@@ -1169,7 +1181,13 @@ void CPlayerObject::Initialize()
 
 		m_pMap->AddNewObject(m_nCurrX, m_nCurrY, OS_MOVINGOBJECT, this);
 
-		AddRefMsg(RM_TURN, m_nDirection, m_nCurrX, m_nCurrY, 0, NULL);
+		AddRefMsg(RM_HUMSHOW, m_nDirection, m_nCurrX, m_nCurrY, 0, NULL);
+
+		for (int i = 0; i < CHARUSEITEMCNT; i++)
+		{
+			if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
+				m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem=GetStdItemByIndex(m_pUserInfo->m_THumanRcd.szTakeItem[i].tUserItemAbility.nStdIndex);
+		}
 
 		m_Ability.Level		= m_pUserInfo->m_THumanRcd.szLevel;
 		m_Ability.Exp		= m_pUserInfo->m_THumanRcd.nExp;
@@ -1292,19 +1310,19 @@ void CPlayerObject::MakeFeature()
 	m_tFeatureEx.dwWearColor	= 0xFFFF;
 }
 
-BOOL CPlayerObject::CheckTakeOnItem(WORD wWhere, _LPTUSERITEMABILITY lpTItemRcd)
+BOOL CPlayerObject::CheckTakeOnItem(WORD wWhere, _LPTUSERITEMRCD lpTItemRcd)
 {
 	TCHAR	wszMsg[64];
 	char	szMsg[64];
 	CStdItemSpecial* lpStdItem;
-	GetStdItemByIndex(lpTItemRcd->nStdIndex, lpStdItem);
+	lpStdItem=GetStdItemByIndex(lpTItemRcd->nStdIndex);
 	int		nNeed		= lpStdItem->wNeed;
 	int		nNeedLevel	= lpStdItem->wNeedLevel;;
 	int		nWeight		= lpStdItem->wWeight;
 
 	if (wWhere == U_DRESS)
 	{
-		if (lpTItemRcd->szMakeIndex[0] != 'B') return FALSE;
+		if (lpTItemRcd->btType != 'B') return FALSE;
 
 		if (lpStdItem->wStdMode == 10)	// 남자옷
 		{
@@ -1380,9 +1398,9 @@ _NOTENOUGH_VALUE:
 	return FALSE;
 }
 
-void CPlayerObject::ServerGetTakeOnGenItem(WORD wWhere, char *pszItemIndex)
+void CPlayerObject::ServerGetTakeOnGenItem(WORD wWhere, const GUID *pszItemIndex)
 {
-	_LPTGENERALITEMRCD	lpTGenItemRcd = NULL;
+	_LPTUSERGENITEMRCD	lpTGenItemRcd = NULL;
 	_TDEFAULTMESSAGE	DefMsg;
 
 	if (m_pUserInfo->m_lpTGenItemRcd.GetCount())
@@ -1393,10 +1411,10 @@ void CPlayerObject::ServerGetTakeOnGenItem(WORD wWhere, char *pszItemIndex)
 		{
 			lpTGenItemRcd = m_pUserInfo->m_lpTGenItemRcd.GetData(pListNode);
 		
-			if (memcmp(pszItemIndex, lpTGenItemRcd->szMakeIndex, _MAKEITEMINDEX) == 0)
+			if (memcmp(pszItemIndex, &lpTGenItemRcd->szMakeIndex, sizeof(GUID)) == 0)
 			{
-				memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, lpTGenItemRcd->szMakeIndex, _MAKEITEMINDEX);
-
+				memcpy(&m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, &lpTGenItemRcd->szMakeIndex, sizeof(GUID));
+				m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].btIsEmpty = false;
 				RecalcAbilitys();
 
 				LONG lFeature = GetFeatureToLong();
@@ -1420,18 +1438,18 @@ void CPlayerObject::ServerGetTakeOnGenItem(WORD wWhere, char *pszItemIndex)
 	SendSocket(&DefMsg, NULL);
 }
 
-void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, char *pszItemIndex)
+void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, const GUID *pszItemIndex)
 {
 	_TDEFAULTMESSAGE	DefMsg;
 
-	_LPTUSERITEMABILITY lpTItemRcd = m_pUserInfo->GetItem(pszItemIndex);
+	_LPTUSERITEMRCD lpTItemRcd = m_pUserInfo->GetItem(pszItemIndex);
 	
 	if (lpTItemRcd)
 	{
 		if (CheckTakeOnItem(wWhere, lpTItemRcd))
 		{
-			memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, lpTItemRcd->szMakeIndex, _MAKEITEMINDEX);
-
+			memcpy(&m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, &lpTItemRcd->szMakeIndex, sizeof(GUID));
+			m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].btIsEmpty = false;
 			switch (wWhere)
 			{
 				case U_DRESS:
@@ -1469,9 +1487,9 @@ void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, char *pszItemIndex)
 	SendSocket(&DefMsg, NULL);
 }
 
-void CPlayerObject::ServerGetTakeOffItem(WORD wWhere, char *pszItemIndex)
+void CPlayerObject::ServerGetTakeOffItem(WORD wWhere, const GUID *pszItemIndex)
 {
-	_LPTUSERITEMABILITY		lpTItemRcd = NULL;
+	_LPTUSERITEMRCD		lpTItemRcd = NULL;
 	_TDEFAULTMESSAGE	DefMsg;
 
 //		PLISTNODE pListNode = m_pUserInfo->m_lpTItemRcd.GetHead();
@@ -1480,10 +1498,11 @@ void CPlayerObject::ServerGetTakeOffItem(WORD wWhere, char *pszItemIndex)
 //		{
 //			lpTItemRcd = m_pUserInfo->m_lpTItemRcd.GetData(pListNode);
 		
-	if (memcmp(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, pszItemIndex, _MAKEITEMINDEX) == 0)
+	if (memcmp(&m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, pszItemIndex, sizeof(GUID)) == 0)
 	{
-		ZeroMemory(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, _MAKEITEMINDEX);
-		memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].szMakeIndex, "0", 2);
+		ZeroMemory(&m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, sizeof(GUID));
+		m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].btIsEmpty = true;
+		//memcpy(m_pUserInfo->m_THumanRcd.szTakeItem[wWhere].tUserItemAbility.szMakeIndex, "0", 2);
 
 		switch (wWhere)
 		{
@@ -1928,13 +1947,13 @@ BOOL CPlayerObject::DoSpell(_LPTHUMANMAGICRCD	lptMagicRcd, int TargetX, int Targ
 		case _SKILL_BIGCLOAK:
 		case _SKILL_SKELLETON:
 		{
-			if (_LPTGENERALITEMRCD lptItem = m_pUserInfo->CanUseBujuk())
+			if (_LPTUSERGENITEMRCD lptItem = m_pUserInfo->CanUseBujuk())
 			{
-				if (lptItem->nDura >= 1)
+				if (lptItem->wDura >= 1)
 				{
-					lptItem->nDura--;
+					lptItem->wDura--;
 
-					AddProcess(this, RM_DURACHANGE, U_ARMRINGL, lptItem->nDura, lptItem->nDuraMax, 0);
+					AddProcess(this, RM_DURACHANGE, U_ARMRINGL, lptItem->wDura, lptItem->wDuraMax, 0);
 
 					switch (lptMagicRcd->btMagicID)
 					{
@@ -2011,13 +2030,13 @@ BOOL CPlayerObject::DoSpell(_LPTHUMANMAGICRCD	lptMagicRcd, int TargetX, int Targ
 		}
 		case _SKILL_SINSU:			// 신수소환
 		{
-			if (_LPTGENERALITEMRCD lptItem = m_pUserInfo->CanUseBujuk())
+			if (_LPTUSERGENITEMRCD lptItem = m_pUserInfo->CanUseBujuk())
 			{
-				if (lptItem->nDura >= 5)
+				if (lptItem->wDura >= 5)
 				{
-					lptItem->nDura -= 5;
+					lptItem->wDura -= 5;
 
-					AddProcess(this, RM_DURACHANGE, U_ARMRINGL, lptItem->nDura, lptItem->nDuraMax, 0);
+					AddProcess(this, RM_DURACHANGE, U_ARMRINGL, lptItem->wDura, lptItem->wDuraMax, 0);
 
 					if (GetAvailablePosition(m_pMap, TargetX, TargetY, 3))
 					{
@@ -2435,15 +2454,15 @@ void CPlayerObject::Operate()
 					{
 						if (lpProcessMsg->pszData)
 						{
-							char	szDecodeData[16];
-
-							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, 12);
+							char	szDecodeData[50];
+							GUID	guid;
+							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, sizeof(szDecodeData));
 							szDecodeData[nPos] = '\0';
-
+							memcpy(&guid, szDecodeData, sizeof(GUID));
 							if (szDecodeData[0] == 'G')
-								ServerGetTakeOnGenItem((WORD)lpProcessMsg->lParam2, szDecodeData);
+								ServerGetTakeOnGenItem((WORD)lpProcessMsg->lParam2, &guid);
 							else
-								ServerGetTakeOnItem((WORD)lpProcessMsg->lParam2, szDecodeData);
+								ServerGetTakeOnItem((WORD)lpProcessMsg->lParam2, &guid);
 						}
 
 						break;
@@ -2452,12 +2471,12 @@ void CPlayerObject::Operate()
 					{
 						if (lpProcessMsg->pszData)
 						{
-							char	szDecodeData[16];
-
-							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, 12);
+							char	szDecodeData[50];
+							GUID	guid;
+							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, sizeof(szDecodeData));
 							szDecodeData[nPos] = '\0';
-
-							ServerGetTakeOffItem((WORD)lpProcessMsg->lParam2, szDecodeData);
+							memcpy(&guid, szDecodeData, sizeof(GUID));
+							ServerGetTakeOffItem((WORD)lpProcessMsg->lParam2, &guid);
 						}
 
 						break;
@@ -2478,11 +2497,11 @@ void CPlayerObject::Operate()
 						if (lpProcessMsg->pszData)
 						{
 							char	szDecodeData[16];
-
-							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, 12);
+							GUID	guid;
+							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, sizeof(szDecodeData));
 							szDecodeData[nPos] = '\0';
-
-							ServerGetEatItem(lpProcessMsg->wParam, szDecodeData);
+							memcpy(&guid, szDecodeData, sizeof(GUID));
+							ServerGetEatItem(lpProcessMsg->wParam, &guid);
 						}
 
 						break;
@@ -2494,34 +2513,30 @@ void CPlayerObject::Operate()
 					}
 					case CM_DROPITEM:
 					{
-						char	szDecodeData[16];
+						char	szDecodeData[38];
 						BOOL	fFlag = FALSE;
+						GUID	guid;
 
 						if (lpProcessMsg->pszData)
 						{
-							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, 12);
+							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, 38);
 							szDecodeData[nPos] = '\0';
-
+							memcpy(&guid, &szDecodeData[1], sizeof(GUID));
 							if (szDecodeData[0] == 'G')
 							{
-								if (m_pUserInfo->UserDropGenItem(lpProcessMsg->wParam, szDecodeData))
+								if (m_pUserInfo->UserDropGenItem(lpProcessMsg->wParam, &guid))
 									fFlag = TRUE;
 							}
 							else
 							{
-								if (m_pUserInfo->UserDropItem(lpProcessMsg->wParam, szDecodeData))
+								if (m_pUserInfo->UserDropItem(lpProcessMsg->wParam, &guid))
 									fFlag = TRUE;
 							}
-
-							if (fFlag)
-								fnMakeDefMessage(&DefMsg, SM_DROPITEM_SUCCESS, 0, lpProcessMsg->wParam, 0, 0);
-							else
-								fnMakeDefMessage(&DefMsg, SM_DROPITEM_FAIL, 0, lpProcessMsg->wParam, 0, 0);
 						}
-						else
-							fnMakeDefMessage(&DefMsg, SM_DROPITEM_FAIL, 0, lpProcessMsg->wParam, 0, 0);
 
-						nPos =	fnEncode6BitBufA((unsigned char *)szDecodeData, szEncodeMsg, 12, sizeof(szEncodeMsg));
+						fnMakeDefMessage(&DefMsg, SM_DROPITEM, fFlag, lpProcessMsg->wParam, 0, 0);
+
+						nPos =	fnEncode6BitBufA((unsigned char *)&szDecodeData[1], szEncodeMsg, sizeof(GUID), sizeof(szEncodeMsg));
 						szEncodeMsg[nPos] = '\0';
 
 						SendSocket(&DefMsg, szEncodeMsg);
@@ -2546,7 +2561,7 @@ void CPlayerObject::Operate()
 
 						fnMakeDefMessage(&DefMsg, SM_LOGON, (int)this, 
 											(unsigned short)m_nCurrX, (unsigned short)m_nCurrY, MAKEWORD(m_nDirection, lpProcessMsg->pCharObject->m_btLight));
-						nPos = fnEncode6BitBufA((unsigned char *)((CPlayerObject *)lpProcessMsg->pCharObject)->m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, DEFGUIDLEN, sizeof(szEncodeMsg) - nPos);
+						nPos = fnEncode6BitBufA((unsigned char *)&((CPlayerObject *)lpProcessMsg->pCharObject)->m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, sizeof(GUID), sizeof(szEncodeMsg) - nPos);
 						nPos += fnEncode6BitBufA((unsigned char *)&lpProcessMsg->pCharObject->m_tFeature, &szEncodeMsg[nPos], sizeof(_TOBJECTFEATURE), sizeof(szEncodeMsg));
 						nPos += fnEncode6BitBufA((unsigned char *)&((CPlayerObject *)lpProcessMsg->pCharObject)->m_tFeatureEx, &szEncodeMsg[nPos], sizeof(_TOBJECTFEATUREEX), sizeof(szEncodeMsg) - nPos);
 						
@@ -2625,6 +2640,41 @@ void CPlayerObject::Operate()
 					{
 						break;
 					}
+					case RM_HUMSHOW:
+						if (lpProcessMsg->pCharObject != this)
+						{
+							fnMakeDefMessage(&DefMsg, SM_HUMSHOW, (int)lpProcessMsg->pCharObject,
+								(unsigned short)lpProcessMsg->lParam1, (unsigned short)lpProcessMsg->lParam2, MAKEWORD(lpProcessMsg->wParam, lpProcessMsg->pCharObject->m_btLight));
+
+							CharDesc.Feature = lpProcessMsg->pCharObject->GetFeatureToLong();
+							CharDesc.Status = lpProcessMsg->pCharObject->m_nCharStatus;
+							/**/
+							char szUncodeMsg[sizeof(szEncodeMsg)];
+							nPos = sizeof(CharDesc);
+							memcpy(szUncodeMsg, &CharDesc, nPos);
+							if (lpProcessMsg->pCharObject->m_wObjectType & _OBJECT_HUMAN) {
+								memset(&szUncodeMsg[nPos++], 1, 1);
+								memcpy(&szUncodeMsg[nPos], (unsigned char *)&((CPlayerObject *)lpProcessMsg->pCharObject)->m_tFeatureEx, sizeof(_TOBJECTFEATUREEX));
+								nPos += sizeof(_TOBJECTFEATUREEX);
+							}
+							else
+								memset(&szUncodeMsg[nPos++], 0, 1);
+							if (lpProcessMsg->pszData)
+							{
+								int nLen = memlen(lpProcessMsg->pszData);
+								memset(&szUncodeMsg[nPos++], 1, 1);
+								memcpy(&szUncodeMsg[nPos], lpProcessMsg->pszData, nLen);
+								nPos += nLen;
+							}
+							else
+								memset(&szUncodeMsg[nPos++], 0, 1);
+							nPos = fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
+
+							szEncodeMsg[nPos] = '\0';
+
+							SendSocket(&DefMsg, szEncodeMsg);
+						}
+						break;
 					case RM_TURN:
 					{
 						if (lpProcessMsg->pCharObject != this)
@@ -2882,9 +2932,9 @@ void CPlayerObject::Operate()
 
 						break;
 					}
-					case RM_DISAPPEAR:
+					case RM_HUMDISAPPEAR:
 					{
-						fnMakeDefMessage(&DefMsg, SM_DISAPPEAR, (int)lpProcessMsg->pCharObject, 0, 0, 0);
+						fnMakeDefMessage(&DefMsg, SM_HUMDISAPPEAR, (int)lpProcessMsg->pCharObject, 0, 0, 0);
 						SendSocket(&DefMsg, NULL);
 						break;
 					}
@@ -3010,28 +3060,27 @@ void CPlayerObject::Operate()
 					{
 						fnMakeDefMessage(&DefMsg, SM_SENDUSEITEMS, 0, 0, 0, 0);
 						char szUncodeMsg[sizeof(szEncodeMsg)];
-						nPos = DEFGUIDLEN;
-						memcpy(szUncodeMsg, m_pUserInfo->m_THumanRcd.szCharGuid,nPos);
+						nPos = sizeof(GUID);
+						memcpy(szUncodeMsg, &(m_pUserInfo->m_THumanRcd.szCharGuid),nPos);
 						_TCLIENTITEMRCD tClientItem;
+						_LPTUSEITEM		lptUseItem;
 						memset(&tClientItem,0,sizeof(_TCLIENTITEMRCD));
-						for (int i=0;i<CHARTAKEITEMCNT;i++) 
+						
+						for (int i=0;i<CHARUSEITEMCNT;i++) 
 						{
-							szUncodeMsg[nPos++] = m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty;
-							if (!m_pUserInfo->m_THumanRcd.szTakeItem[i].btIsEmpty)
-							{
-								m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetStandardItem(&tClientItem);
-								memcpy(&tClientItem, &m_pUserInfo->m_THumanRcd.szTakeItem[i],sizeof(tag_TUSERITEMABILITY));
-								//m_pUserInfo->m_THumanRcd.szTakeItem[i].lptStdItem->GetUpgradeStdItem(&tClientItem, &m_pUserInfo->m_THumanRcd.szTakeItem[i]);
+							lptUseItem = &m_pUserInfo->m_THumanRcd.szTakeItem[i];
+							szUncodeMsg[nPos++] = lptUseItem->btIsEmpty;
+							if (!lptUseItem->btIsEmpty)
+							{							
+								lptUseItem->lptStdItem->GetStandardItem(&tClientItem);
+								lptUseItem->lptStdItem->GetUpgradeStdItem(&tClientItem, &lptUseItem->tUserItemAbility);
+
 								memcpy(&szUncodeMsg[nPos], &tClientItem, sizeof(_TCLIENTITEMRCD));
 								nPos += sizeof(_TCLIENTITEMRCD);
 							}
 						}
-						//nPos += sizeof(m_pUserInfo->m_THumanRcd.szTakeItem);
 						nPos = fnEncode6BitBufA((unsigned char *)szUncodeMsg, szEncodeMsg, nPos, sizeof(szEncodeMsg));
-
 						
-						//nPos = fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szCharGuid, szEncodeMsg, sizeof(m_pUserInfo->m_THumanRcd.szCharGuid), sizeof(szEncodeMsg));
-						//nPos += fnEncode6BitBufA((unsigned char *)m_pUserInfo->m_THumanRcd.szTakeItem, &szEncodeMsg[nPos], sizeof(m_pUserInfo->m_THumanRcd.szTakeItem), sizeof(szEncodeMsg));
 						szEncodeMsg[nPos] = '\0';
 						SendSocket(&DefMsg, szEncodeMsg);
 						//delete tClientItem;
@@ -3111,7 +3160,7 @@ void CPlayerObject::Operate()
 						break;
 					}
 					case RM_ITEMSHOW:
-					{
+					{//AddRefMsg(RM_ITEMSHOW, xpMapItem->wLooks, (int)xpMapItem, nX, nY, xpMapItem->szName);
 						fnMakeDefMessage(&DefMsg, SM_ITEMSHOW, lpProcessMsg->lParam1, 
 											(WORD)lpProcessMsg->lParam2, (WORD)lpProcessMsg->lParam3, lpProcessMsg->wParam);
 

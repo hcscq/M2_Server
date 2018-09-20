@@ -62,10 +62,14 @@ int							g_nNumOfMonGenInfo = 0;
 CMonRaceInfo*				g_pMonRaceInfo = NULL;			// Monster List
 int							g_nNumOfMonRaceInfo = 0;
 CStdItemSpecial*			g_pStdItemSpecial = NULL;		// Standard Item List
-inline CStdItemSpecial * GetStdItemByIndex(WORD stdItemIndex, CStdItemSpecial* lpStdItem) {
-	lpStdItem = g_pStdItemSpecial;
-	for (int i = 0; lpStdItem&&i < g_nStdItemSpecial&&lpStdItem->Index != stdItemIndex; i++, lpStdItem++);
-	return lpStdItem;
+inline CStdItemSpecial * GetStdItemByIndex(WORD stdItemIndex) {
+	for (int i = 0; i < g_nStdItemSpecial; i++)
+		if (g_pStdItemSpecial[i].Index == stdItemIndex)
+			return &g_pStdItemSpecial[i];
+	return 0;
+	//lpStdItem = g_pStdItemSpecial;
+	//for (int i = 0; lpStdItem&&i < g_nStdItemSpecial&&lpStdItem->Index != stdItemIndex; i++, lpStdItem++);
+	//return lpStdItem;
 }
 int							g_nStdItemSpecial = 0;
 CStdItem*					g_pStdItemEtc = NULL;			// Standard General Item list

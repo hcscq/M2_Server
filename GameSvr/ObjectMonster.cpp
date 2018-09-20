@@ -364,7 +364,7 @@ void CMonsterObject::Die()
 
 void CMonsterObject::ScatterBagItems()
 {
-	_LPTUSERITEMRCD lptUserItemRcd = NULL;
+	_LPTUSERITEMRCD lptUserItemRcd = NULL; 
 
 	if (m_xTItemRcd.GetCount())
 	{
@@ -470,13 +470,13 @@ void CMonsterObject::Initialize()
 	m_tFeature.btWeapon	= 0;
 }
 
-void CMonsterObject::MakeGenItem(_LPTGENERALITEMRCD lptGenItemRcd)
+void CMonsterObject::MakeGenItem(_LPTUSERGENITEMRCD lptGenItemRcd)
 {
-	_TGENITEMRCD		GenItemRcd;
+	//_TUSERGENITEMRCD		GenItemRcd;
 
-	sprintf(GenItemRcd.szItem, "G%03d%04d%04d", lptGenItemRcd->nStdIndex, lptGenItemRcd->nDura, lptGenItemRcd->nDuraMax);
+	//sprintf(GenItemRcd.szItem, "G%03d%04d%04d", lptGenItemRcd->nStdIndex, lptGenItemRcd->wDura, lptGenItemRcd->wDuraMax);
 
-	memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
+	//memcpy(lptGenItemRcd->szMakeIndex, GenItemRcd.szItem, 12);
 
 	m_xTGenItemRcd.AddNewNode(lptGenItemRcd);
 }
@@ -502,7 +502,6 @@ void CMonsterObject::MonGetRandomItems()
 				{
 //					if (1 >= rand() % pMonItem->m_nPoint)
 //					{
-						_LPTUSERITEMRCD lpTItemRcd = new _TUSERITEMRCD;
 
 						switch (pMonItem->m_btItemType)
 						{
@@ -513,6 +512,8 @@ void CMonsterObject::MonGetRandomItems()
 							case _ITEM_ARMOR:
 							case _ITEM_ACCESSORY:
 							{
+								_LPTUSERITEMRCD lpTItemRcd = new _TUSERITEMRCD;
+
 								ZeroMemory(lpTItemRcd->szPrefixName, sizeof(lpTItemRcd->szPrefixName));
 								ZeroMemory(lpTItemRcd->btValue, sizeof(lpTItemRcd->btValue));
 
@@ -530,15 +531,17 @@ void CMonsterObject::MonGetRandomItems()
 								//		memcpy(lpTItemRcd->szMakeIndex, "C00000000000", 12);
 								//		break;
 								//}
-								GetGuidSZ(lpTItemRcd->szMakeIndex);
+								
 
 								CStdItemSpecial* lpStdItem;
-								GetStdItemByIndex(pMonItem->m_wItemIndex, lpStdItem);
-								lpTItemRcd->nDura		= lpStdItem->wDuraMax;
-								lpTItemRcd->nDuraMax	= lpStdItem->wDuraMax;
+								lpStdItem=GetStdItemByIndex(pMonItem->m_wItemIndex);//lpStdItem->MakeIndex generated when pick up
+
+								lpTItemRcd->btType		= lpStdItem->btType;
+								lpTItemRcd->wDura		= lpStdItem->wDuraMax;
+								lpTItemRcd->wDuraMax	= lpStdItem->wDuraMax;
 
 								if (rand() % 10 == 0)
-									lpStdItem->UpgradeRandomItem(lpTItemRcd->btValue, lpTItemRcd->nDura, lpTItemRcd->nDuraMax);
+									lpStdItem->UpgradeRandomItem(lpTItemRcd->btValue, lpTItemRcd->wDura, lpTItemRcd->wDuraMax);
 
 								m_xTItemRcd.AddNewNode(lpTItemRcd);
 //								MakeItemToDB(&MakeItemRcd);
@@ -547,13 +550,13 @@ void CMonsterObject::MonGetRandomItems()
 							}
 							case _ITEM_ETC:
 							{
-								_LPTGENERALITEMRCD	lptGenItemRcd = new _TGENERALITEMRCD;
+								_LPTUSERGENITEMRCD	lptGenItemRcd = new _TUSERGENITEMRCD;
 
 								if (lptGenItemRcd)
 								{
 									lptGenItemRcd->nStdIndex	= pMonItem->m_wItemIndex;
-									lptGenItemRcd->nDura		= g_pStdItemEtc[pMonItem->m_wItemIndex].wDuraMax;
-									lptGenItemRcd->nDuraMax		= g_pStdItemEtc[pMonItem->m_wItemIndex].dwRSource;
+									lptGenItemRcd->wDura		= g_pStdItemEtc[pMonItem->m_wItemIndex].wDuraMax;
+									lptGenItemRcd->wDuraMax		= g_pStdItemEtc[pMonItem->m_wItemIndex].wRSource;
 
 									MakeGenItem(lptGenItemRcd);
 								}

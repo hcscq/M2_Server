@@ -69,7 +69,7 @@ CMonsterObject* AddCreature(CMirMap* pMap, int nX, int nY, int nMonRace, BOOL fS
 		pMap->AddNewObject(nX, nY, OS_MOVINGOBJECT, pMonsterObject);
 
 		if (!pMonsterObject->m_fHideMode)
-			pMonsterObject->AddRefMsg(RM_TURN, pMonsterObject->m_nDirection, nX, nY, 0, pMonsterObject->m_szName);
+			pMonsterObject->AddRefMsg(RM_HUMSHOW, pMonsterObject->m_nDirection, nX, nY, 0, pMonsterObject->m_szName);
 
 		return pMonsterObject;
 	}
@@ -143,9 +143,9 @@ UINT WINAPI ProcessMonster(LPVOID lpParameter)
 			{
 				if ((pMonGenInfo->dwStartTime == 0) || ((dwLastGenTick - pMonGenInfo->dwStartTime) > GetZenTime(pMonGenInfo->dwZenTime)))
 				{
-					if (pMonGenInfo->nCount > (int)pMonGenInfo->xMonsterObjList.GetCount())
+					if (pMonGenInfo->wCount > (int)pMonGenInfo->xMonsterObjList.GetCount())
 					{
-						if (RegenMonster(pMonGenInfo, pMonGenInfo->nCount - pMonGenInfo->xMonsterObjList.GetCount()))
+						if (RegenMonster(pMonGenInfo, pMonGenInfo->wCount - pMonGenInfo->xMonsterObjList.GetCount()))
 							pMonGenInfo->dwStartTime = GetTickCount();
 					}
 				}

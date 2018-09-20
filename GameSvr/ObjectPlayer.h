@@ -46,22 +46,22 @@ public:
 
 	void		SendMapName();
 	void		SendNewMap();
-	void		SendAddItem(_LPTUSERITEMABILITY lpTItemRcd);
+	void		SendAddItem(_LPTUSERITEMRCD lpTItemRcd);
 
-	BOOL		EatItem(char *pszMakeIndex);
-	BOOL		ReadBook(char *pszMakeIndex);
+	BOOL		EatItem(const GUID *pszMakeIndex);
+	BOOL		ReadBook(const GUID *pszMakeIndex);
 	int			GetMagicID(char *pszMakeIndex);
-	BOOL		ServerGetEatItem(int nItemIndex, char *pszMakeIndex);
+	BOOL		ServerGetEatItem(int nItemIndex, const GUID *pszMakeIndex);
 	BOOL		PickUp();
 
 	void		Whisper(char *pszChar, char *pszMsg);
 
-	int			UpdateItemToDB(_LPTUSERITEMABILITY lpMakeItemRcd, int nAction);
+	int			UpdateItemToDB(_LPTUSERITEMRCD lpMakeItemRcd, int nAction);
 
-	BOOL		CheckTakeOnItem(WORD wWhere, _LPTUSERITEMABILITY lpTItemRcd);
-	void		ServerGetTakeOnGenItem(WORD wWhere, char *pszItemIndex);
-	void		ServerGetTakeOnItem(WORD wWhere, char *pszItemIndex);
-	void		ServerGetTakeOffItem(WORD wWhere, char *pszItemIndex);
+	BOOL		CheckTakeOnItem(WORD wWhere, _LPTUSERITEMRCD lpTItemRcd);
+	void		ServerGetTakeOnGenItem(WORD wWhere, const GUID *pszItemIndex);
+	void		ServerGetTakeOnItem(WORD wWhere, const GUID *pszItemIndex);
+	void		ServerGetTakeOffItem(WORD wWhere, const GUID *pszItemIndex);
 	void		ServerGetButch(CCharObject* pCharObject, int nX, int nY, int nDir);
 
 	void		ServerGetMagicKeyChange(int nMagicID, int nUseKey);

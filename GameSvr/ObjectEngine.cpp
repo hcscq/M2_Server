@@ -567,17 +567,18 @@ begin
    end;
 end;
 */
-BOOL CCharObject::DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL fIsGenItem)
+BOOL CCharObject::DropItemDown(_LPTUSERITEMRCD lpTItemRcd, int nRange, BOOL fIsGenItem)
 {
 	CMapItem* xpMapItem = new CMapItem;
+	//char	  szEncodeData[80];
 
 	xpMapItem->nCount = 1;
 
 	if (fIsGenItem)
 	{
-		_LPTGENERALITEMRCD lpTGenItemRcd = NULL;
+		_LPTUSERGENITEMRCD lpTGenItemRcd = NULL;
 		
-		lpTGenItemRcd = (_LPTGENERALITEMRCD)lpTItemRcd;
+		lpTGenItemRcd = (_LPTUSERGENITEMRCD)lpTItemRcd;
 
 		xpMapItem->wLooks		= (WORD)g_pStdItemEtc[lpTGenItemRcd->nStdIndex].dwLooks;
 		xpMapItem->btAniCount	= (BYTE)0;
@@ -588,9 +589,9 @@ BOOL CCharObject::DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL 
 	else
 	{
 		CStdItemSpecial* lpStdItem;
-		GetStdItemByIndex(lpTItemRcd->nStdIndex,lpStdItem);
+		lpStdItem=GetStdItemByIndex(lpTItemRcd->nStdIndex);
 		xpMapItem->wLooks		= (WORD)lpStdItem->dwLooks;
-		xpMapItem->btAniCount	= (BYTE)lpStdItem->wAniCount;
+		xpMapItem->btAniCount	= (BYTE)lpStdItem->btAniCount;
 		
 		xpMapItem->pItem		= (LONG)lpTItemRcd;
 		
@@ -608,7 +609,8 @@ BOOL CCharObject::DropItemDown(_LPTUSERITEMABILITY lpTItemRcd, int nRange, BOOL 
 
 	m_pMap->GetDropPosition(m_nCurrX, m_nCurrY, nRange, nX, nY);
 	m_pMap->AddNewObject(nX, nY, OS_ITEMOBJECT, (VOID *)xpMapItem);
-
+	//memcpy(szEncodeData, lpTItemRcd->szMakeIndex, MAKEITEMINDEX);
+	//strcpy(&szEncodeData[MAKEITEMINDEX], xpMapItem->szName);
 	AddRefMsg(RM_ITEMSHOW, xpMapItem->wLooks, (int)xpMapItem, nX, nY, xpMapItem->szName);
 
 	return TRUE;
@@ -1469,7 +1471,7 @@ void CCharObject::SearchViewRange()
 				if (pVisibleObject->nVisibleFlag == 0)
 				{
 					if (!pVisibleObject->pObject->m_fHideMode)
-						AddProcess(pVisibleObject->pObject, RM_DISAPPEAR, 0, 0, 0, 0, NULL);
+						AddProcess(pVisibleObject->pObject, RM_HUMDISAPPEAR, 0, 0, 0, 0, NULL);
 
 					delete pVisibleObject;
 					pVisibleObject = NULL;
@@ -1492,7 +1494,7 @@ void CCharObject::SearchViewRange()
 																		pVisibleObject->pObject->m_nCurrX, pVisibleObject->pObject->m_nCurrY, 0, NULL);
 								}
 								else
-									AddProcess(pVisibleObject->pObject, RM_TURN, pVisibleObject->pObject->m_nDirection, 
+									AddProcess(pVisibleObject->pObject, RM_HUMSHOW, pVisibleObject->pObject->m_nDirection, 
 																		pVisibleObject->pObject->m_nCurrX, pVisibleObject->pObject->m_nCurrY, 
 																		0, pVisibleObject->pObject->m_szName);
 							}
@@ -1574,7 +1576,7 @@ void CCharObject::Disappear()
 	if (m_pMap)
 	{
 		m_pMap->RemoveObject(m_nCurrX, m_nCurrY, OS_MOVINGOBJECT, this);
-		AddRefMsg(RM_DISAPPEAR, 0, 0, 0, 0, NULL);
+		AddRefMsg(RM_HUMDISAPPEAR, 0, 0, 0, 0, NULL);
 	}
 }
 
@@ -1887,35 +1889,35 @@ void CCharObject::StruckDamage(int nDamage)
 
 		if (m_pUserInfo)
 		{
-			_LPTUSERITEMABILITY	lptDress = m_pUserInfo->GetDress();
+			_LPTUSERITEMRCD	lptDress = m_pUserInfo->GetDress();
 
 			if (lptDress)
 			{
-				int nDura		= lptDress->nDura;
+				int nDura		= lptDress->wDura;
 				int nOldDura	= ROUND(nDura / 1000);
 				
 				nDura	-= wDam;
 
 				if (nDura <= 0)	// 닳아 없어짐
 				{
-					lptDress->nDura = nDura = 0;
+					lptDress->wDura = nDura = 0;
 
 //               hum.SendDelItem (UseItems[U_DRESS]); //클라이언트에 없어진거 보냄
 					m_pUserInfo->SetEmptyDress();
 
-					AddProcess(this, RM_DURACHANGE, U_DRESS, nDura, lptDress->nDuraMax, 0); 
+					AddProcess(this, RM_DURACHANGE, U_DRESS, nDura, lptDress->wDuraMax, 0); 
 					AddProcess(this, RM_FEATURECHANGED, 0, GetFeatureToLong(), 0, 0);
 					
 					fReCalc = TRUE;
 				}
 				else
-					lptDress->nDura = nDura;
+					lptDress->wDura = nDura;
 
 				if (nOldDura != ROUND(nDura / 1000))
-					AddProcess(this, RM_DURACHANGE, U_DRESS, lptDress->nDura, lptDress->nDuraMax, 0); 
+					AddProcess(this, RM_DURACHANGE, U_DRESS, lptDress->wDura, lptDress->wDuraMax, 0); 
 			}
 
-			_LPTUSERITEMABILITY	lptUseItem;
+			_LPTUSERITEMRCD	lptUseItem;
 
 			for (int i = 0; i < 8; i++)
 			{
@@ -1923,28 +1925,28 @@ void CCharObject::StruckDamage(int nDamage)
 
 				if (lptUseItem && (rand() % 8) == 0)
 				{
-					int nDura		= lptUseItem->nDura;
+					int nDura		= lptUseItem->wDura;
 					int nOldDura	= ROUND(nDura / 1000);
 					
 					nDura	-= wDam;
 
 					if (nDura <= 0)	// 닳아 없어짐
 					{
-						lptUseItem->nDura = nDura = 0;
+						lptUseItem->wDura = nDura = 0;
 
 	//               hum.SendDelItem (UseItems[U_DRESS]); //클라이언트에 없어진거 보냄
 						m_pUserInfo->SetEmptyUseItem(i);
 
-						AddProcess(this, RM_DURACHANGE, i, nDura, lptUseItem->nDuraMax, 0); 
+						AddProcess(this, RM_DURACHANGE, i, nDura, lptUseItem->wDuraMax, 0); 
 						AddProcess(this, RM_FEATURECHANGED, 0, GetFeatureToLong(), 0, 0);
 
 						fReCalc = TRUE;
 					}
 					else
-						lptUseItem->nDura = nDura;
+						lptUseItem->wDura = nDura;
 
 					if (nOldDura != ROUND(nDura / 1000))
-						AddProcess(this, RM_DURACHANGE, i, lptUseItem->nDura, lptUseItem->nDuraMax, 0); 
+						AddProcess(this, RM_DURACHANGE, i, lptUseItem->wDura, lptUseItem->wDuraMax, 0); 
 				}
 			}
 		}
@@ -2014,31 +2016,31 @@ void CCharObject::DoDamageWeapon(int nDamage)
 {
 	if (m_pUserInfo)
 	{
-		_LPTUSERITEMABILITY	lptWeapon = m_pUserInfo->GetWeapon();
+		_LPTUSERITEMRCD	lptWeapon = m_pUserInfo->GetWeapon();
 
 		if (lptWeapon)
 		{
-			int nDura		= lptWeapon->nDura;
+			int nDura		= lptWeapon->wDura;
 			int nOldDura	= ROUND(nDura / 1000);
 			
 			nDura	-= nDamage;
 
 			if (nDura <= 0)	// 닳아 없어짐
 			{
-				lptWeapon->nDura = nDura = 0;
+				lptWeapon->wDura = nDura = 0;
 //               hum.SendDelItem (UseItems[U_DRESS]); //클라이언트에 없어진거 보냄
 
 				((CPlayerObject*)this)->RecalcAbilitys();
 
 				m_pUserInfo->SetEmptyWeapon();
 
-				AddProcess(this, RM_DURACHANGE, U_WEAPON, nDura, lptWeapon->nDuraMax, 0); 
+				AddProcess(this, RM_DURACHANGE, U_WEAPON, nDura, lptWeapon->wDuraMax, 0); 
 			}
 			else
-				lptWeapon->nDura = nDura;
+				lptWeapon->wDura = nDura;
 
 			if (nOldDura != ROUND(nDura / 1000))
-				AddProcess(this, RM_DURACHANGE, U_WEAPON, lptWeapon->nDura, lptWeapon->nDuraMax, 0); 
+				AddProcess(this, RM_DURACHANGE, U_WEAPON, lptWeapon->wDura, lptWeapon->wDuraMax, 0); 
 		}
 	}
 }
@@ -3273,7 +3275,7 @@ void CCharObject::SendSocket(_LPTDEFAULTMESSAGE lpDefMsg, char *pszPacket)
 		if (pszPacket)
 		{
 			int nLength = memlen(pszPacket)-1;
-
+			lpDefMsg->nLen = nLength + DEFBLOCKSIZE;
 			if (nLength >= 8096) 
 			{
 				InsertLogMsg(_TEXT("SendSocket:Packet is too long."));

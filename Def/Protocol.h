@@ -4,12 +4,13 @@
 
 #define DEFBLOCKSIZE			22
 #define DEFGUIDLEN				36
-#define HUMANRCDBLOCKSIZE		1959//256
-#define HUMLOADRDCVLOCKSIZE		123
-#define ITEMRCDBLOCKSIZE		180//70			// _TUSERITEMRCD
-#define MAGICRCDBLOCKSIZE		10
-#define GENITEMRCDBLOCKSIZE		18
-#define CHARTAKEITEMCNT			10
+#define HUMANRCDBLOCKSIZE		1319//1879//256
+#define HUMLOADRDCVLOCKSIZE		96//123
+#define ITEMRCDBLOCKSIZE		114//167//180//70			// _TUSEITEM
+#define MAGICRCDBLOCKSIZE		7//10
+#define GENITEMRCDBLOCKSIZE		34//74//18
+#define CHARUSEITEMCNT			10
+#define MAKEITEMINDEX			36//12
 /*MAP*/
 #define _Mir2Map				0
 #define _Mir3Map				1
@@ -143,7 +144,8 @@
 #define SM_FLYAXE               22
 #define SM_LIGHTING             23
 #define SM_WIDEHIT              24
-#define SM_DISAPPEAR            30
+#define SM_HUMDISAPPEAR         29//30->29
+#define SM_HUMSHOW				30//ADDED 2018.02.05
 #define SM_STRUCK				31
 #define SM_DEATH                32
 #define SM_SKELETON             33
@@ -173,8 +175,8 @@
 #define SM_ADDMAGIC             210
 #define SM_SENDMYMAGIC			211
 
-#define SM_DROPITEM_SUCCESS     600
-#define SM_DROPITEM_FAIL        601
+#define SM_DROPITEM				600
+//#define SM_DROPITEM_FAIL        601
 
 #define SM_ITEMSHOW             610
 #define SM_ITEMHIDE             611
@@ -227,7 +229,8 @@
 #define RM_RUSH					10015
 #define RM_STRUCK				10020
 #define RM_DEATH                10021
-#define RM_DISAPPEAR			10022
+#define RM_HUMDISAPPEAR			10022
+#define RM_HUMSHOW				10023//2018.02.05 SHOW HUM OBJECT
 #define RM_MAGSTRUCK            10025
 #define RM_STRUCK_MAG           10027
 #define RM_MAGSTRUCK_MINE       10028
@@ -383,7 +386,7 @@ typedef struct tag_TLOADMUHAN
 	char		szCharName[20];
 	char		szUserAddr[15];
 	byte		btCharIndex;
-	char		szCharGuid[36];
+	GUID		szCharGuid;//[DEFGUIDLEN];
 	int			nCertification;
 } _TLOADHUMAN, *_LPTLOADHUMAN;
 
@@ -398,18 +401,25 @@ typedef struct tag_TLOADMUHAN
 #define U_RINGR				8
 
 #pragma pack(1)
-typedef struct tag_TUSERITEMABILITY
+#pragma region SERVER ITEM MEMERY STRUCT
+
+typedef struct tag_USERGENITEMRCD
 {
-	char		szMakeIndex[43];
+	GUID		szMakeIndex;// [MAKEITEMINDEX];// EASY TO SKIP MAKEINDEX
+	BYTE		btType;
 	WORD		nStdIndex;
-	WORD		nDura;
-	WORD		nDuraMax;
-	USHORT		usCount;
+	WORD		wDura;
+	WORD		wDuraMax;
+	WORD		wCount;
+} _TUSERGENITEMRCD, *_LPTUSERGENITEMRCD;
+
+typedef struct tag_TUSERITEMRCD:tag_USERGENITEMRCD
+{
 	BYTE		btValue[22];
-	char		szBoundGuid[36];
+	GUID		szBoundGuid;// [DEFGUIDLEN];
 	char		sbtValue[2];
 	char		szPrefixName[20];
-} _TUSERITEMABILITY, *_LPTUSERITEMABILITY;
+} _TUSERITEMRCD, *_LPTUSERITEMRCD;
 
 typedef struct tag_TMAKEITEMRCD
 {
@@ -420,78 +430,105 @@ typedef struct tag_TMAKEITEMRCD
 	BYTE		btValue[22];
 } _TMAKEITEMRCD, *_LPTMAKEITEMRCD;
 
-typedef struct tag_GENERALITEMRCD
+
+typedef struct tag_TUSEITEM
 {
-	char		szMakeIndex[71];
-	int			nStdIndex;
-	int			nDura;
-	int			nDuraMax;
-} _TGENERALITEMRCD, *_LPTGENERALITEMRCD;
+	BYTE				btIsEmpty;
+	_TUSERITEMRCD		tUserItemAbility;
+	CStdItemSpecial		*lptStdItem;
+} _TUSEITEM, *_LPTUSEITEM;
+#pragma endregion
 
 
+//typedef struct tag_TGENITEMRCD
+//{
+//	char		szItem[13];
+//} _TGENITEMRCD, *_LPTGENITEMRCD;
+#pragma region CLIENT ITEM MEMERY STRUCT
 
-typedef struct tag_TGENITEMRCD
+typedef struct tag_TCLIENTGENITEMRCD
 {
-	char		szItem[13];
-} _TGENITEMRCD, *_LPTGENITEMRCD;
+	//append
+	GUID		szMakeIndex; //[MAKEITEMINDEX];
+	WORD		wCurDura;
+	WORD		wCurDuraMax;
+	WORD		wCount;
 
-typedef struct tag_TSTANDARDITEM
-{
-	char		szName[20];			// 아이템 이름 (천하제일검)
-	char		szPrefixName[20];
-	BYTE		btStdMode;          //
-	BYTE		btShape;            // 형태별 이름 (철검)
-	BYTE		btWeight;           // 무게
-	BYTE		btAniCount;         // 1보다 크면 애니메이션 되는 아이템
-	BYTE		btSource;           // 재질 (0은 기본, 1보다 크면 더 단단함)
-	BYTE		btNeedIdentify;     // $01 (아이댄티파이 안 된 것)
+	//STD 
+	BYTE		btType;
+	BYTE		btAniCount;
 	WORD		Index;
-	WORD		wLooks;             // 그림 번호
-	WORD		wDuraMax;
+	char		szName[20];
 
+	WORD		wStdMode;
+	WORD		wShape;
+	WORD		wWeight;
+	WORD		wDuraMax;		// Val1
+	DWORD		dwLooks;
+	DWORD		wRSource;		// Val2
+
+	DWORD		dwPrice;
+	DWORD		dwStock;		//MaxStock
+
+} _TCLIENTGENITEMRCD, *_LPTCLIENTGENITEMRCD;
+
+typedef struct tag_TCUSERITEMRCD 
+{
+	BYTE		btValue[22];
+	GUID		szBoundGuid;//[DEFGUIDLEN];
+	char		sbtValue[2];
+	char		szPrefixName[20];
+} _TCUSERITEMRCD, *_LPTCUSERITEMRCD;
+
+typedef struct tag_TCLIENTITEMRCD :tag_TCLIENTGENITEMRCD//tag_TUSERITEMRCD
+{
 	WORD		HP;
 	WORD		MP;
 	BYTE		AttackSpeed;
 	BYTE		Luck;
 
-	WORD		wAC;				// 방어력
-	WORD		wMAC;				// 마항력
-	WORD		wDC;				// 데미지
-	WORD		wMC;				// 술사의 마법 파워
-	WORD		wSC;				// 도사의 정신력
-	BYTE		btNeed;             // 0:Level, 1:DC, 2:MC, 3:SC
-	BYTE		btNeedLevel;        // 1..60 level value...
-	UINT		nPrice;
-} _TSTANDARDITEM, *_LPTSTANDARDITEM;
+	BYTE		wAC;				// Defence
+	BYTE		wAC2;				// Defence Max
+	BYTE		wMAC;				// Magic Defence
+	BYTE		wMAC2;				// Magic Defence Max
+	BYTE		wDC;				// Attack
+	BYTE		wDC2;				// Attack Max
+	BYTE		wMC;				// Magic
+	BYTE		wMC2;				// Magic Max
+	BYTE		wSC;				//
+	BYTE		wSC2;				// Max
 
-typedef struct tag_TUSERITEMRCD:tag_TUSERITEMABILITY
-{
-	//char			szMakeIndex[12];
-	//int				nDura;
-	//int				nDuraMax;
-	CStdItemSpecial	*lptStdItem;
-} _TUSERITEMRCD, *_LPTUSERITEMRCD;
+	BYTE		m_btWater;
+	BYTE		m_btWater2;
+	BYTE		m_btFire;
+	BYTE		m_btFire2;
+	BYTE		m_btWind;
+	BYTE		m_btWind2;
+	BYTE		m_btLight;
+	BYTE		m_btLight2;
+	BYTE		m_btEarth;
+	BYTE		m_btEarth2;
 
-typedef struct tag_TCLIENTITEMRCD :tag_TUSERITEMABILITY
-{
-	_TSTANDARDITEM		tStdItem;
+	WORD		wNeed;
+	WORD		wNeedLevel;
+
+	DWORD		dwFeature;
+	//char		szPrefixName[20];
+	_TCUSERITEMRCD		tCUserItemAbility;
 } _TCLIENTITEMRCD, *_LPTCLIENTITEMRCD;
 
-typedef struct tag_USEITEMRCD:tag_TUSERITEMRCD 
-{
-	BYTE		  btIsEmpty;
-}_TUSEITEMRCD,*_LPTUSEITEMRCD;
+#pragma endregion
 
 typedef struct tag_THUMANRCD
 {
 	char		szUserID[16];
 	char		szCharName[20];
-	char		szCharGuid[36];
+	GUID		szCharGuid;// [MAKEITEMINDEX];
 
 	BYTE		btIndex;
 	BYTE		btJob;
 	BYTE		btGender;
-	_TUSEITEMRCD		szTakeItem[10];
+	_TUSEITEM	szTakeItem[CHARUSEITEMCNT];
 	BYTE		szLevel;
 	BYTE		szHair;
 	BYTE		nDirection;

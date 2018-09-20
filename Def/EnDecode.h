@@ -57,8 +57,10 @@ int  WINAPI fnEncodeMessageW(_LPTDEFAULTMESSAGE lptdm, TCHAR *pszBuf, int nLen);
 __inline void  WINAPI fnDecodeMessageW(_LPTDEFAULTMESSAGE lptdm, TCHAR *pszBuf)
 	{ fnDecode6BitBufW(pszBuf, (char *)lptdm, sizeof(_TDEFAULTMESSAGE)); }
 
-__inline void WINAPI fnMakeDefMessageW(_LPTDEFAULTMESSAGE lptdm, WORD wIdent, int nRecog, WORD wParam, WORD wTag, WORD wSeries)
-	{ lptdm->wIdent	= wIdent; lptdm->nRecog	= nRecog; lptdm->wParam	= wParam; lptdm->wTag = wTag; lptdm->wSeries = wSeries; }
+__inline void WINAPI fnMakeDefMessageW(_LPTDEFAULTMESSAGE lptdm, WORD wIdent, int nRecog, WORD wParam, WORD wTag, WORD wSeries,int nlen=0)
+{
+	lptdm->wIdent = wIdent; lptdm->nRecog = nRecog; lptdm->wParam = wParam; lptdm->wTag = wTag; lptdm->wSeries = wSeries; lptdm->nLen =_DEFBLOCKSIZE+nlen;
+}
 
 int  WINAPI fnEncode6BitBufA(unsigned char *pszSrc, char *pszDest, int nSrcLen, int nDestLen);
 int  WINAPI fnDecode6BitBufA(char *pwszSrc, char *pszDest, int nDestLen);

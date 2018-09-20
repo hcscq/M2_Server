@@ -59,7 +59,8 @@ void InitStdItemEtcInfo()
 	
 	pRec= g_pConnCommon->CreateRecordset();
 
-	sprintf( szQuery, "SELECT COUNT(*) AS FLD_COUNT FROM TBL_STDITEM_ETC");
+	//sprintf( szQuery, "SELECT COUNT(*) AS FLD_COUNT FROM TBL_STDITEM_ETC");
+	sprintf(szQuery, "SELECT COUNT(*) AS FLD_COUNT FROM TBL_STDITEM");
 
 	if (pRec->Execute( szQuery ))
 	{
@@ -73,7 +74,8 @@ void InitStdItemEtcInfo()
 
 	g_pStdItemEtc = new CStdItem[g_nStdItemEtc];
 
-	sprintf( szQuery, "SELECT * FROM TBL_STDITEM_ETC ORDER BY FLD_INDEX");
+	//sprintf( szQuery, "SELECT * FROM TBL_STDITEM_ETC ORDER BY FLD_INDEX");
+	sprintf(szQuery, "SELECT FLD_TYPE,FLD_NAME,FLD_STDMODE,FLD_SHAPE,FLD_WEIGHT,FLD_LOOKS,FLD_DURAMAX,FLD_SOURCE,FLD_PRICE FROM TBL_STDITEM ORDER BY FLD_INDEX");
 
 	pRec = g_pConnCommon->CreateRecordset();
 	
@@ -83,15 +85,16 @@ void InitStdItemEtcInfo()
 		{
 			if (pRec->Fetch())								 
 			{
-				strcpy(g_pStdItemEtc[i].szName, pRec->Get( "FLD_NAME" ) );
+				strcpy_s(g_pStdItemEtc[i].szName, pRec->Get( "FLD_NAME" ) );
 
 				g_pStdItemEtc[i].wStdMode	= atoi( pRec->Get( "FLD_STDMODE" ) );
 				g_pStdItemEtc[i].wShape		= atoi( pRec->Get( "FLD_SHAPE" ) );
 				g_pStdItemEtc[i].wWeight	= atoi( pRec->Get( "FLD_WEIGHT" ) );
 				g_pStdItemEtc[i].dwLooks	= atoi( pRec->Get( "FLD_LOOKS" ) );
-				g_pStdItemEtc[i].wDuraMax	= atoi( pRec->Get( "FLD_VAL1" ) );
-				g_pStdItemEtc[i].dwRSource	= atoi( pRec->Get( "FLD_VAL2" ) );
+				g_pStdItemEtc[i].wDuraMax	= atoi( pRec->Get( "FLD_DURAMAX" ) );//FLD_VAL1
+				g_pStdItemEtc[i].wRSource	= atoi( pRec->Get( "FLD_SOURCE" ) );//FLD_VAL2 FLD_DURAMAX,FLD_SOURCE
 				g_pStdItemEtc[i].dwPrice	= atoi( pRec->Get( "FLD_PRICE" ) );
+				g_pStdItemEtc[i].btType		= (BYTE)atoi(pRec->Get("FLD_TYPE"));
 			}
 		}
 
@@ -107,6 +110,32 @@ void InitStdItemSpecial()
 
 	CRecordset *pRec = g_pConnCommon->CreateRecordset();
 	sprintf( szQuery, "SELECT COUNT(*) AS FLD_COUNT FROM TBL_STDITEM");
+	//TEST
+
+
+	//GUID guid;
+	//char szQuery2[102];
+	////CoCreateGuid(&guid);
+	//UINT64 K= _atoi64("A50B8BC0-F0BC-4411-8E9C-3B784000F46E");
+	//memcpy(&guid, &K, sizeof(guid));
+	//memcpy(&K, &guid, sizeof(guid));//"PRIu64"
+	//
+	//sprintf(szQuery, "INSERT INTO TBL_GUID ([Guid]) VALUES(0x%x)", &guid);
+	//int reC = pRec->Execute(szQuery);
+	//
+	//GUID guid2;
+	//char szQuery1[60];
+	//memcpy(&guid2, &K, sizeof(guid));
+	//long s = 0;//2147483647
+	//s = strtol(("0xF3F0F000000000000000000000000000"), NULL, 16);
+	//sprintf(szQuery, "SELECT *  FROM TBL_GUID");
+	//
+	//reC = pRec->Execute(szQuery);
+	//if (pRec->Fetch())
+	//	s = strtol((pRec->Get("[Guid]")), NULL, 16);
+	
+		//memcpy(&guid2, strtol((pRec->Get("[Guid]")), NULL, 16),sizeof(guid2));
+	//TEST END
 
 	if (pRec->Execute( szQuery ))
 	{
@@ -120,7 +149,6 @@ void InitStdItemSpecial()
 
 	g_pStdItemSpecial = new CStdItemSpecial[g_nStdItemSpecial];
 
-	//memset(g_pStdItemSpecial,0, g_nStdItemSpecial*sizeof(CStdItemSpecial));
 	sprintf( szQuery, "SELECT * FROM TBL_STDITEM ORDER BY FLD_INDEX");
 
 	pRec = g_pConnCommon->CreateRecordset();
@@ -134,12 +162,12 @@ void InitStdItemSpecial()
 				strcpy(g_pStdItemSpecial[i].szName, pRec->Get( "FLD_NAME" ) );
 
 				g_pStdItemSpecial[i].wStdMode		= (SHORT)atoi( pRec->Get( "FLD_STDMODE" ) );
-				g_pStdItemSpecial[i].btType			= (BYTE)atoi( pRec->Get( "FLD_TYPE" ) );
+				g_pStdItemSpecial[i].btType			= ( pRec->Get( "FLD_TYPE" )[0] );
 				g_pStdItemSpecial[i].Index			= (LONG)atoi(pRec->Get("FLD_Index"));
 				g_pStdItemSpecial[i].wShape			= (SHORT)atoi( pRec->Get( "FLD_SHAPE" ) );
 				g_pStdItemSpecial[i].wWeight		= (SHORT)atoi( pRec->Get( "FLD_WEIGHT" ) );
-				g_pStdItemSpecial[i].wAniCount		= (SHORT)atoi( pRec->Get( "FLD_ANICOUNT" ) );
-				g_pStdItemSpecial[i].wSource		= (SHORT)atoi( pRec->Get( "FLD_SOURCE" ) );
+				g_pStdItemSpecial[i].btAniCount		= (SHORT)atoi( pRec->Get( "FLD_ANICOUNT" ) );
+				g_pStdItemSpecial[i].wRSource		= (SHORT)atoi( pRec->Get( "FLD_SOURCE" ) );
 				g_pStdItemSpecial[i].dwLooks		= (LONG)atoi( pRec->Get( "FLD_LOOKS" ) );
 				g_pStdItemSpecial[i].wDuraMax		= (WORD)atoi( pRec->Get( "FLD_DURAMAX" ) );
 				g_pStdItemSpecial[i].wAC			= (BYTE)atoi( pRec->Get( "FLD_AC" ) );

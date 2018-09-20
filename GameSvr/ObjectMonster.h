@@ -76,8 +76,8 @@ public:
 	DWORD							m_dwHolySeizeTime;
 
 	DWORD							m_dwGold;
-	CWHList<_LPTGENERALITEMRCD>		m_xTGenItemRcd;
-	CWHList<_LPTUSERITEMRCD>			m_xTItemRcd;
+	CWHList<_LPTUSERGENITEMRCD>		m_xTGenItemRcd;
+	CWHList<_LPTUSERITEMRCD>		m_xTItemRcd;
 			
 public:
 	CMonsterObject();
@@ -113,7 +113,7 @@ public:
 
 	void	ScatterBagItems();
 
-	void	MakeGenItem(_LPTGENERALITEMRCD lptGenItemRcd);
+	void	MakeGenItem(_LPTUSERGENITEMRCD lptGenItemRcd);
 	void	MonGetRandomItems();
 
 	virtual BOOL	IsProperTarget(CCharObject* pCharObject);
