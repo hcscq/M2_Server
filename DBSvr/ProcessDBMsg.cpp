@@ -138,8 +138,8 @@ void GetHumanItemRcd(const _LPTHUMANRCD lptHumanRcd, CWHList<_LPTUSERITEMRCD>	*p
 				//memset(pItemRcd, 0, sizeof(_TUSERGENITEMRCD));
 				if (pItemRcd)
 				{
-					pItemRcd->btType = btStdType;
 					GetGuidTagFromString(pRec->Get("FLD_MAKEINDEX"), &pItemRcd->szMakeIndex);
+					pItemRcd->btType = btStdType;
 					//memcpy(pItemRcd->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), MAKEITEMINDEX);
 					pItemRcd->nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
 					pItemRcd->wDura = atoi(pRec->Get("FLD_DURA"));
@@ -176,9 +176,10 @@ void GetHumanItemRcd(const _LPTHUMANRCD lptHumanRcd, CWHList<_LPTUSERITEMRCD>	*p
 
 				public Awake Awake = new Awake();
 				*/
-				pItem->btType = btStdType;
 
 				GetGuidTagFromString(pRec->Get("FLD_MAKEINDEX"), &pItem->szMakeIndex);
+				//***********************Notice the order with MAKEINDEX
+				pItem->btType = btStdType;
 				//memcpy(pItem->szMakeIndex, pRec->Get("FLD_MAKEINDEX"), MAKEITEMINDEX);
 
 				pItem->nStdIndex = atoi(pRec->Get("FLD_STDINDEX"));
@@ -524,17 +525,17 @@ BOOL SaveHumanRcd(CServerInfo* pServerInfo, _LPTLOADHUMAN lpLoadHuman, _LPTHUMAN
 		else
 			memcpy(szEquip[i], "NULL", sizeof("NULL"));
 	}
-	
+	char szMakeIndex[37];
 	sprintf(szSQL, "UPDATE TBL_CHARACTER SET FLD_JOB=%d, FLD_GENDER=%d, FLD_LEVEL=%d, FLD_DIRECTION=%d, FLD_CX=%d, FLD_CY=%d, "
-						"FLD_MAPNAME='%s', FLD_GOLD=%d, FLD_HAIR=%d, FLD_DRESS_ID=%s, FLD_WEAPON_ID=%s, "
-						"FLD_LEFTHAND_ID=%s, FLD_RIGHTHAND_ID=%s, FLD_HELMET_ID=%s, FLD_NECKLACE_ID=%s, "
-						"FLD_ARMRINGL_ID=%s, FLD_ARMRINGR_ID=%s, FLD_RINGL_ID=%s, FLD_RINGR_ID=%s, FLD_EXP=%d,FLD_ATTACKMODE=%d "
-						"WHERE FLD_GUID='%s'",
-						lptHumanRcd->btJob, lptHumanRcd->btGender, lptHumanRcd->szLevel, lptHumanRcd->nDirection,
-						lptHumanRcd->nCX, lptHumanRcd->nCY, lptHumanRcd->szMapName, lptHumanRcd->dwGold,
-						lptHumanRcd->szHair, szEquip[0], szEquip[1], szEquip[2], szEquip[3], szEquip[4],
-						szEquip[5], szEquip[6], szEquip[7], szEquip[8], szEquip[9], lptHumanRcd->nExp, lptHumanRcd->btAttackMode,
-						lptHumanRcd->szCharGuid);
+		"FLD_MAPNAME='%s', FLD_GOLD=%d, FLD_HAIR=%d, FLD_DRESS_ID=%s, FLD_WEAPON_ID=%s, "
+		"FLD_LEFTHAND_ID=%s, FLD_RIGHTHAND_ID=%s, FLD_HELMET_ID=%s, FLD_NECKLACE_ID=%s, "
+		"FLD_ARMRINGL_ID=%s, FLD_ARMRINGR_ID=%s, FLD_RINGL_ID=%s, FLD_RINGR_ID=%s, FLD_EXP=%d,FLD_ATTACKMODE=%d "
+		"WHERE FLD_GUID='%s'",
+		lptHumanRcd->btJob, lptHumanRcd->btGender, lptHumanRcd->szLevel, lptHumanRcd->nDirection,
+		lptHumanRcd->nCX, lptHumanRcd->nCY, lptHumanRcd->szMapName, lptHumanRcd->dwGold,
+		lptHumanRcd->szHair, szEquip[0], szEquip[1], szEquip[2], szEquip[3], szEquip[4],
+		szEquip[5], szEquip[6], szEquip[7], szEquip[8], szEquip[9], lptHumanRcd->nExp, lptHumanRcd->btAttackMode,
+		GetGuidSZ(szMakeIndex, &lptHumanRcd->szCharGuid));
 
 	CRecordset *pRec = GetDBManager()->CreateRecordset();
 

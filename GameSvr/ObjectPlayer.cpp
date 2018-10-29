@@ -460,12 +460,14 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMRCD lpMakeItemRcd, int nAction)
 
 	//char	szMakeDay[7];
 	char	szMakeIndex[37];
+	char	szCharIndex[37];
 
 	//ZeroMemory(szMakeDay, sizeof(szMakeDay));
 	ZeroMemory(szMakeIndex, sizeof(szMakeIndex));
 
 	//memcpy(szMakeDay, &lpMakeItemRcd->szMakeIndex[1], 6);
 	GetGuidSZ(szMakeIndex, &lpMakeItemRcd->szMakeIndex);
+	GetGuidSZ(szCharIndex, &m_pUserInfo->m_THumanRcd.szCharGuid);
 	//memcpy(szMakeIndex, &lpMakeItemRcd->szMakeIndex[7], 5);
 
 	if (IsEmptyGuid(&lpMakeItemRcd->szMakeIndex))//(atoi(szMakeDay) == 0 && atoi(szMakeIndex) == 0) //means  empty
@@ -517,46 +519,46 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMRCD lpMakeItemRcd, int nAction)
 		}
 		case _ITEM_ACTION_THROW:
 		{
-			sprintf(szQuery, "UPDATE TBL_CHARACTER_ITEM SET FLD_LOGINID='%s', FLD_CHARNAME='%s', "
-								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_VALUE1=%d, FLD_VALUE2=%d, FLD_VALUE3=%d, FLD_VALUE4=%d, FLD_VALUE5=%d, "
-								"FLD_VALUE6=%d, FLD_VALUE7=%d, FLD_VALUE8=%d, FLD_VALUE9=%d, FLD_VALUE10=%d, FLD_VALUE11=%d, FLD_VALUE12=%d, FLD_VALUE13=%d, "
-								"FLD_VALUE14=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
+			sprintf(szQuery, "UPDATE TBL_CHARACTER_ITEM SET FLD_LOGINID='%s', "
+								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_AC=%d, FLD_MAC=%d, FLD_DC=%d, FLD_MC=%d, FLD_SC=%d, "
+								"FLD_Accuracy=%d, FLD_Agility=%d, FLD_HP=%d, FLD_MP=%d, FLD_Strong=%d, FLD_MagicResist=%d, FLD_PoisonResist=%d, FLD_HealthRecovery=%d, "
+								"FLD_ManaRecovery=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
 								"WHERE FLD_STDTYPE='%c'  AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
-								"0", "WEMADE", lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
+								"0",  lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
-								lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], m_pUserInfo->m_szCharName, _ITEM_ACTION_THROW,
+								lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], szCharIndex, _ITEM_ACTION_THROW,
 								lpMakeItemRcd->btType, szMakeIndex, lpMakeItemRcd->nStdIndex);
 			break;
 		}
 		case _ITEM_ACTION_PICKUP:
 		{
-			sprintf(szQuery, "UPDATE TBL_CHARACTER_ITEM SET FLD_LOGINID='%s', FLD_CHARNAME='%s', "
-								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_VALUE1=%d, FLD_VALUE2=%d, FLD_VALUE3=%d, FLD_VALUE4=%d, FLD_VALUE5=%d, "
-								"FLD_VALUE6=%d, FLD_VALUE7=%d, FLD_VALUE8=%d, FLD_VALUE9=%d, FLD_VALUE10=%d, FLD_VALUE11=%d, FLD_VALUE12=%d, FLD_VALUE13=%d, "
-								"FLD_VALUE14=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
+			sprintf(szQuery, "UPDATE TBL_CHARACTER_ITEM SET FLD_LOGINID='%s',  "
+								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_AC=%d, FLD_MAC=%d, FLD_DC=%d, FLD_MC=%d, FLD_SC=%d, "
+								"FLD_Accuracy=%d, FLD_Agility=%d, FLD_HP=%d, FLD_MP=%d, FLD_Strong=%d, FLD_MagicResist=%d, FLD_PoisonResist=%d, FLD_HealthRecovery=%d, "
+								"FLD_ManaRecovery=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
 								"WHERE FLD_STDTYPE='%c'  AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
-								m_pUserInfo->m_szUserID, m_pUserInfo->m_szCharName, lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
+								m_pUserInfo->m_szUserID, lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
-								lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], "WEMADE", _ITEM_ACTION_PICKUP,
+								lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], szCharIndex, _ITEM_ACTION_PICKUP,
 								lpMakeItemRcd->btType, szMakeIndex, lpMakeItemRcd->nStdIndex);
 			break;
 		}
 		case _ITEM_ACTION_UPDATE:
 		{
 			sprintf(szQuery, "UPDATE TBL_CHARACTER_ITEM SET "
-								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_VALUE1=%d, FLD_VALUE2=%d, FLD_VALUE3=%d, FLD_VALUE4=%d, FLD_VALUE5=%d, "
-								"FLD_VALUE6=%d, FLD_VALUE7=%d, FLD_VALUE8=%d, FLD_VALUE9=%d, FLD_VALUE10=%d, FLD_VALUE11=%d, FLD_VALUE12=%d, FLD_VALUE13=%d, "
-								"FLD_VALUE14=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d, FLD_PREFIXNAME='%s' "
+								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_AC=%d, FLD_MAC=%d, FLD_DC=%d, FLD_MC=%d, FLD_SC=%d, "
+								"FLD_Accuracy=%d, FLD_Agility=%d, FLD_HP=%d, FLD_MP=%d, FLD_Strong=%d, FLD_MagicResist=%d, FLD_PoisonResist=%d, FLD_HealthRecovery=%d, "
+								"FLD_ManaRecovery=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d, FLD_PREFIXNAME='%s' "
 								"WHERE FLD_STDTYPE='%c'  AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
 								lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
-								lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], m_pUserInfo->m_szCharName, _ITEM_ACTION_UPDATE, lpMakeItemRcd->szPrefixName,
+								lpMakeItemRcd->btValue[12], lpMakeItemRcd->btValue[13], szCharIndex, _ITEM_ACTION_UPDATE, lpMakeItemRcd->szPrefixName,
 								lpMakeItemRcd->btType,  szMakeIndex, lpMakeItemRcd->nStdIndex);
 			break;
 		}
