@@ -519,7 +519,7 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMRCD lpMakeItemRcd, int nAction)
 		}
 		case _ITEM_ACTION_THROW:
 		{
-			sprintf(szQuery, "UPDATE TBL_CHARACTER_ITEM SET FLD_LOGINID='%s', "
+			sprintf(szQuery, "UPDATE TBL_CHARACTER_ITEM SET FLD_LOGINID='%s',FLD_OWNER=CAST(CAST(0 AS BINARY) AS UNIQUEIDENTIFIER), "
 								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_AC=%d, FLD_MAC=%d, FLD_DC=%d, FLD_MC=%d, FLD_SC=%d, "
 								"FLD_Accuracy=%d, FLD_Agility=%d, FLD_HP=%d, FLD_MP=%d, FLD_Strong=%d, FLD_MagicResist=%d, FLD_PoisonResist=%d, FLD_HealthRecovery=%d, "
 								"FLD_ManaRecovery=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
@@ -534,12 +534,12 @@ int CPlayerObject::UpdateItemToDB(_LPTUSERITEMRCD lpMakeItemRcd, int nAction)
 		}
 		case _ITEM_ACTION_PICKUP:
 		{
-			sprintf(szQuery, "UPDATE TBL_CHARACTER_ITEM SET FLD_LOGINID='%s',  "
+			sprintf(szQuery, "UPDATE TBL_CHARACTER_ITEM SET FLD_LOGINID='%s',FLD_OWNER='%s',  "
 								"FLD_DURA=%d, FLD_DURAMAX=%d, FLD_AC=%d, FLD_MAC=%d, FLD_DC=%d, FLD_MC=%d, FLD_SC=%d, "
 								"FLD_Accuracy=%d, FLD_Agility=%d, FLD_HP=%d, FLD_MP=%d, FLD_Strong=%d, FLD_MagicResist=%d, FLD_PoisonResist=%d, FLD_HealthRecovery=%d, "
 								"FLD_ManaRecovery=%d, FLD_LASTOWNER='%s', FLD_LASTACTION=%d "
 								"WHERE FLD_STDTYPE='%c'  AND FLD_MAKEINDEX='%s' AND FLD_STDINDEX=%d",
-								m_pUserInfo->m_szUserID, lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
+								m_pUserInfo->m_szUserID,szCharIndex ,lpMakeItemRcd->wDura, lpMakeItemRcd->wDuraMax, 
 								lpMakeItemRcd->btValue[0], lpMakeItemRcd->btValue[1], lpMakeItemRcd->btValue[2], lpMakeItemRcd->btValue[3], 
 								lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[5], lpMakeItemRcd->btValue[6], lpMakeItemRcd->btValue[7], 
 								lpMakeItemRcd->btValue[8], lpMakeItemRcd->btValue[9], lpMakeItemRcd->btValue[10], lpMakeItemRcd->btValue[11], 
