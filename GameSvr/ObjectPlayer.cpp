@@ -315,6 +315,7 @@ void CPlayerObject::SendAddItem(_LPTUSERITEMRCD lpTItemRcd)
 
 		tClientItemRcd.wCurDura = lpTItemRcd->wDura;
 		tClientItemRcd.wCurDuraMax = lpTItemRcd->wDuraMax;
+		tClientItemRcd.wCount = lpTItemRcd->wCount;
 
 		nPos = fnEncode6BitBufA((unsigned char *)&tClientItemRcd, szEncodeMsg, sizeof(_TCLIENTITEMRCD), sizeof(szEncodeMsg));
 	}

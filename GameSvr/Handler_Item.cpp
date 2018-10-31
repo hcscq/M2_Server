@@ -110,7 +110,7 @@ void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTU
 	}
 */	
 	//_LPTCLIENTITEMRCD lpClientItemRcd = (_LPTCLIENTITEMRCD)lpClientItemRcd;
-	memcpy(&lpClientItemRcd->tCUserItemAbility, lpUserItemRcd + sizeof(_TUSERGENITEMRCD), sizeof(_TCUSERITEMRCD));
+	memcpy(&(lpClientItemRcd->tCUserItemAbility), (char*)lpUserItemRcd + sizeof(_TUSERGENITEMRCD), sizeof(_TCUSERITEMRCD));
 	switch (btType)
 	{
 		case 0:
@@ -146,13 +146,13 @@ void CStdItemSpecial::GetUpgradeStdItem(_LPTCLIENTITEMRCD lpClientItemRcd, _LPTU
 			break;
 		}
 		default:
-		{
-			lpClientItemRcd->wAC		= 0;
-			lpClientItemRcd->wMAC		= 0;
-			lpClientItemRcd->wDC		= 0;
-			lpClientItemRcd->wMC		= 0;
-			lpClientItemRcd->wSC		= 0;
-			lpClientItemRcd->wRSource	= 0;
+		{	//2018-10-31
+			//lpClientItemRcd->wAC		= 0;
+			//lpClientItemRcd->wMAC		= 0;
+			//lpClientItemRcd->wDC		= 0;
+			//lpClientItemRcd->wMC		= 0;
+			//lpClientItemRcd->wSC		= 0;
+			//lpClientItemRcd->wRSource	= 0;
 
 			break;
 		}
