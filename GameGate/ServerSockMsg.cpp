@@ -105,8 +105,10 @@ DWORD WINAPI AcceptThread(LPVOID lpParameter)
 	{
 		Accept = accept(g_ssock, (struct sockaddr FAR *)&Address, &nLen);
 
-		if (g_fTerminated)
+		if (g_fTerminated || g_ssock == INVALID_SOCKET) {
+			InsertLogMsg(_TEXT("End accept waiting."));
 			return 0;
+		}
 
 		int nIndex = g_UserInfoArray.GetAvailablePosition();
 

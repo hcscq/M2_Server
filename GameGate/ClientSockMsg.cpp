@@ -7,11 +7,13 @@ VOID WINAPI		OnTimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime);
 UINT WINAPI		ClientWorkerThread(LPVOID lpParameter);
 
 extern SOCKET					g_csock;
+extern SOCKET					g_ssock;
 
 extern HWND						g_hMainWnd;
 extern HWND						g_hStatusBar;
 
 extern CWHDynamicArray<CSessionInfo>	g_UserInfoArray;
+extern void UpdateStatusBar(BOOL fGrow);
 
 
 HANDLE							g_hThreadForComm = NULL;
@@ -272,7 +274,16 @@ LPARAM OnClientSockMsg(WPARAM wParam, LPARAM lParam)
 
 	return 0L;
 }
+void CloseAllSessions()
+{
 
+	g_UserInfoArray.SetEmptyElement(pSessionInfo->nGateIndex, pSessionInfo);
+
+	closesocket(pSessionInfo->sock);
+
+	UpdateStatusBar(FALSE);
+
+}
 UINT WINAPI		ClientWorkerThread(LPVOID lpParameter)
 {
 	_TOVERLAPPEDEX		ClientOverlapped;
@@ -305,8 +316,9 @@ UINT WINAPI		ClientWorkerThread(LPVOID lpParameter)
 		if (dwIndex == WSA_WAIT_TIMEOUT && !g_fTerminated) {
 			InsertLogMsg(IDS_CONNECT_GAMESERVER_TIMEOUT);
 			KillTimer(g_hMainWnd, _ID_TIMER_KEEPALIVE);
-			closesocket(g_csock);
-			g_csock = INVALID_SOCKET;
+			//closesocket(g_csock);
+			ClearSocket(g_csock);
+			
 			SetTimer(g_hMainWnd, _ID_TIMER_CONNECTSERVER, 2000, (TIMERPROC)OnTimerProc);
 			break;
 		}
@@ -318,8 +330,8 @@ UINT WINAPI		ClientWorkerThread(LPVOID lpParameter)
 		{
 			InsertLogMsg(IDS_DISCONNECT_GAMESERVER);
 			KillTimer(g_hMainWnd, _ID_TIMER_KEEPALIVE);
-			closesocket(g_csock);
-			g_csock = INVALID_SOCKET;
+			//closesocket(g_csock);
+			ClearSocket(g_csock);
 
 			SetTimer(g_hMainWnd, _ID_TIMER_CONNECTSERVER, 2000, (TIMERPROC)OnTimerProc);
 			break;
