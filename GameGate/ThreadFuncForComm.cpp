@@ -8,6 +8,9 @@ extern HWND				g_hStatusBar;
 extern SOCKET			g_csock;
 extern SOCKADDR_IN		g_caddr;
 
+extern SOCKET			g_ssock;
+extern SOCKADDR_IN		g_saddr;
+
 BOOL	jRegGetKey(LPCTSTR pSubKeyName, LPCTSTR pValueName, LPBYTE pValue);
 
 VOID WINAPI OnTimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)//timer proc
@@ -20,6 +23,19 @@ VOID WINAPI OnTimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)//t
 			{
 				SendSocketMsgS(GM_CHECKCLIENT, 0, 0, 0, 0, NULL);
 				SendMessage(g_hStatusBar, SB_SETTEXT, MAKEWORD(2, 0), (LPARAM)_TEXT("Check Activity"));
+				if (g_ssock == INVALID_SOCKET) {
+					DWORD	dwIP = 0;
+					int		nPort = 0;
+
+					if (!jRegGetKey(_GAMEGATE_SERVER_REGISTRY, _TEXT("LocalPort"), (LPBYTE)&nPort))
+						nPort = 7200;
+
+					if (InitServerSocket(g_ssock, &g_saddr, _IDM_SERVERSOCK_MSG, nPort, 2)) {
+						TCHAR	szSrvAddr[16];
+						_stprintf(szSrvAddr, _T("%d"), nPort);
+						InsertLogMsgParam(IDS_ENABLE_PORT, szSrvAddr, LOGPARAM_STR);
+					}
+				}
 			}
 
 			break;

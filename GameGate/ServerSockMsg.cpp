@@ -149,7 +149,7 @@ void CloseSession(CSessionInfo* pSessionInfo)
 {
 	g_UserInfoArray.SetEmptyElement(pSessionInfo->nGateIndex, pSessionInfo);
 
-	closesocket(pSessionInfo->sock);
+	ClearSocket(pSessionInfo->sock);
 
 	UpdateStatusBar(FALSE);
 }

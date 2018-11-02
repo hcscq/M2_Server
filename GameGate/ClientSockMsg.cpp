@@ -274,16 +274,7 @@ LPARAM OnClientSockMsg(WPARAM wParam, LPARAM lParam)
 
 	return 0L;
 }
-void CloseAllSessions()
-{
 
-	g_UserInfoArray.SetEmptyElement(pSessionInfo->nGateIndex, pSessionInfo);
-
-	closesocket(pSessionInfo->sock);
-
-	UpdateStatusBar(FALSE);
-
-}
 UINT WINAPI		ClientWorkerThread(LPVOID lpParameter)
 {
 	_TOVERLAPPEDEX		ClientOverlapped;
@@ -318,7 +309,7 @@ UINT WINAPI		ClientWorkerThread(LPVOID lpParameter)
 			KillTimer(g_hMainWnd, _ID_TIMER_KEEPALIVE);
 			//closesocket(g_csock);
 			ClearSocket(g_csock);
-			
+			ClearSocket(g_ssock);
 			SetTimer(g_hMainWnd, _ID_TIMER_CONNECTSERVER, 2000, (TIMERPROC)OnTimerProc);
 			break;
 		}
@@ -332,6 +323,7 @@ UINT WINAPI		ClientWorkerThread(LPVOID lpParameter)
 			KillTimer(g_hMainWnd, _ID_TIMER_KEEPALIVE);
 			//closesocket(g_csock);
 			ClearSocket(g_csock);
+			ClearSocket(g_ssock);
 
 			SetTimer(g_hMainWnd, _ID_TIMER_CONNECTSERVER, 2000, (TIMERPROC)OnTimerProc);
 			break;
