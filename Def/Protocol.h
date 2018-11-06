@@ -181,7 +181,7 @@
 #define SM_ITEMSHOW             610
 #define SM_ITEMHIDE             611
 #define SM_DOOROPEN				612
-#define SM_TAKEON_OK            615
+#define SM_TAKEON_EQUIP         615
 #define SM_TAKEON_FAIL          616
 #define SM_TAKEOFF_OK           619
 #define SM_TAKEOFF_FAIL         620

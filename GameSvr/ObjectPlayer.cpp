@@ -1425,7 +1425,7 @@ void CPlayerObject::ServerGetTakeOnGenItem(WORD wWhere, const GUID *pszItemIndex
 				AddProcess(this, RM_ABILITY, 0, 0, 0, 0, NULL);
 				AddProcess(this, RM_SUBABILITY, 0, 0, 0, 0, NULL);
 
-				fnMakeDefMessage(&DefMsg, SM_TAKEON_OK, lFeature, 0, 0, 0);
+				fnMakeDefMessage(&DefMsg, SM_TAKEON_EQUIP, lFeature, wWhere, 0, 0);
 				SendSocket(&DefMsg, NULL);
 
 				AddRefMsg(RM_FEATURECHANGED, 0, lFeature, 0, 0, NULL);
@@ -1437,7 +1437,7 @@ void CPlayerObject::ServerGetTakeOnGenItem(WORD wWhere, const GUID *pszItemIndex
 		}
 	}
 
-	fnMakeDefMessage(&DefMsg, SM_TAKEON_FAIL, 2, 0, 0, 0);
+	fnMakeDefMessage(&DefMsg, SM_TAKEON_EQUIP, 0, 0, 2, 0);
 	SendSocket(&DefMsg, NULL);
 }
 
@@ -1461,6 +1461,7 @@ void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, const GUID *pszItemIndex)
 				case U_WEAPON:
 					m_tFeature.btWeapon	= m_pUserInfo->GetWeaponFeature();
 					break;
+				default:break;
 			}
 
 			RecalcAbilitys();
@@ -1470,8 +1471,13 @@ void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, const GUID *pszItemIndex)
 			AddProcess(this, RM_ABILITY, 0, 0, 0, 0, NULL);
 			AddProcess(this, RM_SUBABILITY, 0, 0, 0, 0, NULL);
 
-			fnMakeDefMessage(&DefMsg, SM_TAKEON_OK, lFeature, 0, 0, 0);
-			SendSocket(&DefMsg, NULL);
+			fnMakeDefMessage(&DefMsg, SM_TAKEON_EQUIP, lFeature, wWhere, 0, 0);
+
+			char	szEncodeMsg[30];
+			int nPos = fnEncode6BitBufA((unsigned char *)pszItemIndex, szEncodeMsg, sizeof(GUID), sizeof(szEncodeMsg));
+			szEncodeMsg[nPos] = '\0';
+
+			SendSocket(&DefMsg, szEncodeMsg);
 
 			AddRefMsg(RM_FEATURECHANGED, 0, lFeature, 0, 0, NULL);
 
@@ -1479,14 +1485,14 @@ void CPlayerObject::ServerGetTakeOnItem(WORD wWhere, const GUID *pszItemIndex)
 		}
 		else
 		{
-			fnMakeDefMessage(&DefMsg, SM_TAKEON_FAIL, 1, 0, 0, 0);
+			fnMakeDefMessage(&DefMsg, SM_TAKEON_EQUIP, 0, 0, 1, 0);
 			SendSocket(&DefMsg, NULL);
 
 			return;
 		}
 	}
 
-	fnMakeDefMessage(&DefMsg, SM_TAKEON_FAIL, 2, 0, 0, 0);
+	fnMakeDefMessage(&DefMsg, SM_TAKEON_EQUIP, 0, 0, 2, 0);
 	SendSocket(&DefMsg, NULL);
 }
 
@@ -2462,10 +2468,10 @@ void CPlayerObject::Operate()
 							nPos = fnDecode6BitBufA(lpProcessMsg->pszData, szDecodeData, sizeof(szDecodeData));
 							szDecodeData[nPos] = '\0';
 							memcpy(&guid, szDecodeData, sizeof(GUID));
-							if (szDecodeData[0] == 'G')
-								ServerGetTakeOnGenItem((WORD)lpProcessMsg->lParam2, &guid);
-							else
-								ServerGetTakeOnItem((WORD)lpProcessMsg->lParam2, &guid);
+							//if (szDecodeData[0] == 'G')
+							//	ServerGetTakeOnGenItem((WORD)lpProcessMsg->lParam2, &guid);
+							//else
+							ServerGetTakeOnItem((WORD)lpProcessMsg->lParam2, &guid);
 						}
 
 						break;
